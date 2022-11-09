@@ -3,19 +3,31 @@
 /* Data Access Object (DAO) module for accessing db */
 
 const sqlite = require('sqlite3');
-const { ServiceType } = require('./Classes/ServiceType');
 
 // open the database
-const db = new sqlite.Database('oqm.db', (err) => {
+const db = new sqlite.Database('hiketracker.db', (err) => {
   if (err) throw err;
 });
 
-/*** TICKET TABLE ***/
+/*** HIKE TABLE ***/
 
-// Get Ticket from id
-exports.getTicket = (id) => {
+// Get Hike info 
+exports.getHike = () => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM TICKET WHERE id = ?';
+    const sql = 'SELECT * FROM HIKE ORDER BY id ASC';
+    db.get(sql, [], (err, row) => {
+      if (err)
+        reject(err);
+      else
+        resolve(row);
+    })
+  })
+}
+
+// Get Hike desc 
+exports.getHikeDesc = (id) => {
+  return new Promise((resolve, reject) => {
+    const sql = 'SELECT description FROM HIKE WHERE id=? ';
     db.get(sql, [id], (err, row) => {
       if (err)
         reject(err);
@@ -25,25 +37,12 @@ exports.getTicket = (id) => {
   })
 }
 
-// Get person in queue
-exports.getQueue = (id, service_type, issued_at) => {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT count(*) as numUtenti FROM TICKET WHERE service_type = ? AND issued_at <= ? AND state = 'open' AND id != ?";
-    db.get(sql, [service_type, issued_at, id], (err, row) => {
-      if (err)
-        reject(err);
-      else
-        resolve(row);
-    })
-  })
-}
 
-exports.createServiceType = (name, estimatedTime) => {
+exports.createHiking = (title, length, description, difficulty, estimatedTime, ascent) => {
 
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO SERVICE_TYPE(name, estimated_time) VALUES(?, ?)`;
-    db.run(sql, [name, estimatedTime], function (err) {
+    const sql = `INSERT INTO hike(title, length, description, difficulty, estimatedTime, ascent) VALUES(?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [title, length, description, difficulty, estimatedTime, ascent], function (err) {
       if (err) {
         reject(err);
         return;
@@ -53,7 +52,7 @@ exports.createServiceType = (name, estimatedTime) => {
   });
 }
 
-
+/*
 // get all Services
 exports.getServices = () => {
   return new Promise((resolve, reject) => {
@@ -85,7 +84,7 @@ exports.getSService = (id) => {
 };
 
 
-/* add a new ticket */
+// add a new ticket 
 exports.postTicket = (serviceId) => {
   return new Promise((resolve, reject) => {
     const sql = 'INSERT INTO TICKET(id, service_type, state, issued_at, counter) VALUES(?, ?, ?, ? ,?)'; 
@@ -106,7 +105,7 @@ exports.postTicket = (serviceId) => {
 // get all Tickets // Would be useful(?) 
 exports.getTickets = () => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM TICKET ORDER BY id ASC';
+    const sql = 'SELECT descption FROM Hike ORDER BY id ASC';
     db.all(sql, [], (err, rows) => {
       if (err)
         reject(err);
@@ -177,6 +176,7 @@ exports.deleteServices = () => {
     });
   }
 })
-  }) 
+  })
+   
 };
-
+*/
