@@ -25,12 +25,12 @@ function App() {
     try {
       //const hikeList = await API.getHikes();
       const hikeList = [
-        {id: 1, title: "First Hike", length: "10km", description: "Lorem Ipsum...", difficulty: "Easy", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
-        {id: 2, title: "Second Hike", length: "10km", description: "Lorem Ipsum...", difficulty: "Average", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
-        {id: 3, title: "Third Hike", length: "10km", description: "Lorem Ipsum...", difficulty: "Difficult", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
-        {id: 4, title: "Fourth Hike", length: "10km", description: "Lorem Ipsum...", difficulty: "Average", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
-        {id: 5, title: "Fifth Hike", length: "10km", description: "Lorem Ipsum...", difficulty: "Easy", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
-        {id: 6, title: "Sixth Hike", length: "10km", description: "Lorem Ipsum...", difficulty: "Easy", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
+        {id: 1, title: "First Hike", length: "10km", description: "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam", difficulty: "Easy", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
+        {id: 2, title: "Second Hike", length: "10km", description: "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim venia.", difficulty: "Average", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
+        {id: 3, title: "Third Hike", length: "10km", description: "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam", difficulty: "Difficult", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
+        {id: 4, title: "Fourth Hike", length: "10km", description: "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim venia", difficulty: "Average", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
+        {id: 5, title: "Fifth Hike", length: "10km", description: "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam", difficulty: "Easy", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
+        {id: 6, title: "Sixth Hike", length: "10km", description: "Lorem ipsum dolor sit amet, consectetur adipisci elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam", difficulty: "Easy", ascent: "50%", estimatedTime: "2h", localguideID: "1"},
       ]
       setHikes(hikeList);
       //setErrMessage('');

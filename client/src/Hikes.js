@@ -58,7 +58,15 @@ function Hikes(props) {
                             </Col>
 
                         </Row> 
-                            {props.hikes.map((hike) => <HikeCard key={hike.id} hike={hike}/>)}
+                        <Row>
+
+                        <Col>
+                            {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike}/>)}
+                        </Col>
+                        <Col>
+                            {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike}/>)}
+                        </Col>
+                        </Row>
                     </Container>
                 </Col>
                 <Col>
@@ -70,6 +78,7 @@ function Hikes(props) {
 
 function HikeCard(props) {
     
+    const [open, setOpen] = useState(false);
     const difficulty = props.hike.difficulty
 
     return (
@@ -79,11 +88,11 @@ function HikeCard(props) {
               <Card.Header>
                 <Row>
                     {/* Localguide's username */}
-                    <Col xxl={10} xl={9} lg={9} md={8} sm={6} xs={6}>
+                    <Col xxl={9} xl={8} lg={8} md={6} sm={8} xs={6}>
                         <b>Posted by: </b> {props.hike.localguideID}
                     </Col>
 
-                    <Col align="right">
+                    <Col align = "right">
                         <Badge bg={
                             (difficulty === "Easy" && "success") ||
                             (difficulty === "Average" && "warning") ||
@@ -102,7 +111,25 @@ function HikeCard(props) {
             <Card.Title>{props.hike.title}</Card.Title>
             <Card.Text>
               {props.hike.description}
+              {open && 
+              <>
+              <br></br><br></br>
+              <b>Details:</b>
+              <br></br>
+              <ul className = "mt-2">
+              <li><b>Length:</b> {props.hike.length}</li>
+              <li><b>Ascent:</b> {props.hike.ascent}</li>
+              <li><b>Estimated time:</b> {props.hike.estimatedTime}</li>
+              </ul>
+              </>
+              }
             </Card.Text>
+            <Col align = "right">
+                {!open &&
+                    <Button variant="link" onClick = {() => setOpen(true)}>More info</Button> || 
+                    <Button variant="link" onClick = {() => setOpen(false)}>Close</Button>
+                }
+            </Col>
             </Card.Body>
 
         </Card>
