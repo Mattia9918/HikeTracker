@@ -1,6 +1,5 @@
-const APIURL = 'http://localhost:3001/api/'
 
-//api/validate/:code
+const APIURL = 'http://localhost:3001/api/'
 
 async function addUser(user) {
 
@@ -13,7 +12,13 @@ async function addUser(user) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email: user.email, password: user.password, role:user.role })
+            body: JSON.stringify({ 
+                email: user.email,
+                password: user.password,
+                role:user.role,
+                name: user.name,
+                surname: user.surname
+            })
         });
         if (response.ok) {
             return true;
@@ -31,11 +36,31 @@ async function addUser(user) {
     }
 }
 
-async function validateUser(){
-    
+async function validateUser(code) {
+
+    const url = APIURL + `validate/`+code;
+
+    try {
+
+        const response = await fetch(url);
+        if (response.ok) {
+            return true;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+
+            throw new TypeError(appErrText);
+
+        }
+    } catch (error) {
+        /* Network error */
+
+        throw (error);
+    }
 }
 
 
 
-const API = { addUser };
+
+const API = { addUser,validateUser };
 export default API;

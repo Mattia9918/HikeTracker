@@ -1,64 +1,41 @@
-import {Col,Form,Button,Alert,Row,Container} from 'react-bootstrap';
 import './App.css';
-import { useNavigate, useParams } from 'react-router-dom';
+
+import {Col,Form,Button,Toast,Row,Container} from 'react-bootstrap';
+
 import {useState} from 'react';
 
-function SignIn(props) {
-
+function LoginForm(props) {
 
     const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
     const [password, setPassword] = useState("test");
-    const [name, setName] = useState("Giorgio"); 
-    const [surname, setSurname] = useState("Ferraro");
     const [role, setRole] = useState("");
+    const [error, setError] = useState("");
+    const [show,setShow] = useState(false); 
 
     const signInHandler = (event) => {
         event.preventDefault();
-        if(password=="") 
-          console.log("password vuoto")
+        if(password===""){
+          setError("Password vuota"); 
+          setShow(true); 
+        }
         else{
-          props.addUser(email,password,role,name,surname);
-        setEmail("");
-        setPassword("");
-        setRole(""); }
-        //navigate('/serviceType');
+          props.login(email,password,role);            
+        }
+   
     
     }
 
-  return (
+  return (<>
+    {error!=="" ? <>
+        <Toast className="w-100 mb-3" onClose={() => setShow(false)} show={show} delay={3000} autohide>
+            <Toast.Header closeButton={false}>{error}</Toast.Header>
+        </Toast>
+    </>
+    :false}
 
     <Container className="shadow-sm p-2">
-    {props.status ? <>
-      <Alert variant="success" dismissibile>
-                    <Alert.Heading>Ti abbiamo inviato un email per attivare il tuo account</Alert.Heading>
-            
-            </Alert>
-
-    </>:false}
     <Form onSubmit={signInHandler}>
-    <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-        <Form.Label column sm="3">
-          Nome
-        </Form.Label>
-        <Col sm="8">
-          <Form.Control type="text" placeholder='email@example.com' 
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          />
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-        <Form.Label column sm="3">
-          Cognome
-        </Form.Label>
-        <Col sm="8">
-          <Form.Control type="text" placeholder='email@example.com' 
-          value={surname}
-          onChange={(event) => setSurname(event.target.value)}
-          />
-        </Col>
-      </Form.Group>
-
+    
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="3">
           Email
@@ -96,12 +73,11 @@ function SignIn(props) {
         </Col>
       </Form.Group>
         <Row>
-            <Col> 
-              <Button variant="primary" type="submit">Registrati</Button>
-            </Col>
+            <Col> <Button variant="primary" type="submit">Login</Button>{' '}</Col>
         </Row>
     </Form>
     </Container>
+    </>
   );
 }
 
@@ -109,4 +85,4 @@ function SignIn(props) {
 
 
 
-export default SignIn;
+export default LoginForm;

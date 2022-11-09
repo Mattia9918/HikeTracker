@@ -93,7 +93,7 @@ app.post('/api/register', async (req, res) => {
 		const code = crypto.randomBytes(64).toString('hex');
 
 		const activation = await dao.insertActivation(email, code);
-		const activationUrl = "http://localhost:3000/api/validate/" + code;
+		const activationUrl = "http://localhost:3000/validate/" + code;
 
 		// Send email with activation code
 		const request = mailjet
