@@ -3,7 +3,7 @@
 /* Data Access Object (DAO) module for accessing db */
 
 const sqlite = require('sqlite3');
-
+const { Hike } = require('./hike');
 // open the database
 const db = new sqlite.Database('hiketracker.db', (err) => {
   if (err) throw err;
@@ -19,7 +19,7 @@ exports.getHike = () => {
       if (err)
         reject(err);
       else{
-      const hikes = rows.map(row => new hike(row.id, row.title, row.lenght, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID)); 
+      const hikes = rows.map(row => new Hike(row.id, row.title, row.lenght, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID)); 
       resolve(hikes);
       }
     })

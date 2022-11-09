@@ -11,7 +11,7 @@ describe("test user", () => {
 
         try {
 
-            await dao.deleteHikes();
+            //await dao.deleteHikes();
 
             //add 2 services
             // await dao.createHiking(service1.name, service1.estimatedTime);
@@ -22,7 +22,7 @@ describe("test user", () => {
         }
     })
 
-    testCreateHiking();
+    //testCreateHiking();
     testgetHike();
 });
 
@@ -36,7 +36,7 @@ function testCreateHiking() {
             title: "hike1",
             lenght: "10",
             description: "sometimes maybe good sometimes maybe shit",
-            difficulty: "meeh",
+            difficulty: "hard",
             estimatedTime: "2",
             ascent:"1024", 
             localguideID: "1"
@@ -58,6 +58,17 @@ function testgetHike() {
         let res = await dao.getHike();
         expect(res).toEqual(
             [
+                
+                {
+                    id: 1,
+                    title: "hike1",
+                    lenght: 10,
+                    description: "sometimes maybe good sometimes maybe shit",
+                    difficulty: "meeh",
+                    estimatedTime: "2",
+                    ascent: 1024,
+                    localguideID: 1
+                  }
                 
             ]
         )
