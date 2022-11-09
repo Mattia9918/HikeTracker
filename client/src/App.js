@@ -1,24 +1,33 @@
 import logo from './logo.svg';
 import './App.css';
+import SignIn from './RegPage'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import RedPage from './Redirection'
+
+import API from './API';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
+
+  const addUser = (email,password,role)=>{
+      const user = {email,password,role}
+      //API.addUser()
+  }
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    
+  
+    <BrowserRouter>
+      <Routes>
+
+          <Route path='/' element={ <SignIn addUser={addUser}/>} />
+          <Route path='/redirect/' element={ <RedPage />} />
+          
+        </Routes>
+    </BrowserRouter>
+   
   );
 }
 
