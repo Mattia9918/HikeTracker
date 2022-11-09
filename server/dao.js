@@ -14,15 +14,20 @@ const db = new sqlite.Database('hiketracker.db', (err) => {
 // Get Hike info 
 exports.getHike = () => {
   return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM HIKE ORDER BY id ASC';
-    db.get(sql, [], (err, row) => {
+    const sql = 'SELECT * FROM hike ORDER BY id ASC';
+    db.all(sql, [], (err, rows) => {
       if (err)
         reject(err);
-      else
-        resolve(row);
+      else{
+      const hikes = rows.map(row => new hike(row.id, row.title, row.lenght, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID)); 
+      resolve(hikes);
+      }
     })
   })
 }
+
+
+
 
 // Get Hike desc 
 exports.getHikeDesc = (id) => {
@@ -38,11 +43,12 @@ exports.getHikeDesc = (id) => {
 }
 
 
-exports.createHiking = (title, length, description, difficulty, estimatedTime, ascent) => {
+
+exports.createHiking = (title, lenght, description, difficulty, estimatedTime, ascent, localguideID) => {
 
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO hike(title, length, description, difficulty, estimatedTime, ascent) VALUES(?, ?, ?, ?, ?, ?)`;
-    db.run(sql, [title, length, description, difficulty, estimatedTime, ascent], function (err) {
+    const sql = `INSERT INTO hike(title, lenght, description, difficulty, estimatedTime, ascent, localguideID) VALUES(?, ?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [title, lenght, description, difficulty, estimatedTime, ascent, localguideID], function (err) {
       if (err) {
         reject(err);
         return;
@@ -51,6 +57,34 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
     });
   });
 }
+
+
+
+
+exports.deleteHikes = () => {
+  return new Promise((resolve, reject) => {
+    const sql1 = 'DROP TABLE IF EXISTS hike';
+    const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id integer NOT NULL, title text NOT NULL, lenght integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+    db.run(sql1, [], function (err) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      else {
+        db.run(sql2, [], function(err) {
+          if (err) {
+            console.log(err);
+            reject(err)
+          }
+          else {
+            resolve()
+          }
+    });
+  }
+})
+  })
+   
+};
 
 /*
 // get all Services
@@ -156,27 +190,5 @@ exports.deleteTicket = () => {
     });
   });
 };
-
-exports.deleteServices = () => {
-  return new Promise((resolve, reject) => {
-    const sql1 = 'DROP TABLE SERVICE_TYPE';
-    const sql2 = 'CREATE TABLE SERVICE_TYPE(id integer NOT NULL, name text NOT NULL, estimated_time text, PRIMARY KEY(id) ) '
-    db.run(sql1, [], function (err) {
-      if (err) {
-        reject(err);
-      }
-      else {
-        db.run(sql2, [], function(err) {
-          if (err) {
-            reject(err)
-          }
-          else {
-            resolve()
-          }
-    });
-  }
-})
-  })
-   
-};
 */
+

@@ -57,7 +57,7 @@ app.get("/api/hiking/:id", async (req, res) => {
 //hiking post 
 app.post('/api/hiking', async (req, res) => {
     try {
-      const status = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent);
+      const status = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
       if (status === '422')
         res.status(422).json({ error: `Validation of request body failed` }).end();
       else
@@ -68,6 +68,22 @@ app.post('/api/hiking', async (req, res) => {
     }
   })
 
+  // hiking delete 
+  app.delete('/api/hiking/delete', async (req, res) => {
+    try {
+      const status = await dao.deleteHikes();
+    if (status === '404'){
+      console.log(status);
+      res.status(404).json({ error: `Validation of request body failed` }).end();
+    }
+      else{
+      return res.status(201).end();}
+    } catch (err) {
+      res.status(500).end();
+    }
+  });
+
+  
 
 
 /* -- SERVER ACTIVATION -- */
