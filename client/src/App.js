@@ -1,24 +1,37 @@
-import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import './styles.css';
-import SignIn from './RegPage'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import RedPage from './Redirection'
 import Layout from './Layout'
 import Hikes from './Hikes';
+import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
+import ValidatePage from './ValidateUser'
+import SignIn from './RegPage'
+import LoginForm from './Login'
 import API from './API';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
 
   /* --- STATES --- */                   
   const [hikes, setHikes] = useState([]);          
+  const [status,setStatus] = useState(false);
+ 
+ 
+  const addUser = async (email,password,role, name, surname)=>{
+      
+      const user = {email,password,role, name, surname}
+      
+      const stat = await API.addUser(user); 
 
-  const addUser = (email,password,role)=>{
-      const user = {email,password,role}
-      //API.addUser()
+      if (stat===true) 
+        setStatus(true); 
+  }
+
+  const login = (email,password,role)=>{
+
+      //navigate("/"); 
   }
 
   async function loadHikes() {
@@ -50,14 +63,16 @@ function App() {
 
     <BrowserRouter>
       <Routes>
-
-          <Route path='/' element={ <SignIn addUser={addUser}/>} />
+      
+          <Route path='/' element={ <SignIn addUser={addUser} status={status}/>} />
           <Route path='/redirect/' element={ <RedPage />} />
 
           <Route element = {<Layout />}>
             <Route path='/hikes' element = {<Hikes hikes = {hikes}/>} />
           </Route>
-          
+       
+          <Route path='/validate/:code' element={ <ValidatePage />} />
+          <Route path='/login' element={ <LoginForm login={login}/>}/>
           
         </Routes>
     </BrowserRouter>
