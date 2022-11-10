@@ -37,27 +37,43 @@ app.get("/api/hike/:id", async (req, res) => {
 	}
 });
 
-app.get(`/api/hikeFilter/*`, async (req, res) => {
+app.get(`/api/hike*`, async (req, res) => {
 	try {
-		const filters = ["ascent"];
-		const filterFunctions = [dao.getHikeByAscent];
-		const mapFilter = new Map();
-		mapFilter.set(filters[0], filterFunctions[0]);
-		console.log(mapFilter);
-		const searchParams = new URLSearchParams(req.url);
-		const params = {};
-
-		// the searchParams.entry also have as a value the url
-		for (const [key, value] of searchParams.entries()) {
-			if (filters.includes(key)) {
-				params.filter = key;
-				params.value = value;
+		let hikes;
+		console.log(req.query); // req.query.filter
+		const filter = req.query.filter;
+		console.log(filter);
+		switch (filter) {
+			case "ascent":
+				hikes = await dao.getHikeByAscent(req.query.max);
 				break;
-			}
+			case "expectedTime":
+				hikes = await dao.getHikeByExpectedTime(req.query.min, req.query.max);
+				break;
+			case "length":
+				hikes = await dao.getHikeByLength(req.query.min, req.query.max);
+				break;
+			case "difficulty":
+				hikes = await dao.getHikeByDiffculty(req.query.difficulty);
+				break;
+			case "city":
+				hikes = await dao.getHikeByCity(req.query.city);
+				break;
+			case "province":
+				hikes = await dao.getHikeByProvince(req.query.province);
+				break;
+			case "distance":
+				hikes = await dao.getHikeByDistanceRange(
+					req.query.longitude,
+					req.query.latitude,
+					req.query.maxDist
+				);
+				break;
+			default:
+				console.log("wrong filter error");
+				res.status(422).json({ error: `Validation of request body failed` }).end();
+				break;
 		}
-		const func = mapFilter.get(params.filter);
-		console.log(func);
-		const hikes = await func(params.value);
 		return res.status(200).json(hikes);
 	} catch (err) {
 		console.log(err);
