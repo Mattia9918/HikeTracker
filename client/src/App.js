@@ -16,9 +16,9 @@ function App() {
   const [status,setStatus] = useState(false);
  
  
-  const addUser = async (email,password,role)=>{
+  const addUser = async (email,password,role, name, surname)=>{
       
-      const user = {email,password,role}
+      const user = {email,password,role, name, surname}
       
       const stat = await API.addUser(user); 
 

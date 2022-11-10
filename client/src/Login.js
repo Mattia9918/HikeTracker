@@ -6,8 +6,8 @@ import {useState} from 'react';
 
 function LoginForm(props) {
 
-    const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
-    const [password, setPassword] = useState("test");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("prova");
     const [role, setRole] = useState("");
     const [error, setError] = useState("");
     const [show,setShow] = useState(false); 

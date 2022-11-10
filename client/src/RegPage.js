@@ -6,15 +6,15 @@ import {useState} from 'react';
 function SignIn(props) {
 
 
-    const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
-    const [password, setPassword] = useState("test");
-    const [name, setName] = useState("Giorgio"); 
-    const [surname, setSurname] = useState("Ferraro");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("prova");
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
     const [role, setRole] = useState("");
 
     const signInHandler = (event) => {
         event.preventDefault();
-        if(password=="") 
+        if(password==="")
           console.log("password vuoto")
         else{
           props.addUser(email,password,role,name,surname);

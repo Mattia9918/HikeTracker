@@ -4,6 +4,7 @@ const e = require("express");
 /* Data Access Object (DAO) module for accessing db */
 
 const sqlite = require("sqlite3");
+const bcrypt = require("bcrypt");
 // const { ServiceType } = require('./Classes/ServiceType');
 
 // open the database
@@ -13,11 +14,11 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 
 /** USER **/
 
-exports.insertUser = (email, hash, salt, role) => {
+exports.insertUser = (email, hash, salt, role, name, surname) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"INSERT INTO user(email, hash, role, isActive, salt) VALUES(?, ?, ?, 0, ?)";
-		db.run(sql, [email, hash, role, salt], function(err) {
+			"INSERT INTO user(email, hash, role, isActive, salt, name, surname) VALUES(?, ?, ?, 0, ?, ?, ?)";
+		db.run(sql, [email, hash, role, salt, name, surname], function(err) {
 			if (err) {
 				reject(err);
 				return;
@@ -62,6 +63,9 @@ exports.getUserById = (id) => {
 			if(err) {
 				reject(err);
 			}
+			else if (row === undefined) {
+				resolve({error: 'User not found.'});
+			}
 			else {
 				resolve(row);
 			}
@@ -78,6 +82,31 @@ exports.getUserByEmail = (email) => {
 			}
 			else {
 				resolve(row);
+			}
+		})
+	})
+}
+
+exports.getUserByCredentials = (email, password) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT * FROM user WHERE email = ?"
+		db.get(sql, [email], function(err, row) {
+			if(err) {
+				reject(err);
+			}
+			else if (row === undefined) {
+				console.log("User not found")
+				resolve(false); // user not found
+			}
+			else {
+				bcrypt.compare(password, row.hash).then(result => {
+					if (result) // password matches
+						resolve(row);
+					else
+					{   console.log("Password not matching")
+						resolve(false); // password not matching
+					}
+				})
 			}
 		})
 	})
