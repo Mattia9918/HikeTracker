@@ -24,10 +24,18 @@ const mailjet = Mailjet.apiConnect(
 const app = new express();
 const port = 3001;
 
+/* CORS options allowing cookies exchange */
+const corsOptions = {
+	origin: 'http://localhost:3000',
+	credentials: true,
+};
+
 /* Middlewares */
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors(corsOptions));
+
+
 
 /* -- API -- */
 
