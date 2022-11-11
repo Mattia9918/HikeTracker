@@ -94,7 +94,7 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const isLocalGuide = (req, res, next) => {
-	if (req.user.role === "Local Guide")
+	if (req.user.role === "local guide")
 		return next();
 
 	return res.status(401).json({ error: 'not authorized!' });
@@ -232,12 +232,13 @@ app.post('/api/register', async (req, res) => {
 	const role = req.body.role;
 	const name = req.body.name;
 	const surname = req.body.surname;
+	const username = req.body.username;
 	try{
 		// Generate hash password
 		const salt = await bcrypt.genSalt(10);
 		const password = await bcrypt.hash(req.body.password, salt);
 
-		await dao.insertUser(email, password, salt, role, name, surname);
+		await dao.insertUser(email, password, salt, role, name, surname, username);
 
 		// Generate activation code
 		const code = crypto.randomBytes(64).toString('hex');
@@ -253,7 +254,7 @@ app.post('/api/register', async (req, res) => {
 					{
 						"From": {
 							"Email": "team7sw2@gmail.com",
-							"Name": "Team 7"
+							"Name": "HikeTracker"
 						},
 						"To": [
 							{

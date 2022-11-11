@@ -18,7 +18,8 @@ async function addUser(user) {
                 password: user.password,
                 role:user.role,
                 name: user.name,
-                surname: user.surname
+                surname: user.surname,
+                username: user.username
             })
         });
         if (response.ok) {
