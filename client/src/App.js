@@ -10,14 +10,36 @@ import SignIn from './RegPage'
 import LoginForm from './Login'
 import API from './API';
 
-
-function App() {
+function App(){
+  return (
+    <BrowserRouter>
+      <App2/>
+    </BrowserRouter>
+  );
+}
+function App2() {
 
   /* --- STATES --- */                   
   const [hikes, setHikes] = useState([]);          
   const [status,setStatus] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false); 
+  const [user, setUser] = useState({});
+  
+  const navigate = useNavigate(); 
  
- 
+  //check Utente loggato: 
+   useEffect(()=> {
+    const checkAuth = async() => {
+      try {
+        const utente = await API.getUserInfo();
+        setLoggedIn(true);
+        setUser(utente);
+
+      } catch(err) {}
+    };
+    checkAuth();
+  }, []);
+  
   const addUser = async (email,password,role, name, surname)=>{
       
       const user = {email,password,role, name, surname}
@@ -28,10 +50,25 @@ function App() {
         setStatus(true); 
   }
 
-  const login = (email,password,role)=>{
-
-      //navigate("/"); 
+  const login = async (credentials) => {
+  
+    try {
+      const user = await API.logIn(credentials);
+      setUser(user);
+      setLoggedIn(true);
+      navigate(`/user/${user.id}`);
+    }
+    catch (err) {
+        console.log(err); 
+    }
   }
+  
+  const logout = async () => {
+      await API.logOut()
+      setUser({});
+      setLoggedIn(false);
+      navigate("/"); 
+    }
 
   async function loadHikes() {
     try {
@@ -61,8 +98,6 @@ function App() {
 
  
   return (
-
-    <BrowserRouter>
       <Routes>
       
           <Route element = {<Layout />}>
@@ -73,8 +108,7 @@ function App() {
           <Route path='/validate/:code' element={ <ValidatePage />} />
           <Route path='/login' element={ <LoginForm login={login}/>}/>
           
-        </Routes>
-    </BrowserRouter>
+      </Routes>
    
   );
 }
