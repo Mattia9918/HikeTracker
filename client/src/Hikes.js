@@ -27,17 +27,19 @@ function Hikes(props) {
                                     <option value="city">City</option>
                                 </Form.Select>
                             </Col>
-                            {(filter == "length" || filter == "difficulty" || filter == "expectedTime") && 
+                            {(filter == "length" || filter == "difficulty" || filter == "expectedTime" || filter == "ascent") && 
                                 <Col className="mt-2 ms-1" xs = {3}>
                                     <Form.Select aria-label="select filter" onChange = {(event) => setValue(event.target.value)}>
-                                        <option value={filter == "length" && "10" || filter == "difficulty" && "easy" || filter == "expectedTime" && "1"}>
-                                            {filter == "length" && "0 - 10 km" || filter == "difficulty" && "Easy" || filter == "expectedTime" && "less than 1 hour"}
+                                        <option value={filter == "length" && "10" || filter == "difficulty" && "easy" || filter == "expectedTime" && "1" || filter == "ascent" && "300"}>
+                                            {filter == "length" && "between 0 and 10 km" || filter == "difficulty" && "Easy" || filter == "expectedTime" && "less than 1 hour" || filter == "ascent" && "less than 300 m"}
                                         </option>
-                                        <option value={filter == "length" && "20" || filter == "difficulty" && "average" || filter == "expectedTime" && "2"}>
-                                            {filter == "length" && "10 - 20 km" || filter == "difficulty" && "Average" || filter == "expectedTime" && "between 1 and 2 hours"}</option>
-                                        <option value={filter == "length" && "30" || filter == "difficulty" && "difficult" || filter == "expectedTime" && "3"}>
-                                            {filter == "length" && "20 - 30 km" || filter == "difficulty" && "Difficult" || filter == "expectedTime" && "between 2 and 3 hours"}</option>
-                                        {filter == "expectedTime" && <option value = "3+">more than 3 hours</option>}
+                                        <option value={filter == "length" && "20" || filter == "difficulty" && "average" || filter == "expectedTime" && "2" || filter == "ascent" && "600"}>
+                                            {filter == "length" && "between 10 and 20 km" || filter == "difficulty" && "Average" || filter == "expectedTime" && "between 1 and 2 hours" || filter == "ascent" && "between 300 and 600 m"}
+                                        </option>
+                                        <option value={filter == "length" && "20+" || filter == "difficulty" && "difficult" || filter == "expectedTime" && "3" || filter == "ascent" && "1000"}>
+                                            {filter == "length" && "more than 20 km" || filter == "difficulty" && "Difficult" || filter == "expectedTime" && "between 2 and 3 hours" || filter == "ascent" && "between 600 and 1000 m"}
+                                        </option>
+                                        {filter == "expectedTime" && <option value = "3+">more than 3 hours</option> || filter == "ascent" && <option value = "1000+">more than 1000 m</option>}
                                     </Form.Select>
                                 </Col>
                             }
@@ -103,6 +105,12 @@ function HikeCard(props) {
 
                 </Row>
             </Card.Header>
+
+            <Card.Img className = "mt-2" variant="top" src={
+                (difficulty === "Easy" && "http://localhost:3000/easyhike.jpg") ||
+                (difficulty === "Average" && "http://localhost:3000/averagehike.jpg") ||
+                (difficulty === "Difficult" && "http://localhost:3000/difficulthike.jpg")
+             } />
 
 
             {/* -- CARD BODY -- */}

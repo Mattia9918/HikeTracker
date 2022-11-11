@@ -7,7 +7,7 @@ function Hike(id, title, length, description, difficulty, ascent, estimatedTime,
     this.difficulty = difficulty;
     this.ascent = ascent;
     this.estimatedTime = estimatedTime;
-    this.localguideId = localguideID;
+    this.localguideUsername = localguideUsername;
 }
 
 exports.Hike = Hike;

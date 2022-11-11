@@ -44,33 +44,12 @@ function Navigation(props) {
                    <Container>
                     <Navbar.Collapse id="basic-navbar-nav" >
                         <Nav className="ms-auto">
-                            {params.service == 'serviceType' ||
-                            <Container>
-                                <Form onSubmit={loginHandler}>
-                                    <Row>
-                                    <Col align = "center">
-                                    <Form.Group className="mb-3" controlId="username">
-                                        <Form.Control  size = "sm" type="text" placeholder="Username" required = {true}
-                                        value={username}
-                                        onChange={(event) => setUsername(event.target.value)}/>
-                                    </Form.Group>
-                                    </Col>
-                                    <Col align = "center">
-                                    <Form.Group  className="mb-3" controlId="password">
-                                        <Form.Control  size = "sm" type="password" placeholder="Password" required = {true}
-                                        value={password}
-                                        onChange={(event) => setPassword(event.target.value)}/>
-                                    </Form.Group>
-                                    </Col>
-                                    <Col xs = {2} align = "center">
-                                    <Button  variant="primary" size="sm" type="submit">
-                                            Login
-                                    </Button>
-                                    </Col>
-                                    </Row>
-                                </Form>
-                        </Container>
-                        }
+                        <Nav.Item>
+                            <Nav.Link onClick = {() => navigate('/login')}>Login</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link onClick = {() => navigate('/register')}>Register</Nav.Link>
+                        </Nav.Item>
                         </Nav>
                     </Navbar.Collapse>
                     </Container> 
