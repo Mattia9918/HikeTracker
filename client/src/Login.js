@@ -1,13 +1,13 @@
 import './App.css';
 
 import {Col,Form,Button,Toast,Row,Container} from 'react-bootstrap';
-
+import { BsFillEnvelopeFill,BsLockFill,BsPersonCircle,BsBoxArrowInRight } from "react-icons/bs";
 import {useState} from 'react';
 
 function LoginForm(props) {
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("prova");
+    const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
+    const [password, setPassword] = useState("test");
     const [role, setRole] = useState("");
     const [error, setError] = useState("");
     const [show,setShow] = useState(false); 
@@ -19,7 +19,9 @@ function LoginForm(props) {
           setShow(true); 
         }
         else{
-          props.login(email,password,role);            
+          const username = email; 
+          const credentials = {username,password}
+          props.login(credentials);            
         }
    
     
@@ -33,12 +35,13 @@ function LoginForm(props) {
     </>
     :false}
 
-    <Container className="shadow-sm p-2">
+    <Container className="shadow-sm p-2 mt-5">
+      <center className="mb-3 fs-2"><BsPersonCircle/>{' '}</center>
     <Form onSubmit={signInHandler}>
     
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="3">
-          Email
+          <BsFillEnvelopeFill /> Email
         </Form.Label>
         <Col sm="8">
           <Form.Control type="email" placeholder='email@example.com' 
@@ -50,7 +53,7 @@ function LoginForm(props) {
 
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
         <Form.Label column sm="3">
-          Password
+          <BsLockFill /> Password
         </Form.Label>
         <Col sm="8">
           <Form.Control type="password" placeholder="Password"
@@ -72,9 +75,12 @@ function LoginForm(props) {
         </Form.Select>
         </Col>
       </Form.Group>
-        <Row>
-            <Col> <Button variant="primary" type="submit">Login</Button>{' '}</Col>
-        </Row>
+      <center>
+        <Button variant="success" size="lg" type="submit">
+          <BsBoxArrowInRight/>  Login
+        </Button>
+      </center>
+        
     </Form>
     </Container>
     </>
