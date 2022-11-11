@@ -193,7 +193,6 @@ exports.getHikeByDiffculty = (diff) => {
 
 exports.getHikeByLength = (minLen, maxLen) => {
 	return new Promise((resolve, reject) => {
-		console.log(minLen);
 		const sql =
 			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND H.length >= ? AND H.length <= ?";
 		db.all(sql, [minLen, maxLen], (err, rows) => {
@@ -287,7 +286,6 @@ const rowJsonMapping = (rows) => {
 	let interestingPoints = [];
 	const hikes = [];
 	for (let r in rows) {
-		console.log(rows[r]);
 		if (rows[r].hikeID !== id) {
 			if (!firstRow) {
 				hikes.push({

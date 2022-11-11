@@ -186,9 +186,7 @@ app.get("/api/hike/:id", async (req, res) => {
 app.get(`/api/hike*`, async (req, res) => {
 	try {
 		let hikes;
-		console.log(req.query); // req.query.filter
 		const filter = req.query.filter;
-		console.log(filter);
 		switch (filter) {
 			case "ascent":
 				hikes = await dao.getHikeByAscent(req.query.max);
@@ -272,7 +270,6 @@ app.post('/api/register', async (req, res) => {
 			})
 		request
 			.then((result) => {
-				console.log(result.body)
 			})
 			.catch((err) => {
 				console.log(err.statusCode)
