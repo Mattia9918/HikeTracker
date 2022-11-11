@@ -128,8 +128,46 @@ async function getFilter(filter, value) {
          throw (err);
      }
  };
+// /api/sessions
+async function logIn(credentials) { 
+    let response = await fetch(new URL("sessions",APIURL), {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+      if(response.ok) {
+          const user = await response.json();
+          return user;
+      }
+      else {
+          const errDetail = await response.json();
+          throw errDetail.message;
+      }
+    }
+  
+// /api/sessions/current
+async function logOut() {
+    await fetch(new URL('sessions/current',APIURL), 
+              { method: 'DELETE',credentials:'include' });
+}
+
+async function getUserInfo() {
+    const response = await fetch(new URL('sessions/current', APIURL),
+            {credentials: 'include'});
+    const userInfo = await response.json();
+    
+    if (response.ok) {
+      return userInfo;
+    } else {
+      throw userInfo; 
+    }
+  }
 
 
 
-const API = { addUser, getHikes, validateUser, getFilter};
+
+const API = { addUser, getHikes, validateUser, getFilter, logIn,logOut,getUserInfo };
 export default API;
