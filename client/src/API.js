@@ -68,7 +68,7 @@ async function getHikes() {
         });
         if (response.ok) {
             const list = await response.json();
-            const hikeList = list.map((hike) =>
+            const hikeList = list.map((hike) => 
                 new Hike(
                     hike.id,
                     hike.title,
@@ -77,7 +77,7 @@ async function getHikes() {
                     hike.difficulty,
                     hike.ascent,
                     hike.estimatedTime,
-                    hike.localguideID
+                    hike.localguideUsername
                 ));
             return hikeList;
         } else {
@@ -91,7 +91,44 @@ async function getHikes() {
     }
 };
 
+async function getFilter(filter, value) {
+    var couple;
+    if (value != undefined) {
+        couple = value.split(',')
+    } else {
+        couple = [undefined, undefined]
+    }
+    const url = APIURL + `hikes?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const list = await response.json();
+             const filteredHikeList = list.map((hike) => 
+                 new Hike(
+                     hike.id,
+                     hike.title,
+                     hike.length,
+                     hike.description,
+                     hike.difficulty,
+                     hike.ascent,
+                     hike.estimatedTime,
+                     hike.localguideUsername
+                 ));
+             return filteredHikeList;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         throw (err);
+     }
+ };
 
 
-const API = { addUser, getHikes, validateUser};
+
+const API = { addUser, getHikes, validateUser, getFilter};
 export default API;

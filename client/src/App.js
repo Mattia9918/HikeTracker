@@ -43,6 +43,16 @@ function App() {
     }
   };
 
+  async function loadFilter(filter, value) {
+    try {
+      const filteredHikeList = await API.getFilter(filter, value);
+      setHikes(filteredHikeList);
+      //setErrMessage('');
+    } catch (err) {
+      //setErrMessage(String(err));
+    }
+  };
+
   useEffect(() => {
     loadHikes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,7 +66,7 @@ function App() {
       <Routes>
       
           <Route element = {<Layout />}>
-            <Route path='/' element = {<Hikes hikes = {hikes}/>} />
+            <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter}/>} />
           </Route>
 
           <Route path='/register' element={ <SignIn addUser={addUser} status={status}/>} /> 

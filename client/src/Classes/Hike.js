@@ -1,4 +1,4 @@
-function Hike(id, title, length, description, difficulty, ascent, estimatedTime, localguideID)
+function Hike(id, title, length, description, difficulty, ascent, estimatedTime, localguideUsername)
 {
     this.id = id;
     this.title = title;
