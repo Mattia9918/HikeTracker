@@ -78,7 +78,11 @@ async function getHikes() {
                     hike.difficulty,
                     hike.ascent,
                     hike.estimatedTime,
-                    hike.localguideUsername
+                    hike.localguideUsername,
+                    hike.startingPoint.city,
+                    hike.startingPoint.province,
+                    hike.endingPoint.city,
+                    hike.endingPoint.province
                 ));
             return hikeList;
         } else {
@@ -99,13 +103,14 @@ async function getFilter(filter, value) {
     } else {
         couple = [undefined, undefined]
     }
-    const url = APIURL + `hikes?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}`;
+    const url = APIURL + `hike?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}`;
      try {
          const response = await fetch(url, {
              credentials: 'include',
          });
          if (response.ok) {
              const list = await response.json();
+             console.log(list)
              const filteredHikeList = list.map((hike) => 
                  new Hike(
                      hike.id,
@@ -115,7 +120,11 @@ async function getFilter(filter, value) {
                      hike.difficulty,
                      hike.ascent,
                      hike.estimatedTime,
-                     hike.localguideUsername
+                     hike.localguideUsername,
+                     hike.startingPoint.city,
+                     hike.startingPoint.province,
+                     hike.endingPoint.city,
+                     hike.endingPoint.province
                  ));
              return filteredHikeList;
          } else {

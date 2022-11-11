@@ -188,23 +188,26 @@ app.get(`/api/hike*`, async (req, res) => {
 		let hikes;
 		const filter = req.query.filter;
 		switch (filter) {
+			case "none":
+				hikes = await dao.getHikes();
+				break;
 			case "ascent":
-				hikes = await dao.getHikeByAscent(req.query.max);
+				hikes = await dao.getHikeByAscent(req.query.value1, req.query.value2);
 				break;
 			case "expectedTime":
-				hikes = await dao.getHikeByExpectedTime(req.query.min, req.query.max);
+				hikes = await dao.getHikeByExpectedTime(req.query.value1, req.query.value2);
 				break;
 			case "length":
-				hikes = await dao.getHikeByLength(req.query.min, req.query.max);
+				hikes = await dao.getHikeByLength(req.query.value1, req.query.value2);
 				break;
 			case "difficulty":
-				hikes = await dao.getHikeByDiffculty(req.query.difficulty);
+				hikes = await dao.getHikeByDiffculty(req.query.value1);
 				break;
 			case "city":
-				hikes = await dao.getHikeByCity(req.query.city);
+				hikes = await dao.getHikeByCity(req.query.value1);
 				break;
 			case "province":
-				hikes = await dao.getHikeByProvince(req.query.province);
+				hikes = await dao.getHikeByProvince(req.query.value1);
 				break;
 			case "distance":
 				hikes = await dao.getHikeByDistanceRange(

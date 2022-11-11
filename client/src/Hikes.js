@@ -42,16 +42,16 @@ function Hikes(props) {
                                 {(filter == "length" || filter == "difficulty" || filter == "expectedTime" || filter == "ascent") &&
                                     <Col className="mt-2 ms-1" xs={3}>
                                         <Form.Select aria-label="select filter" onChange={(event) => setValue(event.target.value)}>
-                                            <option value={filter == "length" && "0,10" || filter == "difficulty" && "easy" || filter == "expectedTime" && "0,1" || filter == "ascent" && "0,300"}>
+                                            <option value={filter == "length" && "0,10" || filter == "difficulty" && "Easy" || filter == "expectedTime" && "0,1" || filter == "ascent" && "0,300"}>
                                                 {filter == "length" && "between 0 and 10 km" || filter == "difficulty" && "Easy" || filter == "expectedTime" && "less than 1 hour" || filter == "ascent" && "less than 300 m"}
                                             </option>
-                                            <option value={filter == "length" && "10,20" || filter == "difficulty" && "average" || filter == "expectedTime" && "1,2" || filter == "ascent" && "300,600"}>
+                                            <option value={filter == "length" && "11,20" || filter == "difficulty" && "Average" || filter == "expectedTime" && "1,2" || filter == "ascent" && "301,600"}>
                                                 {filter == "length" && "between 10 and 20 km" || filter == "difficulty" && "Average" || filter == "expectedTime" && "between 1 and 2 hours" || filter == "ascent" && "between 300 and 600 m"}
                                             </option>
-                                            <option value={filter == "length" && "20,1000" || filter == "difficulty" && "difficult" || filter == "expectedTime" && "2,3" || filter == "ascent" && "600,1000"}>
+                                            <option value={filter == "length" && "21,1000" || filter == "difficulty" && "Difficult" || filter == "expectedTime" && "2,3" || filter == "ascent" && "601,1000"}>
                                                 {filter == "length" && "more than 20 km" || filter == "difficulty" && "Difficult" || filter == "expectedTime" && "between 2 and 3 hours" || filter == "ascent" && "between 600 and 1000 m"}
                                             </option>
-                                            {filter == "expectedTime" && <option value="3,1000">more than 3 hours</option> || filter == "ascent" && <option value="1000,100000">more than 1000 m</option>}
+                                            {filter == "expectedTime" && <option value="3,1000">more than 3 hours</option> || filter == "ascent" && <option value="1001,100000">more than 1000 m</option>}
                                         </Form.Select>
                                     </Col>
                                 }
@@ -139,9 +139,11 @@ function HikeCard(props) {
                                 <b>Details:</b>
                                 <br></br>
                                 <ul className="mt-2">
-                                    <li><b>Length:</b> {props.hike.length}</li>
-                                    <li><b>Ascent:</b> {props.hike.ascent}</li>
-                                    <li><b>Estimated time:</b> {props.hike.estimatedTime}</li>
+                                    <li><b>Starting point:</b> {props.hike.startingCity}, {props.hike.startingProvince}</li>
+                                    <li><b>Ending point:</b> {props.hike.endingCity}, {props.hike.endingProvince}</li>
+                                    <li><b>Length:</b> {props.hike.length} km</li>
+                                    <li><b>Ascent:</b> {props.hike.ascent} m</li>
+                                    <li><b>Estimated time:</b> {props.hike.estimatedTime} h</li>
                                 </ul>
                             </>
                         }
