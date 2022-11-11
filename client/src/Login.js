@@ -63,18 +63,7 @@ function LoginForm(props) {
         </Col>
       </Form.Group>
 
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-      <Col sm="11">
-        <Form.Select  aria-label="Default select example" 
-            onChange={(event) => setRole(event.target.value)}
-        >
-            <option>Seleziona il ruolo</option>
-            <option value={"admin"}  >Admin</option>
-            <option value={"localGuide"}  >Local Guide</option>
-            <option value={"user"} >User</option>
-        </Form.Select>
-        </Col>
-      </Form.Group>
+      
       <center>
         <Button variant="success" size="lg" type="submit">
           <BsBoxArrowInRight/>  Login
