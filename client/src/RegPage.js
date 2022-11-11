@@ -30,7 +30,7 @@ function SignIn(props) {
 
   return (
 
-    <Container className="shadow-sm p-2">
+    <Container className="shadow-sm p-2 mt-5">
     {props.status ? <>
       <Alert variant="success" dismissibile>
                     <Alert.Heading>Ti abbiamo inviato un email per attivare il tuo account</Alert.Heading>
@@ -98,11 +98,9 @@ function SignIn(props) {
         </Form.Select>
         </Col>
       </Form.Group>
-        <Row>
-            <Col> 
-              <Button variant="primary" type="submit">Registrati</Button>
-            </Col>
-        </Row>
+        
+      <center><Button variant="primary"  size="lg" type="submit">Registrati</Button></center>
+            
     </Form>
     </Container>
   );
