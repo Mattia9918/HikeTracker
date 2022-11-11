@@ -19,7 +19,7 @@ function Hikes(props) {
             <Row>
                 <Col >
                 </Col>
-                <Col xs={8}>
+                <Col sm={8} xs={12}>
                     <Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
                         <Form onSubmit={submitHandler}>
                             <Row>
@@ -94,7 +94,7 @@ function Hikes(props) {
 
 function HikeCard(props) {
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(0);
     const difficulty = props.hike.difficulty
 
     return (
@@ -133,25 +133,43 @@ function HikeCard(props) {
                     <Card.Title>{props.hike.title}</Card.Title>
                     <Card.Text>
                         {props.hike.description}
-                        {open &&
+                        {open !== 0 &&
                             <>
                                 <br></br><br></br>
                                 <b>Details:</b>
                                 <br></br>
                                 <ul className="mt-2">
-                                    <li><b>Starting point:</b> {props.hike.startingCity}, {props.hike.startingProvince}</li>
-                                    <li><b>Ending point:</b> {props.hike.endingCity}, {props.hike.endingProvince}</li>
+                                    <li><b>Starting point:</b> <i>(lat: {props.hike.startingPoint.latitude}, lon: {props.hike.startingPoint.longitude})</i> - {props.hike.startingPoint.city}, {props.hike.startingPoint.province}</li>
+                                    <li><b>Ending point:</b> <i>(lat: {props.hike.startingPoint.latitude}, lon: {props.hike.startingPoint.longitude})</i> - {props.hike.endingPoint.city}, {props.hike.endingPoint.province}</li>
                                     <li><b>Length:</b> {props.hike.length} km</li>
                                     <li><b>Ascent:</b> {props.hike.ascent} m</li>
                                     <li><b>Estimated time:</b> {props.hike.estimatedTime} h</li>
+                                    <li className="mt-4"><b>Intermediate points of interest:</b></li> 
+                                    {
+                                     open === 1 && <Button variant="link" onClick={() => setOpen(2)}>Show</Button> ||
+                                     open === 2 &&
+                                     <> 
+                                        {props.hike.pointsOfInterest.map((poi) => 
+                                            <ul>
+                                                <li>
+                                                    {poi.type === "hut" &&
+                                                        <img src = "http://localhost:3000/huticon.svg" alt = "huticon"/> ||
+                                                        <img src = "http://localhost:3000/parkingicon.svg" alt = "parkingicon" />
+                                                    }
+                                                    <i>&nbsp; - (lat: {poi.latitude}, lon: {poi.longitude})</i> - {poi.city}, {poi.province}
+                                                </li>
+                                            </ul>)}
+                                        <Button variant="link" onClick={() => setOpen(1)}>Hide</Button>
+                                     </>
+                                    }   
                                 </ul>
                             </>
                         }
                     </Card.Text>
                     <Col align="right">
-                        {!open &&
-                            <Button variant="link" onClick={() => setOpen(true)}>More info</Button> ||
-                            <Button variant="link" onClick={() => setOpen(false)}>Close</Button>
+                        {open === 0 &&
+                            <Button variant="link" onClick={() => setOpen(1)}>More info</Button> ||
+                            <Button variant="link" onClick={() => setOpen(0)}>Close</Button>
                         }
                     </Col>
                 </Card.Body>

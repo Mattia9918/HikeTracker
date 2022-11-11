@@ -79,10 +79,9 @@ async function getHikes() {
                     hike.ascent,
                     hike.estimatedTime,
                     hike.localguideUsername,
-                    hike.startingPoint.city,
-                    hike.startingPoint.province,
-                    hike.endingPoint.city,
-                    hike.endingPoint.province
+                    hike.startingPoint,
+                    hike.pointsOfInterest,
+                    hike.endingPoint
                 ));
             return hikeList;
         } else {
@@ -121,10 +120,9 @@ async function getFilter(filter, value) {
                      hike.ascent,
                      hike.estimatedTime,
                      hike.localguideUsername,
-                     hike.startingPoint.city,
-                     hike.startingPoint.province,
-                     hike.endingPoint.city,
-                     hike.endingPoint.province
+                     hike.startingPoint,
+                     hike.pointsOfInterest,
+                     hike.endingPoint
                  ));
              return filteredHikeList;
          } else {

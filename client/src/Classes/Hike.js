@@ -1,4 +1,4 @@
-function Hike(id, title, length, description, difficulty, ascent, estimatedTime, localguideUsername, startingCity, startingProvince, endingCity, endingProvince)
+function Hike(id, title, length, description, difficulty, ascent, estimatedTime, localguideUsername, startingPoint, pointsOfInterest, endingPoint)
 {
     this.id = id;
     this.title = title;
@@ -8,10 +8,9 @@ function Hike(id, title, length, description, difficulty, ascent, estimatedTime,
     this.ascent = ascent;
     this.estimatedTime = estimatedTime;
     this.localguideUsername = localguideUsername;
-    this.startingCity = startingCity;
-    this.startingProvince = startingProvince;
-    this.endingCity = endingCity;
-    this.endingProvince = endingProvince;
+    this.startingPoint = startingPoint;
+    this.pointsOfInterest = pointsOfInterest;
+    this.endingPoint = endingPoint;
 
 }
 
