@@ -12,6 +12,67 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
 
+exports.deleteUser = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM user";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		}); 
+		const sql2 =
+			"UPDATE sqlite_sequence SET seq=0 WHERE name=user";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		}); 
+		
+	})
+}; 
+exports.deleteTableActivation = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM activation";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		}); 
+		const sql2 =
+			"UPDATE sqlite_sequence SET seq=0 WHERE name=activation";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		}); 
+		
+	})
+}; 
+exports.getActivationByEmail = (email) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT * FROM activation WHERE email = ?"
+		db.get(sql, [email], function(err, row) {
+			if(err) {
+				reject(err);
+			}
+			else {
+				resolve(row);
+			}
+		})
+	})
+}
+
+
 /** USER **/
 
 exports.insertUser = (email, hash, salt, role, name, surname, username) => {
