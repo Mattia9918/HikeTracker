@@ -153,6 +153,39 @@ app.get('/api/user', isLoggedIn, (req, res) => {
 
  */
 
+app.get('/api/getActivationByEmail', async (req, res) => {
+	try{
+		const row = await dao.getActivationByEmail(req.body.email);
+
+		return res.status(200).json(row.code);
+	} catch(err){
+		return res.status(500).json({ error: err });
+	}
+})
+//Delete all from user table
+app.delete('/api/deleteUser',async(req,res)=>{
+	
+	try{
+		await dao.deleteUser(); 
+		res.status(200).end(); 	
+
+	}catch(err){
+		res.status(500).end(); 
+	}
+}); 
+////Delete all row from activation table
+app.delete('/api/deleteTableActivation',async(req,res)=>{
+	
+	try{
+		await dao.deleteTableActivation(); 
+	
+		res.status(200).end(); 	
+
+	}catch(err){
+		res.status(500).end(); 
+	}
+}); 
+
 app.get("/api/user", isLoggedIn, isLocalGuide, async (req, res) => {
 	try {
 		const user = await dao.getUserById(1);
