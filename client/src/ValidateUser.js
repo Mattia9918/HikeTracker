@@ -3,6 +3,7 @@ import {  useNavigate,useParams } from 'react-router-dom';
 import {useState,useEffect} from 'react';
 import {Container,Alert,Button} from 'react-bootstrap';
 
+import { BsCheckCircle,BsExclamationDiamondFill } from "react-icons/bs";
 import API from './API';
 
 
@@ -41,10 +42,10 @@ function ValidatePage() {
     
 
     return (
-        <Container className="shadow-sm p-2">
+        <Container className="shadow-sm p-2 mt-5">
         {success ? <>
             <Alert variant="success">
-                    <Alert.Heading>Utente create con successo</Alert.Heading>
+                    <Alert.Heading><BsCheckCircle variant="success"/>{" "}Utente creato con successo</Alert.Heading>
                     <p>
                         Premi il buttone qui sotto, per andare nella pagina di login
                     </p>
@@ -55,7 +56,7 @@ function ValidatePage() {
         
         :   <>
             <Alert variant="danger" onClose={() => setShow(false)} dismissible>
-                    <Alert.Heading>Mi dispiace, qualcosa è andato storto</Alert.Heading>
+                    <Alert.Heading><BsExclamationDiamondFill variant="danger"/>{" "}Mi dispiace, qualcosa è andato storto</Alert.Heading>
                     <p>
                         Premi il buttone qui sotto, per andare nella pagina di registrazione
                     </p>
