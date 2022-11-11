@@ -6,23 +6,24 @@ import {useState} from 'react';
 function SignIn(props) {
 
 
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("prova");
-    const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
+    const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
+    const [password, setPassword] = useState("test");
+    const [name, setName] = useState("Giorgio"); 
+    const [surname, setSurname] = useState("Ferraro");
     const [role, setRole] = useState("");
 
     const signInHandler = (event) => {
         event.preventDefault();
-        if(password==="")
+        if(password=="") 
           console.log("password vuoto")
         else{
-          props.addUser(email,password,role,name,surname, username);
-        setEmail("");
-        setPassword("");
-        setRole("");
-        setUsername("");}
+          props.addUser(email,password,role,name,surname);
+          setEmail("");
+          setPassword("");
+          setRole("");
+          setName("");
+          setSurname("");  
+      }
         //navigate('/serviceType');
     
     }
@@ -60,19 +61,8 @@ function SignIn(props) {
           />
         </Col>
       </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextUsername">
-            <Form.Label column sm="3">
-                Username
-            </Form.Label>
-            <Col sm="8">
-                <Form.Control type="text" placeholder='username'
-                              value={username}
-                              onChange={(event) => setUsername(event.target.value)}
-                />
-            </Col>
-        </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+      <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="3">
           Email
         </Form.Label>
