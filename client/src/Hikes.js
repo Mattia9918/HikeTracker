@@ -6,6 +6,8 @@ function Hikes(props) {
     /* -- INPUT STATE MANAGEMENT -- */
     const [filter, setFilter] = useState();
     const [value, setValue] = useState();
+    const [show, setShow] = useState();
+    
 
     /* -- SUBMIT HANDLER --  */
     const submitHandler = (event) => {
@@ -21,7 +23,9 @@ function Hikes(props) {
                 </Col>
                 <Col sm={8} xs={12}>
                     {(props.msg.message === "You have been logged out!" || (props.user && props.msg.message === `Welcome ${props.user.username}!`))  && 
-                        <Alert variant = {props.msg.type}>{props.msg.message}</Alert>
+                        <Alert variant = {props.msg.type} onClose={() => setShow(false)} show={show} dismissible>
+                            {props.msg.message}
+                        </Alert>
                     }
                     <Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
                         <Form onSubmit={submitHandler}>

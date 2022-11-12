@@ -21,12 +21,19 @@ function LoginForm(props) {
     
     }
 
+    useEffect(() =>{
+      props.setMsg({message:"",type:""});
+    },[]); 
+
 
   return (<>
-    {props.msg.message!=="" ? 
-      <Alert variant={props.msg.type} className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
-          {props.msg.message}
-      </Alert>:false}
+    {(props.msg.message!=="" &&  props.msg.message!==undefined) ? 
+      <center>
+        <Alert variant={props.msg.type} className="w-100 " onClose={() => setShow(false)} show={show} dismissible>
+            {props.msg.message}
+        </Alert>
+      </center>
+      :false}
 
 
     <Container className="shadow-sm p-5 w-75 mt-5">

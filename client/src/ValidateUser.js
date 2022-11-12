@@ -17,7 +17,7 @@ function ValidatePage() {
 
     const handleSubmit = ()=>{
         if(!success)
-            navigate("/signIn");
+            navigate("/register");
         else 
             navigate("/login");
         
