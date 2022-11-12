@@ -7,7 +7,7 @@ function Layout(props) {
         <>
             {/* -- NAVIGATION BAR -- */}
             <Row>
-                <Navigation />
+                <Navigation user = {props.user} logout = {props.logout}/>
             </Row>
 
             {/* -- BODY  -- */}

@@ -20,11 +20,12 @@ function App(){
 function App2() {
 
   /* --- STATES --- */                   
+
   const [hikes, setHikes] = useState([]);    
-  console.log(hikes)      
-  const [status,setStatus] = useState(false);
+  const [status,setStatus] = useState("undefined");
+  const [msg, setMsg] = useState("");
   const [loggedIn, setLoggedIn] = useState(false); 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(undefined);
   
   const navigate = useNavigate(); 
  
@@ -41,33 +42,53 @@ function App2() {
     checkAuth();
   }, []);
   
-  const addUser = async (email,password,role, name, surname)=>{
+  const addUser = async (email,password,role, name, surname,username)=>{
       
-      const user = {email,password,role, name, surname}
-      
-      const stat = await API.addUser(user); 
+      const user = {email,password,role, name, surname,username}
+      try {
+        await API.addUser(user); 
+        setStatus("success"); 
+        setMsg({message: 'Check email to activate your account', type: "warning"}); 
 
-      if (stat===true) 
-        setStatus(true); 
+      }
+      catch(error){
+        setStatus("error");
+        
+        if(error.message.includes("SQLITE_CONSTRAINT"))
+          setMsg({message: 'User previously defined', type: "danger"}); 
+        else if(error.message.includes("Invalid value"))
+          setMsg({message: 'Error with format of data', type: "danger"}); 
+        else  
+          setMsg({message: 'Sorry, something went wrong', type: "danger"}); 
+       
+          
+      }
   }
 
   const login = async (credentials) => {
   
     try {
       const user = await API.logIn(credentials);
-      setUser(user);
-      setLoggedIn(true);
-      navigate(`/user/${user.id}`);
+      if(user.message !== undefined)
+      {
+        setMsg({message: user.message, type: "danger"}); 
+      } else {
+        setUser(user);
+        setLoggedIn(true);
+        navigate(`/`);
+        setMsg({message: `Welcome ${user.username}!`, type: "success"})
+      }
     }
-    catch (err) {
-        console.log(err); 
+    catch (err) { 
+      setMsg({message: err, type: "danger"}); 
     }
   }
   
   const logout = async () => {
       await API.logOut()
-      setUser({});
+      setUser(undefined);
       setLoggedIn(false);
+      setMsg({message: "You have been logged out!", type: "warning"})
       navigate("/"); 
     }
 
@@ -101,12 +122,14 @@ function App2() {
   return (
       <Routes>
       
-          <Route element = {<Layout />}>
-            <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter}/>} />
-            <Route path='/register' element={ <SignIn addUser={addUser} status={status}/>} /> 
+          <Route element = {<Layout user = {user} logout = {logout}/>}>
+            <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter} msg = {msg} user = {user} />}/>
             <Route path='/validate/:code' element={ <ValidatePage />} />
-            <Route path='/login' element={ <LoginForm login={login}/>}/>
+            <Route path='/register' element={ <SignIn addUser={addUser} status={status} msg={msg}/>} /> 
+            <Route path='/login' element={ <LoginForm login={login} msg={msg}/>}/>
           </Route>
+          
+          
       </Routes>
    
   );

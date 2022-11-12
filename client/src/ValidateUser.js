@@ -42,7 +42,8 @@ function ValidatePage() {
     
 
     return (
-        <Container className="shadow-sm p-2 mt-5">
+        <Container>
+        <Container className="shadow-sm p-5 mt-5">
         {success ? <>
             <Alert variant="success">
                     <Alert.Heading><BsCheckCircle variant="success"/>{" "}Utente creato con successo</Alert.Heading>
@@ -66,6 +67,7 @@ function ValidatePage() {
             
         }
 
+        </Container>
         </Container>
         
     ); 

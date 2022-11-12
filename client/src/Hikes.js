@@ -1,4 +1,4 @@
-import { Container, Card, Row, Col, Form, Button, Badge } from 'react-bootstrap';
+import { Container, Card, Row, Col, Form, Button, Badge, Alert } from 'react-bootstrap';
 import { useState } from 'react';
 
 function Hikes(props) {
@@ -20,6 +20,9 @@ function Hikes(props) {
                 <Col >
                 </Col>
                 <Col sm={8} xs={12}>
+                    {(props.msg.message === "You have been logged out!" || (props.user && props.msg.message === `Welcome ${props.user.username}!`))  && 
+                        <Alert variant = {props.msg.type}>{props.msg.message}</Alert>
+                    }
                     <Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
                         <Form onSubmit={submitHandler}>
                             <Row>
@@ -75,13 +78,16 @@ function Hikes(props) {
                             </Row>
                         </Form>
                         <Row>
-
-                            <Col>
-                                {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} />)}
-                            </Col>
-                            <Col>
-                                {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike} />)}
-                            </Col>
+                            {(props.hikes.length === 1 && props.hikes[0].id == undefined) ||
+                                <>
+                                    <Col>
+                                        {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} />)}
+                                    </Col>
+                                    <Col>
+                                        {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike} />)}
+                                    </Col>
+                                </>
+                            }
                         </Row>
                     </Container>
                 </Col>

@@ -5,12 +5,13 @@ const e = require("express");
 
 const sqlite = require("sqlite3");
 const bcrypt = require("bcrypt");
-// const { ServiceType } = require('./Classes/ServiceType');
+const { Hike } = require('./hike');
 
 // open the database
 const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
+
 
 exports.deleteUser = () => {
 	return new Promise((resolve, reject) => {
@@ -25,7 +26,7 @@ exports.deleteUser = () => {
 		}); 
 		const sql2 =
 			"UPDATE sqlite_sequence SET seq=0 WHERE name=user";
-		db.run(sql, [], function(err) {
+		db.run(sql2, [], function(err) {
 			if (err) {
 				reject(err);
 				return;
@@ -45,32 +46,9 @@ exports.deleteTableActivation = () => {
 				return;
 			}
 			resolve();
-		}); 
-		const sql2 =
-			"UPDATE sqlite_sequence SET seq=0 WHERE name=activation";
-		db.run(sql, [], function(err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		}); 
-		
+		});
 	})
-}; 
-exports.getActivationByEmail = (email) => {
-	return new Promise((resolve, reject) => {
-		const sql = "SELECT * FROM activation WHERE email = ?"
-		db.get(sql, [email], function(err, row) {
-			if(err) {
-				reject(err);
-			}
-			else {
-				resolve(row);
-			}
-		})
-	})
-}
+};
 
 
 /** USER **/
@@ -415,4 +393,73 @@ const rowJsonMapping = (rows) => {
 		pointsOfInterest: interestingPoints,
 	});
 	return hikes;
+};
+
+/*** HIKE TABLE ***/
+
+// Get Hike info
+exports.getHike = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT * FROM hike ORDER BY id ASC';
+		db.all(sql, [], (err, rows) => {
+			if (err)
+				reject(err);
+			else{
+				const hikes = rows.map(row => new Hike(row.id, row.title, row.lenght, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
+				resolve(hikes);
+			}
+		})
+	})
+}
+
+// Get Hike desc
+exports.getHikeDesc = (id) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT description FROM HIKE WHERE id=? ';
+		db.get(sql, [id], (err, row) => {
+			if (err)
+				reject(err);
+			else
+				resolve(row);
+		})
+	})
+}
+
+exports.createHiking = (title, length, description, difficulty, estimatedTime, ascent, localguideID) => {
+
+	return new Promise((resolve, reject) => {
+		const sql = `INSERT INTO hike(title, length, description, difficulty, estimatedTime, ascent, localguideID) VALUES(?, ?, ?, ?, ?, ?, ?)`;
+		db.run(sql, [title, length, description, difficulty, estimatedTime, ascent, localguideID], function (err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve(this.lastID);
+		});
+	});
+}
+
+exports.deleteHikes = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DROP TABLE IF EXISTS hike';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id integer NOT NULL, title text NOT NULL, lenght integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+		db.run(sql1, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql2, [], function(err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
 };

@@ -5,21 +5,7 @@ import {useState} from 'react';
 
 function Navigation(props) {
 
-    let params = useParams();
     const navigate = useNavigate();
-
-    const [username, setUsername] = useState(""); 
-    const [password, setPassword] = useState("");
-    
-    const loginHandler = (event) => {
-        event.preventDefault();
-
-        setUsername("");
-        setPassword("");
-        navigate('/serviceType');
-    
-    }
-
     return (
         <>
 
@@ -32,9 +18,11 @@ function Navigation(props) {
                         {/* Logo and brand */}
                         <Container>
                         <Navbar.Brand>
-                            <img src = "http://localhost:3000/navicon.svg" style = {{'height': '40px', 'marginLeft': '20px', 'marginTop': '-10px'}} alt = "navicon"/>
-                            <b id = "title1">Hike</b>
-                            <b id = "title2">Tracker</b>
+                            <img src = "http://localhost:3000/navicon.svg" style = {{'height': '40px', 'marginLeft': '20px', 'marginTop': '-10px', 'cursor': 'pointer' }}
+                                onClick = {() => navigate('/')}
+                                alt = "navicon"/>
+                            <b id = "title1" style = {{'cursor': 'pointer'}} onClick = {() => navigate('/')}>Hike</b>
+                            <b id = "title2" style = {{'cursor': 'pointer'}} onClick = {() => navigate('/')}>Tracker</b>
                         </Navbar.Brand>
                         </Container>
                     </Col>
@@ -47,10 +35,16 @@ function Navigation(props) {
                     <Navbar.Collapse id="basic-navbar-nav" >
                         <Nav className="ms-auto">
                         <Nav.Item>
-                            <Nav.Link onClick = {() => navigate('/login')}>Login</Nav.Link>
+                            {
+                                props.user === undefined && <Nav.Link onClick = {() => navigate('/login')}>Login</Nav.Link> ||
+                                props.user.role === "localGuide" &&  <Nav.Link onClick = {() => navigate('/newhike')}>New hike</Nav.Link>
+                            }
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link onClick = {() => navigate('/register')}>Register</Nav.Link>
+                            {props.user === undefined && 
+                                <Nav.Link onClick = {() => navigate('/register')}>Register</Nav.Link> ||
+                                <Nav.Link onClick = {() => props.logout()}>Logout</Nav.Link>
+                            }
                         </Nav.Item>
                         </Nav>
                     </Navbar.Collapse>

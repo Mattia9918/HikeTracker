@@ -1,6 +1,6 @@
 import './App.css';
 
-import {Col,Form,Button,Toast,Row,Container} from 'react-bootstrap';
+import {Col,Form,Button,Alert,Row,Container} from 'react-bootstrap';
 import { BsFillEnvelopeFill,BsLockFill,BsPersonCircle,BsBoxArrowInRight } from "react-icons/bs";
 import {useState} from 'react';
 
@@ -8,34 +8,28 @@ function LoginForm(props) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [show,setShow] = useState(false); 
+    const [show,setShow] = useState(true); 
 
     const signInHandler = (event) => {
         event.preventDefault();
-        if(password===""){
-          setError("Password vuota"); 
-          setShow(true); 
-        }
-        else{
-          const username = email; 
-          const credentials = {username,password}
-          props.login(credentials);            
-        }
-   
+        
+
+        const username = email; 
+        const credentials = {username,password}
+        props.login(credentials); 
+          
     
     }
 
-  return (
-  <Container>
-    {error!=="" ? <>
-        <Toast className="w-100 mb-3" onClose={() => setShow(false)} show={show} delay={3000} autohide>
-            <Toast.Header closeButton={false}>{error}</Toast.Header>
-        </Toast>
-    </>
-    :false}
 
-    <Container className="shadow-sm p-2 mt-5">
+  return (<>
+    {props.msg.message!=="" ? 
+      <Alert variant={props.msg.type} className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
+          {props.msg.message}
+      </Alert>:false}
+
+
+    <Container className="shadow-sm p-5 w-75 mt-5">
       <center className="mb-3 fs-2"><BsPersonCircle/>{' '}</center>
     <Form onSubmit={signInHandler}>
     
@@ -72,7 +66,7 @@ function LoginForm(props) {
         
     </Form>
     </Container>
-    </Container>
+    </>
   );
 }
 
