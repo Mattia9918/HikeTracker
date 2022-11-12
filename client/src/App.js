@@ -76,9 +76,11 @@ function App2() {
       setLoggedIn(true);
       navigate(`/`);
       
+      
     }
     catch (err) { 
-        setMsgLogin(err); 
+      console.log(err); 
+      setMsgLogin(err); 
     }
   }
   
@@ -121,10 +123,11 @@ function App2() {
       
           <Route element = {<Layout />}>
             <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter}/>} />
-            <Route path='/register' element={ <SignIn addUser={addUser} status={status} msg={msgReg}/>} /> 
             <Route path='/validate/:code' element={ <ValidatePage />} />
+            <Route path='/register' element={ <SignIn addUser={addUser} status={status} msg={msgReg}/>} /> 
             <Route path='/login' element={ <LoginForm login={login} msg={msgLogin}/>}/>
           </Route>
+          
           
       </Routes>
    

@@ -40,16 +40,16 @@ function SignIn(props) {
 
   return (<>
 
-    {props.status!=="success" ? 
+    {props.status==="success" ? 
     <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
         {props.msg}
     </Alert>:false}
-    {props.status!=="error" ? 
+    {props.status==="error" ? 
     <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
         {props.msg}
     </Alert>:false}
     
-    <Container className="shadow-sm p-2 mt-5">
+    <Container className="shadow-sm p-5 mt-5 w-75">
     <Form onSubmit={signInHandler}>
         <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
             <Form.Label column sm="3">

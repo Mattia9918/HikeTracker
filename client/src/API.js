@@ -156,7 +156,7 @@ async function logIn(credentials) {
           throw errDetail.message;
       }
     }
-    catch(error){throw error.message;}
+    catch(error){ throw error.message;}
 }
   
 // /api/sessions/current
