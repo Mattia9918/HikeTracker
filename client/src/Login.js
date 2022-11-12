@@ -26,7 +26,8 @@ function LoginForm(props) {
     
     }
 
-  return (<>
+  return (
+  <Container>
     {error!=="" ? <>
         <Toast className="w-100 mb-3" onClose={() => setShow(false)} show={show} delay={3000} autohide>
             <Toast.Header closeButton={false}>{error}</Toast.Header>
@@ -71,7 +72,7 @@ function LoginForm(props) {
         
     </Form>
     </Container>
-    </>
+    </Container>
   );
 }
 

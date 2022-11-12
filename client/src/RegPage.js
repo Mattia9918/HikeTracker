@@ -31,7 +31,7 @@ function SignIn(props) {
     }
 
   return (
-
+    <Container>
     <Container className="shadow-sm p-2 mt-5">
     {props.status ? <>
       <Alert variant="success" dismissibile>
@@ -92,7 +92,7 @@ function SignIn(props) {
           Password
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="password" placeholder="************"
+          <Form.Control type="password" placeholder="********"
                         required = {true}
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
@@ -118,6 +118,7 @@ function SignIn(props) {
       <center><Button variant="primary"  size="lg" type="submit">Register</Button></center>
             
     </Form>
+    </Container>
     </Container>
   );
 }
