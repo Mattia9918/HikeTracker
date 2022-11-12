@@ -1,13 +1,13 @@
 const express = require("express"); 
 const dao = require('./dao');
 const fileUpload = require("express-fileupload");
-
+const cors = require('cors'); 
 const app = express();
 const port = 3001;
 
 app.use(express.json());
 app.use(fileUpload());
-
+app.use(cors()); 
 
 // FILE UPLOAD(.gpx*)
 app.post('/upload', async(req, res) => {
