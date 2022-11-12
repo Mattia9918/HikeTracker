@@ -38,8 +38,17 @@ function SignIn(props) {
     
     }
 
-  return (
+  return (<>
 
+    {props.status!=="success" ? 
+    <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
+        {props.msg}
+    </Alert>:false}
+    {props.status!=="error" ? 
+    <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
+        {props.msg}
+    </Alert>:false}
+    
     <Container className="shadow-sm p-2 mt-5">
     <Form onSubmit={signInHandler}>
         <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
@@ -119,7 +128,7 @@ function SignIn(props) {
       <center><Button variant="primary"  size="lg" type="submit">Register</Button></center>
             
     </Form>
-    </Container>
+    </Container></>
   );
 }
 
