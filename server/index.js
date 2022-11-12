@@ -238,9 +238,11 @@ app.get(`/api/hike*`, async (req, res) => {
 				break;
 			case "city":
 				hikes = await dao.getHikeByCity(req.query.value1);
+				console.log(hikes);
 				break;
 			case "province":
 				hikes = await dao.getHikeByProvince(req.query.value1);
+				console.log(hikes);
 				break;
 			case "distance":
 				hikes = await dao.getHikeByDistanceRange(

@@ -283,7 +283,7 @@ exports.getHikeByExpectedTime = (minTime, maxTime) => {
 exports.getHikeByProvince = (province) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND province = ?";
+			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND H.id IN (SELECT H.id FROM hike H, point P, hike_point HP WHERE H.id = HP.hikeID AND P.id = HP.pointID AND P.province = ? AND HP.type = 'start')"
 		db.all(sql, [province], (err, rows) => {
 			if (err) reject(err);
 			else {
@@ -297,7 +297,7 @@ exports.getHikeByProvince = (province) => {
 exports.getHikeByCity = (city) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND city = ?";
+			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND H.id IN (SELECT H.id FROM hike H, point P, hike_point HP WHERE H.id = HP.hikeID AND P.id = HP.pointID AND P.city = ? AND HP.type = 'start')"
 		db.all(sql, [city], (err, rows) => {
 			if (err) reject(err);
 			else {
@@ -358,7 +358,7 @@ const rowJsonMapping = (rows) => {
 					estimatedTime: estimatedTime,
 					ascent: ascent,
 					localguideID: localguideID,
-          localguideUsername: localguideUsername,
+          			localguideUsername: localguideUsername,
 					startingPoint: startingPoint,
 					endingPoint: endingPoint,
 					pointsOfInterest: interestingPoints,
@@ -372,7 +372,7 @@ const rowJsonMapping = (rows) => {
 			estimatedTime = rows[r].estimatedTime;
 			ascent = rows[r].ascent;
 			localguideID = rows[r].localguideID;
-      localguideUsername = rows[r].username;
+     		localguideUsername = rows[r].username;
 			interestingPoints = [];
 		}
 		firstRow = false;
@@ -409,7 +409,7 @@ const rowJsonMapping = (rows) => {
 		estimatedTime: estimatedTime,
 		ascent: ascent,
 		localguideID: localguideID,
-    localguideUsername: localguideUsername,
+    	localguideUsername: localguideUsername,
 		startingPoint: startingPoint,
 		endingPoint: endingPoint,
 		pointsOfInterest: interestingPoints,
