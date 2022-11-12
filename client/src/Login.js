@@ -21,11 +21,13 @@ function LoginForm(props) {
     
     }
 
+
   return (<>
     {props.msg!=="" ? 
       <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
           {props.msg}
       </Alert>:false}
+
 
     <Container className="shadow-sm p-2 mt-5">
       <center className="mb-3 fs-2"><BsPersonCircle/>{' '}</center>
@@ -64,7 +66,7 @@ function LoginForm(props) {
         
     </Form>
     </Container>
-    </>
+    </Container>
   );
 }
 

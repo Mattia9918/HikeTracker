@@ -39,14 +39,6 @@ function SignIn(props) {
     }
 
   return (
-    <>
-    {props.status==="success" ? <Alert variant="success" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
-     {props.msg}
-    </Alert>:false}
-    {props.status==="error" ? 
-     <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
-     {props.msg}
-    </Alert>:false}
 
     <Container className="shadow-sm p-2 mt-5">
     <Form onSubmit={signInHandler}>
@@ -101,7 +93,7 @@ function SignIn(props) {
           Password
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="password" placeholder="************"
+          <Form.Control type="password" placeholder="********"
                         required = {true}
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
@@ -128,7 +120,6 @@ function SignIn(props) {
             
     </Form>
     </Container>
-    </>
   );
 }
 

@@ -121,13 +121,15 @@ function App2() {
       
           <Route element = {<Layout />}>
             <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter}/>} />
+            <Route path='/register' element={ <SignIn addUser={addUser} status={status}/>} /> 
+            <Route path='/validate/:code' element={ <ValidatePage />} />
+            <Route path='/login' element={ <LoginForm login={login}/>}/>
           </Route>
 
-          <Route path='/register' element={ <SignIn addUser={addUser} msg={msgReg} status={status}/>} /> 
+          <Route path='/register' element={ <SignIn addUser={addUser} status={status}/>} /> 
           <Route path='/validate/:code' element={ <ValidatePage />} />
-          <Route path='/login' element={ <LoginForm login={login}  msg={msgLogin}/>}/>
+          <Route path='/login' element={ <LoginForm login={login}/>}/>
           
-
       </Routes>
    
   );

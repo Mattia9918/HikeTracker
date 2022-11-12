@@ -32,7 +32,9 @@ function Navigation(props) {
                         {/* Logo and brand */}
                         <Container>
                         <Navbar.Brand>
-                            <i id = "title" style = {{'marginLeft': '20px'}}>HikeTrackerLogo</i>
+                            <img src = "http://localhost:3000/navicon.svg" style = {{'height': '40px', 'marginLeft': '20px', 'marginTop': '-10px'}} alt = "navicon"/>
+                            <b id = "title1">Hike</b>
+                            <b id = "title2">Tracker</b>
                         </Navbar.Brand>
                         </Container>
                     </Col>
