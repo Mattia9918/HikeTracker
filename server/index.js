@@ -16,15 +16,19 @@ app.post('/upload', async(req, res) => {
   }
 
   const file = req.files.file;
+  
 
-  file.mv(`../client/public/uploads/${file.name}`, err => {
+  file.mv(`../client/public/uploads/${file}`, err => {
     if (err) {
       console.error(err);
       return res.status(500).send(err);
     }
-
-    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+        
   });
+
+  const a = dao.getCoordinates(`../client/public/uploads/${file.name}`);
+  
+  res.json({ fileName: file.name, filePath: `/uploads/${file.name}`, startPointLong: a[0][1][0], startPointLat: a[0][1][1], endingPointLong: a[0][a[0].length-1][0], endingPointLat: a[0][a[0].length-1][1] });
 });
 /*
 app.get(`${__dirname}/upload`, (req,res)=> {

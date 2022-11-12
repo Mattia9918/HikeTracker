@@ -11,6 +11,35 @@ const db = new sqlite.Database('hiketracker.db', (err) => {
 
 /*** HIKE TABLE ***/
 
+const togeojson = require("@mapbox/togeojson"); //convert from xml->json
+const DomParser = require("xmldom").DOMParser; // node doesn't have xml parsing or a dom.
+const fs = require("fs"); //file system manager (readFile)
+
+
+exports.getCoordinates=(file)=>{
+
+    
+  if (file) {
+  const fileParsedFromDom = new DomParser().parseFromString(fs.readFileSync(file, "utf-8"));
+  // Convert GPX to GeoJSON
+  const converted = togeojson.gpx(fileParsedFromDom);
+  const coordinates = {}; 
+  let i=0;
+  for(const geometries of converted.features )
+  {
+      const c = geometries.geometry.coordinates; 
+      coordinates[i] = c; 
+      
+      i+=1; 
+  }
+  return coordinates; 
+  }
+  return {}; 
+
+}
+
+
+
 // Get Hike info 
 exports.getHike = () => {
   return new Promise((resolve, reject) => {

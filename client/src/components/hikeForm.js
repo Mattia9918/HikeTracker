@@ -1,6 +1,6 @@
 //import "./src/App.css"; 
 import './hikeFormCss.css'; 
-
+import API from '../API';
 import {Col,Form,Button,Row,Container} from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
@@ -25,7 +25,8 @@ function HikeForm(props) {
     const [difficulty, setDifficulty] = useState("");
     const [ascent, setAscent] = useState(""); 
     
-
+    const [spoint, setSpoint] = useState(); 
+    const [epoint, setEpoint] = useState(); 
 
 
     const [file, setFile] = useState('');
@@ -33,6 +34,8 @@ function HikeForm(props) {
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
+    
+    
 
     const onChange = e => {
         setFile(e.target.files[0]);
@@ -45,6 +48,8 @@ function HikeForm(props) {
 
         event.preventDefault();
         props.loadHike(info); 
+        
+        
         //navigate("/");
     }
 
@@ -72,12 +77,26 @@ function HikeForm(props) {
         // Clear percentage
         setTimeout(() => setUploadPercentage(0), 10000);
 
-        const { fileName, filePath } = res.data;
+        const { fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat } = res.data;
 
-        setUploadedFile({ fileName, filePath });
+        setUploadedFile({ fileName, filePath, startPointLong,startPointLat, endingPointLong, endingPointLat });
+
+        const startPointInfo = {long: startPointLong, lat: startPointLat}; 
+        const endingPointInfo = {long: endingPointLong, lat: endingPointLat};
+        
+
+
+        
+        const startpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+startPointInfo.lat+'&longitude='+startPointInfo.long+'&localityLanguage=en'); 
+        const endpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+endingPointInfo.lat+'&longitude='+endingPointInfo.long+'&localityLanguage=en');   
+
+
+        setSpoint(startpoint.data); 
+        setEpoint(endpoint.data); 
 
         setMessage('File Uploaded');
         } catch (err) {
+            console.log(err); 
         if (err.response.status === 500) {
             setMessage('There was a problem with the server');
         } else {
@@ -85,7 +104,14 @@ function HikeForm(props) {
         }
         setUploadPercentage(0)
         }
+
+       
     };
+
+ //Installare questi moduli 
+// npm install @mapbox/togeojson xmldom
+
+   
 
  
 
@@ -164,19 +190,25 @@ function HikeForm(props) {
                                 <Progress percentage={uploadPercentage} />
                     </Row>
                     <Row xs="auto">
-                        <Col></Col>
+                        
                         <Col>
                             {uploadedFile ? (
                                     
                                         <div>
                                             <h6>Filename: </h6>
-                                            <h3 className='text-center'>{uploadedFile.fileName}</h3>
-                                            <img style={{ width: '100%' }} src={uploadedFile.filePath} alt='' />
+                                            <h3>{uploadedFile.fileName}</h3>
+                                            <h6>Starting Point Longitude: {spoint ? spoint.longitude : null} </h6>
+                                            <h6>Starting Point Latitude: {spoint ? spoint.latitude : null}</h6>
+                                            <h6>Starting Point City: {spoint ? spoint.city : null}</h6>
+                                            <h6>Ending Point Longitude: {epoint ? epoint.longitude : null}</h6>
+                                            <h6>Ending Point Latitude: {epoint ? epoint.latitude : null} </h6>
+                                            <h6>Ending Point City: {epoint ? spoint.city : null}</h6>
                                         </div>
                                     
                                 ) : null}
                             
-                        </Col>        
+                        </Col>
+                               
                         <Col></Col>
                         <Col>
                                 <input

@@ -29,5 +29,32 @@ async function postHike(Hike) {
     }
 }
 
-const API = { postHike };
+async function getInfo(info) {
+
+    const url = 'http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+info.lat+'&longitude='+info.long+'&localityLanguage=en'; 
+
+    
+
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            const city = await response.json(); 
+                
+            
+            return city;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        throw (err);
+    }
+    
+
+
+}
+
+const API = { postHike , getInfo};
 export default API;
