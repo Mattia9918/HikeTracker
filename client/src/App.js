@@ -21,7 +21,12 @@ function App2() {
 
   /* --- STATES --- */                   
   const [hikes, setHikes] = useState([]);          
-  const [status,setStatus] = useState(false);
+  
+  const [status,setStatus] = useState("undefined");
+  const [msgReg,setMsgReg] = useState("");  
+
+  const [msgLogin,setMsgLogin] = useState("");  
+  
   const [loggedIn, setLoggedIn] = useState(false); 
   const [user, setUser] = useState({});
   
@@ -40,14 +45,27 @@ function App2() {
     checkAuth();
   }, []);
   
-  const addUser = async (email,password,role, name, surname)=>{
+  const addUser = async (email,password,role, name, surname,username)=>{
       
-      const user = {email,password,role, name, surname}
-      
-      const stat = await API.addUser(user); 
+      const user = {email,password,role, name, surname,username}
+      try {
+        await API.addUser(user); 
+        setStatus("success"); 
+        setMsgReg('Check email to activate your account'); 
 
-      if (stat===true) 
-        setStatus(true); 
+      }
+      catch(error){
+        setStatus("error");
+        
+        if(error.message.includes("SQLITE_CONSTRAINT"))
+          setMsgReg('User previously defined'); 
+        else if(error.message.includes("Invalid value"))
+          setMsgReg('Error with format of data'); 
+        else  
+          setMsgReg('Sorry, something went wrong'); 
+       
+          
+      }
   }
 
   const login = async (credentials) => {
@@ -56,10 +74,11 @@ function App2() {
       const user = await API.logIn(credentials);
       setUser(user);
       setLoggedIn(true);
-      navigate(`/user/${user.id}`);
+      navigate(`/`);
+      
     }
-    catch (err) {
-        console.log(err); 
+    catch (err) { 
+        setMsgLogin(err); 
     }
   }
   
@@ -104,10 +123,11 @@ function App2() {
             <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter}/>} />
           </Route>
 
-          <Route path='/register' element={ <SignIn addUser={addUser} status={status}/>} /> 
+          <Route path='/register' element={ <SignIn addUser={addUser} msg={msgReg} status={status}/>} /> 
           <Route path='/validate/:code' element={ <ValidatePage />} />
-          <Route path='/login' element={ <LoginForm login={login}/>}/>
+          <Route path='/login' element={ <LoginForm login={login}  msg={msgLogin}/>}/>
           
+
       </Routes>
    
   );

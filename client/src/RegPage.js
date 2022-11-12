@@ -1,45 +1,54 @@
-import {Col,Form,Button,Alert,Row,Container} from 'react-bootstrap';
+import {Col,Form,Button,Row,Alert,Container} from 'react-bootstrap';
 import './App.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import {useState} from 'react';
 
+
+
 function SignIn(props) {
+ 
+    const [email, setEmail] = useState("giorgioferraro4242@gmail.com");
+    const [password, setPassword] = useState("fdfsdfd");
+    const [name, setName] = useState("sdffds");
+    const [surname, setSurname] = useState("fdsfd");
+    const [username, setUsername] = useState("fsdfds");
+    const [role, setRole] = useState("fsdfds");
 
+    
+    const [show,setShow] = useState(true); 
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
-    const [username, setUsername] = useState("");
-    const [role, setRole] = useState("");
+    const resetState = ()=>{
+      setEmail("");
+      setPassword("");
+      setRole("");
+      setName("");
+      setSurname("");
+      setUsername("");
+    }
 
     const signInHandler = (event) => {
+        
         event.preventDefault();
-        if(password==="")
-          console.log("password vuoto")
-        else{
-          props.addUser(email,password,role,name,surname,username);
-          setEmail("");
-          setPassword("");
-          setRole("");
-          setName("");
-          setSurname("");
-          setUsername("");
-      }
+      
+        props.addUser(email,password,role,name,surname,username);
+        
+        resetState();
+        
         //navigate('/serviceType');
     
     }
 
   return (
+    <>
+    {props.status==="success" ? <Alert variant="success" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
+     {props.msg}
+    </Alert>:false}
+    {props.status==="error" ? 
+     <Alert variant="danger" className="w-100 "onClose={() => setShow(false)} show={show} dismissible>
+     {props.msg}
+    </Alert>:false}
 
     <Container className="shadow-sm p-2 mt-5">
-    {props.status ? <>
-      <Alert variant="success" dismissibile>
-                    <Alert.Heading>Ti abbiamo inviato un email per attivare il tuo account</Alert.Heading>
-            
-            </Alert>
-
-    </>:false}
     <Form onSubmit={signInHandler}>
         <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
             <Form.Label column sm="3">
@@ -119,6 +128,7 @@ function SignIn(props) {
             
     </Form>
     </Container>
+    </>
   );
 }
 

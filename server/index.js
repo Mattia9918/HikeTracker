@@ -10,6 +10,10 @@ const session = require('express-session');  // session middleware
 const passport = require('passport');  // authentication
 const passportLocal = require('passport-local');
 
+
+const { check, validationResult } = require('express-validator'); // validation middleware
+
+
 // To hash user password
 const bcrypt = require("bcrypt");
 
@@ -103,7 +107,7 @@ const isLocalGuide = (req, res, next) => {
 /** API Login and Logout **/
 // POST /sessions
 // login
-app.post('/api/sessions', function (req, res, next) {
+app.post('/api/sessions',function (req, res, next) {
 	passport.authenticate('local', (err, user, info) => {
 		if (err)
 			return next(err);
@@ -263,17 +267,30 @@ app.get(`/api/hike*`, async (req, res) => {
 
 /** Register new user **/
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/register',                 
+[ 
+	check('email').isEmail(),
+	check('role').isLength({min:3})
+
+],
+async (req, res) => {
 	const email = req.body.email;
 	const role = req.body.role;
 	const name = req.body.name;
 	const surname = req.body.surname;
 	const username = req.body.username;
-	console.log(username)
+	const pass = req.body.password; 
+	
+	const errors = validationResult(req); 
+	
+	if (!errors.isEmpty()) {
+    	return res.status(422).json({ error: errors}); 
+  	}
+
 	try{
 		// Generate hash password
 		const salt = await bcrypt.genSalt(10);
-		const password = await bcrypt.hash(req.body.password, salt);
+		const password = await bcrypt.hash(pass, salt);
 
 		await dao.insertUser(email, password, salt, role, name, surname, username);
 

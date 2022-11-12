@@ -7,8 +7,7 @@ async function addUser(user) {
     const url = APIURL + `register`;
 
     try {
-        console.log(user.username)
-
+        
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -26,16 +25,15 @@ async function addUser(user) {
         if (response.ok) {
             return true;
         } else {
-            /* Application error */
+          
             const appErrText = await response.text();
 
             throw new TypeError(appErrText);
+           
 
         }
     } catch (error) {
-        /* Network error */
-
-        throw (error);
+        throw error; 
     }
 }
 
@@ -138,6 +136,8 @@ async function getFilter(filter, value) {
  };
 // /api/sessions
 async function logIn(credentials) { 
+    try{
+        
     let response = await fetch(new URL("sessions",APIURL), {
         method: 'POST',
         credentials: 'include',
@@ -152,9 +152,12 @@ async function logIn(credentials) {
       }
       else {
           const errDetail = await response.json();
+          
           throw errDetail.message;
       }
     }
+    catch(error){throw error.message;}
+}
   
 // /api/sessions/current
 async function logOut() {

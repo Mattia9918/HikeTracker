@@ -1,3 +1,6 @@
 DELETE 
-FROM user
-WHERE email = "giorgioferraro4141@gmail.com"
+FROM user; 
+
+DELETE 
+FROM activation;
+
