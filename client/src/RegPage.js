@@ -6,23 +6,25 @@ import {useState} from 'react';
 function SignIn(props) {
 
 
-    const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
-    const [password, setPassword] = useState("test");
-    const [name, setName] = useState("Giorgio"); 
-    const [surname, setSurname] = useState("Ferraro");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
 
     const signInHandler = (event) => {
         event.preventDefault();
-        if(password=="") 
+        if(password==="")
           console.log("password vuoto")
         else{
-          props.addUser(email,password,role,name,surname);
+          props.addUser(email,password,role,name,surname,username);
           setEmail("");
           setPassword("");
           setRole("");
           setName("");
-          setSurname("");  
+          setSurname("");
+          setUsername("");
       }
         //navigate('/serviceType');
     
@@ -39,12 +41,23 @@ function SignIn(props) {
 
     </>:false}
     <Form onSubmit={signInHandler}>
+        <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
+            <Form.Label column sm="3">
+                Username
+            </Form.Label>
+            <Col sm="8">
+                <Form.Control required = {true} type="text" placeholder='username'
+                              value={username}
+                              onChange={(event) => setUsername(event.target.value)}
+                />
+            </Col>
+        </Form.Group>
     <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="3">
           Nome
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="text" placeholder='email@example.com' 
+          <Form.Control required = {true} type="text" placeholder='nome'
           value={name}
           onChange={(event) => setName(event.target.value)}
           />
@@ -55,7 +68,7 @@ function SignIn(props) {
           Cognome
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="text" placeholder='email@example.com' 
+          <Form.Control required = {true} type="text" placeholder='cognome'
           value={surname}
           onChange={(event) => setSurname(event.target.value)}
           />
@@ -67,7 +80,7 @@ function SignIn(props) {
           Email
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="email" placeholder='email@example.com' 
+          <Form.Control required = {true} type="email" placeholder='email@example.com'
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           />
@@ -79,27 +92,30 @@ function SignIn(props) {
           Password
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="password" placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          <Form.Control type="password" placeholder="************"
+                        required = {true}
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
           />
         </Col>
       </Form.Group>
 
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
       <Col sm="11">
-        <Form.Select  aria-label="Default select example" 
-            onChange={(event) => setRole(event.target.value)}
+        <Form.Select  aria-label="Default select example"
+                      required = {true}
+                      onChange={(event) => setRole(event.target.value)}
         >
-            <option>Seleziona il ruolo</option>
-            <option value={"admin"}  >Admin</option>
+            <option >Select Role</option>
+            <option value={"hiker"}  >Hiker</option>
             <option value={"localGuide"}  >Local Guide</option>
-            <option value={"user"} >User</option>
+            <option value={"hutWorker"} >Hut Worker</option>
+            <option value={"platformManager"} >Platform Manager</option>
         </Form.Select>
         </Col>
       </Form.Group>
         
-      <center><Button variant="primary"  size="lg" type="submit">Registrati</Button></center>
+      <center><Button variant="primary"  size="lg" type="submit">Register</Button></center>
             
     </Form>
     </Container>

@@ -6,9 +6,8 @@ import {useState} from 'react';
 
 function LoginForm(props) {
 
-    const [email, setEmail] = useState("giorgioferraro4141@gmail.com"); 
-    const [password, setPassword] = useState("test");
-    const [role, setRole] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [show,setShow] = useState(false); 
 
@@ -56,7 +55,7 @@ function LoginForm(props) {
           <BsLockFill /> Password
         </Form.Label>
         <Col sm="8">
-          <Form.Control type="password" placeholder="Password"
+          <Form.Control type="password" placeholder="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           />

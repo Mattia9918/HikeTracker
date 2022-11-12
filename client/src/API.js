@@ -7,6 +7,7 @@ async function addUser(user) {
     const url = APIURL + `register`;
 
     try {
+        console.log(user.username)
 
         const response = await fetch(url, {
             method: 'POST',

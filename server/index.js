@@ -269,6 +269,7 @@ app.post('/api/register', async (req, res) => {
 	const name = req.body.name;
 	const surname = req.body.surname;
 	const username = req.body.username;
+	console.log(username)
 	try{
 		// Generate hash password
 		const salt = await bcrypt.genSalt(10);
