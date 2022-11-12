@@ -140,7 +140,7 @@ function HikeCard(props) {
                                 <br></br>
                                 <ul className="mt-2">
                                     <li><b>Starting point:</b> <i>(lat: {props.hike.startingPoint.latitude}, lon: {props.hike.startingPoint.longitude})</i> - {props.hike.startingPoint.city}, {props.hike.startingPoint.province}</li>
-                                    <li><b>Ending point:</b> <i>(lat: {props.hike.startingPoint.latitude}, lon: {props.hike.startingPoint.longitude})</i> - {props.hike.endingPoint.city}, {props.hike.endingPoint.province}</li>
+                                    <li><b>Ending point:</b> <i>(lat: {props.hike.endingPoint.latitude}, lon: {props.hike.endingPoint.longitude})</i> - {props.hike.endingPoint.city}, {props.hike.endingPoint.province}</li>
                                     <li><b>Length:</b> {props.hike.length} km</li>
                                     <li><b>Ascent:</b> {props.hike.ascent} m</li>
                                     <li><b>Estimated time:</b> {props.hike.estimatedTime} h</li>

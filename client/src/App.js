@@ -20,7 +20,8 @@ function App(){
 function App2() {
 
   /* --- STATES --- */                   
-  const [hikes, setHikes] = useState([]);          
+  const [hikes, setHikes] = useState([]);    
+  console.log(hikes)      
   const [status,setStatus] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false); 
   const [user, setUser] = useState({});
