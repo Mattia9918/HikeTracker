@@ -51,18 +51,18 @@ function ValidatePage() {
                         Premi il buttone qui sotto, per andare nella pagina di login
                     </p>
             </Alert>
-            <Button variant="primary" onClick={handleSubmit}>Login</Button>
+            <center><Button variant="primary" size="lg" onClick={handleSubmit}>Login</Button></center>
             </>
 
         
         :   <>
-            <Alert variant="danger" onClose={() => setShow(false)} dismissible>
+            <Alert variant="danger" onClose={() => setShow(false)} show={show} dismissible>
                     <Alert.Heading><BsExclamationDiamondFill variant="danger"/>{" "}Mi dispiace, qualcosa è andato storto</Alert.Heading>
                     <p>
                         Premi il buttone qui sotto, per andare nella pagina di registrazione
                     </p>
             </Alert>
-            <Button variant="primary" onClick={handleSubmit}>Registrati</Button>
+            <center><Button variant="primary" size="lg" onClick={handleSubmit}>Registrati</Button></center>
             </>
             
         }
