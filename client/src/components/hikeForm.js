@@ -260,8 +260,8 @@ function HikeForm(props) {
 
 
             </Container>
-
         </>
+        
     );
 }
 

@@ -23,7 +23,10 @@ function Hikes(props) {
                 </Col>
                 <Col sm={8} xs={12}>
                     {(props.msg.message === "You have been logged out!" || (props.user && props.msg.message === `Welcome ${props.user.username}!`))  && 
-                        <Alert variant = {props.msg.type} onClose={() => setShow(false)} show={show} dismissible>
+                        <Alert variant = {props.msg.type} onClose={() => {
+                            props.setMsg("");
+                            setShow(false);
+                        }} show={show} dismissible> 
                             {props.msg.message}
                         </Alert>
                     }

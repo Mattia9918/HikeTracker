@@ -5,6 +5,8 @@ import {useState} from 'react';
 
 function Navigation(props) {
 
+    const url = window.location.href;
+    console.log(url);
     const navigate = useNavigate();
     return (
         <>
@@ -36,14 +38,14 @@ function Navigation(props) {
                         <Nav className="ms-auto">
                         <Nav.Item>
                             {
-                                props.user === undefined && <Nav.Link onClick = {() => navigate('/login')}>Login</Nav.Link> ||
-                                props.user.role === "localGuide" &&  <Nav.Link onClick = {() => navigate('/newhike')}>New hike</Nav.Link>
+                                props.user === undefined && <Nav.Link id = "navlink" onClick = {() => navigate('/login')}>Login</Nav.Link> ||
+                                props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhike" && <Nav.Link onClick = {() => navigate('/newhike')}>New hike</Nav.Link>
                             }
                         </Nav.Item>
                         <Nav.Item>
                             {props.user === undefined && 
-                                <Nav.Link onClick = {() => navigate('/register')}>Register</Nav.Link> ||
-                                <Nav.Link onClick = {() => props.logout()}>Logout</Nav.Link>
+                                <Nav.Link id = "navlink" onClick = {() => navigate('/register')}>Register</Nav.Link> ||
+                                <Nav.Link id = "navlink" onClick = {() => props.logout()}>Logout</Nav.Link>
                             }
                         </Nav.Item>
                         </Nav>

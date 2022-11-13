@@ -360,51 +360,72 @@ app.post('/upload', async(req, res) => {
 
 
 // HIKING TABLE
-app.get('/api/hiking', async (req, res) => {
-	try {
-		const hike = await dao.getHike();
-		return res.status(200).json(hike);
-	} catch (err) {
-		console.log(err);
-		return res.status(500).json({ error: err });
-
-	}
-});
 
 // hiking desc
-app.get("/api/hiking/:id", async (req, res) => {
+app.get("/api/hikesdesc/:id", async (req, res) => {
+
+  if (isNan(req.params.id)){
+    return res.status(404).json("Id is a wrong entity");
+  }
+
 	try {
 		const hikedesc = await dao.getHikeDesc(req.params.id);
 		res.status(200).json(hikedesc);
 	} catch (err) {
-		res.status(500).end();
+		res.status(500).json({error: err});
 	}
 });
 
 //hiking post
-app.post('/api/hiking', async (req, res) => {
-	try {
-		const status = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
-		if (status === '422')
-			res.status(422).json({ error: `Validation of request body failed` }).end();
-		else
-			return res.status(201).end();
-	} catch (err) {
-		console.log(err);
-		res.status(500).json({ error: `Generic error` }).end();
-	}
+app.post('/api/hiking', 
+        [check('length').isInt(),
+        check('estimatedTime').isInt()]
+        ,async (req, res) => {
+
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(422).json({errors: errors.array()});
+        } 
+        try {
+
+			const hikeID = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
+			const startingPointID = await dao.postPoint(req.body.startingPoint);
+			const endingPointID = await dao.postPoint(req.body.endingPoint);
+			await dao.postHike_Point(hikeID, "start", startingPointID);
+			await dao.postHike_Point(hikeID, "arrive", endingPointID);
+	
+			for(let i in req.body.pointsOfInterest) {
+				let pointID = await dao.postPoint(req.body.pointsOfInterest[i]);
+				await dao.postHike_Point(hikeID, "interest", pointID);
+			}
+			
+            return res.status(201).json("Hiking is created");
+        } catch (err) {
+
+          res.status(500).json({ error: `Generic error` }).end();
+        }
+
+
 })
 
 // hiking delete
 app.delete('/api/hiking/delete', async (req, res) => {
 	try {
 		const status = await dao.deleteHikes();
-		if (status === '404'){
-			console.log(status);
-			res.status(404).json({ error: `Validation of request body failed` }).end();
-		}
-		else{
-			return res.status(201).end();}
+			return res.status(204).end();
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
+app.delete('/api/points', async (req, res) => {
+	try {
+		await dao.deleteHike_Point();
+		await dao.deletePoint();
+
+		return res.status(201).end();
 	} catch (err) {
 		res.status(500).end();
 	}
