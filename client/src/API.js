@@ -44,8 +44,6 @@ async function getInfo(info) {
         const response = await fetch(url);
         if (response.ok) {
             const city = await response.json();
-
-
             return city;
         } else {
             /* Application error */
