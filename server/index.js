@@ -389,7 +389,17 @@ app.post('/api/hiking',
         } 
         try {
 
-          const status = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
+			const hikeID = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
+			const startingPointID = await dao.postPoint(req.body.startingPoint);
+			const endingPointID = await dao.postPoint(req.body.endingPoint);
+			await dao.postHike_Point(hikeID, "start", startingPointID);
+			await dao.postHike_Point(hikeID, "arrive", endingPointID);
+	
+			for(let i in req.body.pointsOfInterest) {
+				let pointID = await dao.postPoint(req.body.pointsOfInterest[i]);
+				await dao.postHike_Point(hikeID, "interest", pointID);
+			}
+			
             return res.status(201).json("Hiking is created");
         } catch (err) {
 
@@ -406,6 +416,17 @@ app.delete('/api/hiking/delete', async (req, res) => {
 			return res.status(204).end();
 	} catch (err) {
 		console.log(err);
+		res.status(500).end();
+	}
+});
+
+app.delete('/api/points', async (req, res) => {
+	try {
+		await dao.deleteHike_Point();
+		await dao.deletePoint();
+
+		return res.status(201).end();
+	} catch (err) {
 		res.status(500).end();
 	}
 });
