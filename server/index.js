@@ -376,6 +376,8 @@ app.get("/api/hikesdesc/:id", async (req, res) => {
 	}
 });
 
+
+
 //hiking post
 app.post('/api/hiking', 
         [check('length').isInt(),

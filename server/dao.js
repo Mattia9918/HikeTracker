@@ -438,22 +438,6 @@ exports.getCoordinates = (file) => {
 
 
 
-// Get Hike info
-exports.getHike = () => {
-	return new Promise((resolve, reject) => {
-		const sql = 'SELECT * FROM hike ORDER BY id ASC';
-		db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
-			else {
-				const hikes = rows.map(row => new Hike(row.id, row.title, row.length, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
-				resolve(hikes);
-			}
-		})
-	})
-}
-
-
 
 
 // Get Hike desc
@@ -468,6 +452,8 @@ exports.getHikeDesc = (id) => {
 		})
 	})
 }
+
+
 
 
 
