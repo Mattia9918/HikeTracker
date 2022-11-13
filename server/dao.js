@@ -438,7 +438,24 @@ exports.getCoordinates = (file) => {
 
 
 
+<<<<<<< HEAD
 
+=======
+// Get Hike info
+exports.getHike = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT * FROM hike ORDER BY id ASC';
+		db.all(sql, [], (err, rows) => {
+			if (err)
+				reject(err);
+			else {
+				const hikes = rows.map(row => new Hike(row.id, row.title, row.length, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
+				resolve(hikes);
+			}
+		})
+	})
+}
+>>>>>>> 5d38b12f25eedc791d11c4c0693dfbfeaf9f553d
 
 // Get Hike desc
 exports.getHikeDesc = (id) => {
@@ -527,7 +544,7 @@ exports.deletePoint = () => {
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.description, body.city, body.province], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "hut located in a naturalistic place", body.city, body.principalSubdivision], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);

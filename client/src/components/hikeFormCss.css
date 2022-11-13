@@ -10,17 +10,27 @@
 .below-nav {
     padding-top: 5rem;
 }
-.row {
+.row{
+    margin-left: 5%;
+    margin-right:5%; 
+
+}
+.r {
     margin-top: 10px;
     margin-bottom: 10px;
+    
+
 }
 .btn {
     width: auto;
 }
 
-.col {
+.c {
     padding-top: 1rem;
     padding-bottom: 1rem ;
     padding-left: 2rem;
     padding-right: 2rem;
+}
+.container.doNotLimitWidth {
+    max-width: none;
 }
