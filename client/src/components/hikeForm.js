@@ -224,7 +224,7 @@ function HikeForm(props) {
                                 <div>
                                     <h6>Starting Point Longitude: {spoint ? spoint.longitude : null} </h6>
                                     <h6>Starting Point Latitude: {spoint ? spoint.latitude : null}</h6>
-                                    <h6>Starting Point City: {spoint ? spoint.city : null}</h6>
+                                    <h6>Starting Point City: {spoint ? spoint.locality : null}</h6>
                                     <h6>Starting Point Country: {spoint ? spoint.countryName : null}</h6>
                                 </div>
 
@@ -238,7 +238,7 @@ function HikeForm(props) {
                                 <div>
                                     <h6>Ending Point Longitude: {epoint ? epoint.longitude : null}</h6>
                                     <h6>Ending Point Latitude: {epoint ? epoint.latitude : null} </h6>
-                                    <h6>Ending Point City: {epoint ? epoint.city : null}</h6>
+                                    <h6>Ending Point City: {epoint ? epoint.locality : null}</h6>
                                     <h6>Starting Point Country: {epoint ? epoint.countryName : null}</h6>
                                 </div>
 
