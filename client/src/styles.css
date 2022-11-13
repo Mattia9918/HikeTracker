@@ -13,3 +13,9 @@
     font-weight: 600;
     color:#6b6b6bd0;
 }
+
+#navlink:focus{
+    color:#0d6efdd0;
+    font-weight: 600;
+}
+

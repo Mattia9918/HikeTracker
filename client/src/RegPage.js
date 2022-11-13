@@ -1,7 +1,7 @@
 import { Col, Form, Button, Row, Alert, Container } from 'react-bootstrap';
 import './App.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 
 
@@ -25,7 +25,9 @@ function SignIn(props) {
     setSurname("");
     setUsername("");
   }
-
+  useEffect(() =>{
+    props.setStatus("");
+  },[]); 
   const signInHandler = (event) => {
 
     event.preventDefault();
@@ -40,7 +42,7 @@ function SignIn(props) {
 
   return (<>
 
-    <Container className="shadow-sm p-5 mt-5 w-75">
+    <Container className="shadow-sm p-5 mt-5 w-75" id = "cardscontainer">
       {props.status === "success" ?
         <Alert variant={props.msg.type} className="w-100 " onClose={() => setShow(false)} show={show} dismissible>
           {props.msg.message}

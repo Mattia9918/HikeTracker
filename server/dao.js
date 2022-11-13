@@ -149,7 +149,7 @@ exports.deleteUser = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
 			"DELETE FROM user";
-		db.run(sql, [], function(err) {
+		db.run(sql, [], function (err) {
 			if (err) {
 				reject(err);
 				return;
@@ -159,7 +159,7 @@ exports.deleteUser = () => {
 
 		const sql2 =
 			"UPDATE sqlite_sequence SET seq=0 WHERE name='user'";
-		db.run(sql2, [], function(err) {
+		db.run(sql2, [], function (err) {
 			if (err) {
 				reject(err);
 				return;
@@ -174,7 +174,7 @@ exports.deleteTableActivation = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
 			"DELETE FROM activation";
-		db.run(sql, [], function(err) {
+		db.run(sql, [], function (err) {
 			if (err) {
 				reject(err);
 				return;
@@ -310,7 +310,7 @@ exports.getHikeByDistanceRange = (longitude, latitude, maxDist) => {
 				const filteredHikes = hikes.filter((r) => {
 					const distance = Math.sqrt(
 						Math.pow(longitude - r.startingPoint.longitude, 2) +
-							Math.pow(latitude - r.startingPoint.latitude, 2)
+						Math.pow(latitude - r.startingPoint.latitude, 2)
 					);
 					if (maxDist >= distance) return true;
 					else return false;
@@ -330,7 +330,7 @@ const rowJsonMapping = (rows) => {
 		estimatedTime,
 		ascent,
 		localguideID,
-    localguideUsername,
+		localguideUsername,
 		startingPoint,
 		endingPoint,
 		point;
@@ -349,7 +349,7 @@ const rowJsonMapping = (rows) => {
 					estimatedTime: estimatedTime,
 					ascent: ascent,
 					localguideID: localguideID,
-          			localguideUsername: localguideUsername,
+					localguideUsername: localguideUsername,
 					startingPoint: startingPoint,
 					endingPoint: endingPoint,
 					pointsOfInterest: interestingPoints,
@@ -363,7 +363,7 @@ const rowJsonMapping = (rows) => {
 			estimatedTime = rows[r].estimatedTime;
 			ascent = rows[r].ascent;
 			localguideID = rows[r].localguideID;
-     		localguideUsername = rows[r].username;
+			localguideUsername = rows[r].username;
 			interestingPoints = [];
 		}
 		firstRow = false;
@@ -400,7 +400,7 @@ const rowJsonMapping = (rows) => {
 		estimatedTime: estimatedTime,
 		ascent: ascent,
 		localguideID: localguideID,
-    	localguideUsername: localguideUsername,
+		localguideUsername: localguideUsername,
 		startingPoint: startingPoint,
 		endingPoint: endingPoint,
 		pointsOfInterest: interestingPoints,
@@ -415,7 +415,7 @@ const togeojson = require("@mapbox/togeojson"); //convert from xml->json
 const DomParser = require("xmldom").DOMParser; // node doesn't have xml parsing or a dom.
 const fs = require("fs"); //file system manager (readFile)
 
-exports.getCoordinates=(file)=>{
+exports.getCoordinates = (file) => {
 
 
 	if (file) {
@@ -423,13 +423,12 @@ exports.getCoordinates=(file)=>{
 		// Convert GPX to GeoJSON
 		const converted = togeojson.gpx(fileParsedFromDom);
 		const coordinates = {};
-		let i=0;
-		for(const geometries of converted.features )
-		{
+		let i = 0;
+		for (const geometries of converted.features) {
 			const c = geometries.geometry.coordinates;
 			coordinates[i] = c;
 
-			i+=1;
+			i += 1;
 		}
 		return coordinates;
 	}
@@ -446,7 +445,7 @@ exports.getHike = () => {
 		db.all(sql, [], (err, rows) => {
 			if (err)
 				reject(err);
-			else{
+			else {
 				const hikes = rows.map(row => new Hike(row.id, row.title, row.length, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
 				resolve(hikes);
 			}
@@ -492,14 +491,14 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 exports.deleteHikes = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DROP TABLE IF EXISTS hike';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id integer NOT NULL, title text NOT NULL, length integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id INTEGER, title text NOT NULL, length integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
 			}
 			else {
-				db.run(sql2, [], function(err) {
+				db.run(sql2, [], function (err) {
 					if (err) {
 						console.log(err);
 						reject(err)
@@ -513,3 +512,85 @@ exports.deleteHikes = () => {
 	})
 
 };
+
+exports.deletePoint = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DROP TABLE IF EXISTS point';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS point(id INTEGER, latitude real NOT NULL, longitude real NOT NULL, type text NOT NULL, description text NOT NULL, city text NOT NULL, province text NOT NULL, PRIMARY KEY(id) ) '
+		db.run(sql1, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql2, [], function (err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
+};
+
+exports.postPoint = (body) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
+		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.description, body.city, body.province], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(this.lastID)
+			}
+		});
+	})
+};
+		
+
+exports.deleteHike_Point = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DROP TABLE IF EXISTS hike_point';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike_point(hikeID INTEGER, type text NOT NULL, pointID integer NOT NULL, PRIMARY KEY(hikeID, pointID)) '
+		db.run(sql1, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql2, [], function (err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
+};
+
+exports.postHike_Point = (hikeID, type, pointID) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'INSERT INTO hike_point(hikeID, type, pointID) VALUES (?, ?, ?)';
+		db.run(sql, [hikeID, type, pointID], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(this.lastID)
+			}
+		});
+	})
+};
+

@@ -1,10 +1,10 @@
 //import "./src/App.css";
-import './hikeFormCss.css';
+//import './hikeFormCss.css';
 import API from '../API';
 import {Col,Form,Button,Row,Container} from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 //import { useNavigate } from 'react-router-dom';
-import MyNavbar from './navbar';
+//import MyNavbar from './navbar';
 import Message from './Message';
 import Progress from './Progress';
 import axios from 'axios';
@@ -113,8 +113,8 @@ function HikeForm(props) {
 
 
     return(
-        <>
-            <MyNavbar></MyNavbar>
+        <Container>
+            {/*<MyNavbar></MyNavbar>*/}
             <Container className='below-nav'>
 
 
@@ -258,7 +258,7 @@ function HikeForm(props) {
 
             </Container>
 
-        </>
+        </Container>
     );
 }
 

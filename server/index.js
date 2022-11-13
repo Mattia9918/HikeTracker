@@ -405,6 +405,7 @@ app.delete('/api/hiking/delete', async (req, res) => {
 		const status = await dao.deleteHikes();
 			return res.status(204).end();
 	} catch (err) {
+		console.log(err);
 		res.status(500).end();
 	}
 });
