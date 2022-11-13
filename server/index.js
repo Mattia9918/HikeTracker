@@ -232,7 +232,6 @@ app.post('/api/register',
 [ 
 	check('email').isEmail(),
 	check('role').isLength({min:3})
-
 ],
 async (req, res) => {
 	const email = req.body.email;
@@ -252,6 +251,13 @@ async (req, res) => {
 		// Generate hash password
 		const salt = await bcrypt.genSalt(10);
 		const password = await bcrypt.hash(pass, salt);
+
+		if(await dao.getUserByEmail(email) !== undefined) {
+			return res.status(500).json({error: "Email already registered!"});
+		}
+		if(await dao.getUserByUsername(username) !== undefined) {
+			return res.status(500).json({error: "Username already used!"});
+		}
 
 		await dao.insertUser(email, password, salt, role, name, surname, username);
 
@@ -320,6 +326,9 @@ app.get('/api/validate/:code', async (req, res) => {
 	}
 })
 
+/** SKETCH **/
+
+
 // FILE UPLOAD(.gpx*)
 app.post('/upload', async(req, res) => {
 	if (req.files === null) {
@@ -328,23 +337,29 @@ app.post('/upload', async(req, res) => {
 
 	const file = req.files.file;
 
-	file.mv(`../client/public/uploads/${file.name}`, err => {
+
+	await file.mv(`../client/public/uploads/${file}`, err => {
 		if (err) {
 			console.error(err);
 			return res.status(500).send(err);
+		} else {
+			const a = dao.getCoordinates(`../client/public/uploads/${file}`);
+			res.json({
+				fileName: file.name,
+				filePath: `/uploads/${file.name}`,
+				startPointLong: a[0][1][0],
+				startPointLat: a[0][1][1],
+				endingPointLong: a[0][a[0].length - 1][0],
+				endingPointLat: a[0][a[0].length - 1][1]
+			});
 		}
 
-		res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
 	});
 });
-/*
-app.get(`${__dirname}/upload`, (req,res)=> {
-    res.download("./uploads/location.gpx");
-});
-*/
 
-/** Create Hike APIs **/
 
+
+// HIKING TABLE
 app.get('/api/hiking', async (req, res) => {
 	try {
 		const hike = await dao.getHike();
@@ -367,7 +382,7 @@ app.get("/api/hiking/:id", async (req, res) => {
 });
 
 //hiking post
-app.post('/api/hiking', isLoggedIn, isLocalGuide, async (req, res) => {
+app.post('/api/hiking', async (req, res) => {
 	try {
 		const status = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
 		if (status === '422')
@@ -391,6 +406,7 @@ app.delete('/api/hiking/delete', async (req, res) => {
 		res.status(500).end();
 	}
 });
+
 
 
 /* -- SERVER ACTIVATION -- */

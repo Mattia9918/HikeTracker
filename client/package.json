@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mapbox/togeojson": "^0.16.0",
+    "axios": "^0.18.0",
+    "bootstrap-icons": "^1.9.1",
+    "prop-types": "^15.8.1",
+    "react-bootstrap-icons": "^1.9.1",
+    "reacticons": "^0.0.1",
+    "xmldom": "^0.6.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -35,6 +42,7 @@
       "not dead",
       "not op_mini all"
     ],
+    "proxy": "http://localhost:3001",
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",

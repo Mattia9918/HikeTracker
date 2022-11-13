@@ -12,47 +12,7 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
 
-
-exports.deleteUser = () => {
-	return new Promise((resolve, reject) => {
-		const sql1 = 'DROP TABLE IF EXISTS user';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS user(id INTEGER, email text NOT NULL, hash text NOT NULL, salt text NOT NULL, role text NOT NULL, username text NOT NULL, isActive integer NOT NULL, name text NOT NULL, surname text NOT NULL, PRIMARY KEY(id) ) '
-		db.run(sql1, [], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
-			else {
-				db.run(sql2, [], function(err) {
-					if (err) {
-						console.log(err);
-						reject(err)
-					}
-					else {
-						resolve()
-					}
-				});
-			}
-		})
-	})
-
-};
-exports.deleteTableActivation = () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"DELETE FROM activation";
-		db.run(sql, [], function(err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		});
-	})
-};
-
-
-/** USER **/
+/** USER AND ACTIVATION **/
 
 exports.insertUser = (email, hash, salt, role, name, surname, username) => {
 	return new Promise((resolve, reject) => {
@@ -63,7 +23,7 @@ exports.insertUser = (email, hash, salt, role, name, surname, username) => {
 				reject(err);
 				return;
 			}
-			resolve(this);
+			resolve(this.lastID);
 		});
 	});
 };
@@ -122,6 +82,19 @@ exports.getUserByEmail = (email) => {
 	});
 };
 
+exports.getUserByUsername = (username) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT * FROM user WHERE username = ?";
+		db.get(sql, [username], function (err, row) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(row);
+			}
+		});
+	});
+};
+
 exports.getUserByCredentials = (email, password) => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT * FROM user WHERE email = ?";
@@ -170,6 +143,45 @@ exports.deleteActivation = (email) => {
 			}
 		});
 	});
+};
+
+exports.deleteUser = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM user";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+
+		const sql2 =
+			"UPDATE sqlite_sequence SET seq=0 WHERE name='user'";
+		db.run(sql2, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+
+	})
+};
+
+exports.deleteTableActivation = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM activation";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+	})
 };
 
 /** HIKES **/
@@ -396,7 +408,36 @@ const rowJsonMapping = (rows) => {
 	return hikes;
 };
 
+/*** SKETCH ***/
 /*** HIKE TABLE ***/
+
+const togeojson = require("@mapbox/togeojson"); //convert from xml->json
+const DomParser = require("xmldom").DOMParser; // node doesn't have xml parsing or a dom.
+const fs = require("fs"); //file system manager (readFile)
+
+exports.getCoordinates=(file)=>{
+
+
+	if (file) {
+		const fileParsedFromDom = new DomParser().parseFromString(fs.readFileSync(file, "utf-8"));
+		// Convert GPX to GeoJSON
+		const converted = togeojson.gpx(fileParsedFromDom);
+		const coordinates = {};
+		let i=0;
+		for(const geometries of converted.features )
+		{
+			const c = geometries.geometry.coordinates;
+			coordinates[i] = c;
+
+			i+=1;
+		}
+		return coordinates;
+	}
+	return {};
+
+}
+
+
 
 // Get Hike info
 exports.getHike = () => {
@@ -413,6 +454,9 @@ exports.getHike = () => {
 	})
 }
 
+
+
+
 // Get Hike desc
 exports.getHikeDesc = (id) => {
 	return new Promise((resolve, reject) => {
@@ -425,6 +469,8 @@ exports.getHikeDesc = (id) => {
 		})
 	})
 }
+
+
 
 exports.createHiking = (title, length, description, difficulty, estimatedTime, ascent, localguideID) => {
 
@@ -439,6 +485,9 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 		});
 	});
 }
+
+
+
 
 exports.deleteHikes = () => {
 	return new Promise((resolve, reject) => {

@@ -7,12 +7,12 @@ import { useState } from 'react';
 
 function SignIn(props) {
 
-  const [email, setEmail] = useState("giorgioferraro4242@gmail.com");
-  const [password, setPassword] = useState("fdfsdfd");
-  const [name, setName] = useState("sdffds");
-  const [surname, setSurname] = useState("fdsfd");
-  const [username, setUsername] = useState("fsdfds");
-  const [role, setRole] = useState("fsdfds");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState("");
 
 
   const [show, setShow] = useState(true);

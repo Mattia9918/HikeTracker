@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
 import ValidatePage from './ValidateUser'
 import SignIn from './RegPage'
 import LoginForm from './Login'
+import HikeForm from './components/hikeForm';
 import API from './API';
 
 function App(){
@@ -34,6 +35,7 @@ function App2() {
     const checkAuth = async() => {
       try {
         const utente = await API.getUserInfo();
+        setMsg({message:"",type:""});
         setLoggedIn(true);
         setUser(utente);
 
@@ -48,7 +50,7 @@ function App2() {
       try {
         await API.addUser(user); 
         setStatus("success"); 
-        setMsg({message: 'Check email to activate your account', type: "warning"}); 
+        setMsg({message: 'Check email to activate your account', type: "success"}); 
 
       }
       catch(error){
@@ -65,6 +67,11 @@ function App2() {
       }
   }
 
+    async function postHike(Hike) {
+        console.log(Hike);
+        await API.postHike(Hike);
+    }
+
   const login = async (credentials) => {
   
     try {
@@ -80,7 +87,7 @@ function App2() {
       }
     }
     catch (err) { 
-      setMsg({message: err, type: "danger"}); 
+      setMsg({message: err.message, type: "danger"}); 
     }
   }
   
@@ -126,7 +133,8 @@ function App2() {
             <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter} msg = {msg} user = {user} />}/>
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={ <SignIn addUser={addUser} status={status} msg={msg}/>} /> 
-            <Route path='/login' element={ <LoginForm login={login} msg={msg}/>}/>
+            <Route path='/login' element={ <LoginForm login={login} msg={msg} setMsg={setMsg}/>}/>
+              <Route path='/newhike' element={ <HikeForm loadHike={postHike} ></HikeForm>}/>
           </Route>
           
           
