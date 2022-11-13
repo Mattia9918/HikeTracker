@@ -52,8 +52,8 @@ describe('test api/register (case invalid data 422)', () => {
 
 
     before(async ()=>{
-        dao.deleteUser(); 
-        dao.deleteTableActivation(); 
+        await dao.deleteUser();
+        await dao.deleteTableActivation();
     }); 
 
     const user = {
@@ -73,8 +73,8 @@ describe('test api/register (case user already defined 500)', () => {
 
 
     before(async ()=>{
-        dao.deleteUser(); 
-        dao.deleteTableActivation(); 
+        await dao.deleteUser();
+        await dao.deleteTableActivation();
     }); 
 
     const user = {
@@ -100,7 +100,7 @@ function register(expectedHTTPStatus, user) {
                 if(expectedHTTPStatus===422)
                     res.text.should.have.string("Invalid value");
                 else if(expectedHTTPStatus===500) 
-                    res.text.should.have.string("SQLITE_CONSTRAINT");
+                    res.text.should.have.string("Email already registered!");
             }); 
 
     })
