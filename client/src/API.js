@@ -2,6 +2,62 @@ import { Hike } from './Classes/Hike';
 
 const APIURL = 'http://localhost:3001/api/'
 
+async function postHike(Hike) {
+
+    const url = APIURL + `hiking`;
+
+    try {
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: Hike.title, length: Hike.length, description: Hike.description, difficulty: Hike.difficulty, estimatedTime: Hike.estimatedtime, ascent: Hike.ascent, localguideID: Hike.localguideID  })
+        });
+        if (response.ok) {
+            return true;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+
+            throw new TypeError(appErrText);
+
+        }
+    } catch (error) {
+
+
+        throw (error);
+    }
+}
+
+async function getInfo(info) {
+
+    const url = 'http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+info.lat+'&longitude='+info.long+'&localityLanguage=en';
+
+
+
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            const city = await response.json();
+
+
+            return city;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        throw (err);
+    }
+
+
+
+}
+
 async function addUser(user) {
 
     const url = APIURL + `register`;
@@ -180,5 +236,5 @@ async function getUserInfo() {
 
 
 
-const API = { addUser, getHikes, validateUser, getFilter, logIn,logOut,getUserInfo };
+const API = { postHike, getInfo, addUser, getHikes, validateUser, getFilter, logIn,logOut,getUserInfo };
 export default API;

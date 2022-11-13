@@ -408,7 +408,36 @@ const rowJsonMapping = (rows) => {
 	return hikes;
 };
 
+/*** SKETCH ***/
 /*** HIKE TABLE ***/
+
+const togeojson = require("@mapbox/togeojson"); //convert from xml->json
+const DomParser = require("xmldom").DOMParser; // node doesn't have xml parsing or a dom.
+const fs = require("fs"); //file system manager (readFile)
+
+exports.getCoordinates=(file)=>{
+
+
+	if (file) {
+		const fileParsedFromDom = new DomParser().parseFromString(fs.readFileSync(file, "utf-8"));
+		// Convert GPX to GeoJSON
+		const converted = togeojson.gpx(fileParsedFromDom);
+		const coordinates = {};
+		let i=0;
+		for(const geometries of converted.features )
+		{
+			const c = geometries.geometry.coordinates;
+			coordinates[i] = c;
+
+			i+=1;
+		}
+		return coordinates;
+	}
+	return {};
+
+}
+
+
 
 // Get Hike info
 exports.getHike = () => {
@@ -418,12 +447,15 @@ exports.getHike = () => {
 			if (err)
 				reject(err);
 			else{
-				const hikes = rows.map(row => new Hike(row.id, row.title, row.lenght, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
+				const hikes = rows.map(row => new Hike(row.id, row.title, row.length, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
 				resolve(hikes);
 			}
 		})
 	})
 }
+
+
+
 
 // Get Hike desc
 exports.getHikeDesc = (id) => {
@@ -437,6 +469,8 @@ exports.getHikeDesc = (id) => {
 		})
 	})
 }
+
+
 
 exports.createHiking = (title, length, description, difficulty, estimatedTime, ascent, localguideID) => {
 
@@ -452,10 +486,13 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 	});
 }
 
+
+
+
 exports.deleteHikes = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DROP TABLE IF EXISTS hike';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id integer NOT NULL, title text NOT NULL, lenght integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id integer NOT NULL, title text NOT NULL, length integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);

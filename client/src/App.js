@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
 import ValidatePage from './ValidateUser'
 import SignIn from './RegPage'
 import LoginForm from './Login'
+import HikeForm from './components/hikeForm';
 import API from './API';
 
 function App(){
@@ -65,6 +66,11 @@ function App2() {
           
       }
   }
+
+    async function postHike(Hike) {
+        console.log(Hike);
+        await API.postHike(Hike);
+    }
 
   const login = async (credentials) => {
   
@@ -128,6 +134,7 @@ function App2() {
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={ <SignIn addUser={addUser} status={status} msg={msg}/>} /> 
             <Route path='/login' element={ <LoginForm login={login} msg={msg} setMsg={setMsg}/>}/>
+              <Route path='/newhike' element={ <HikeForm loadHike={postHike} ></HikeForm>}/>
           </Route>
           
           
