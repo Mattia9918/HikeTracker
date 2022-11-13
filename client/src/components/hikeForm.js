@@ -97,6 +97,7 @@ function HikeForm(props) {
             setSpoint(startpoint.data);
             setEpoint(endpoint.data);
 
+            console.log(startpoint); 
             setMessage('File Uploaded');
         } catch (err) {
             console.log(err);

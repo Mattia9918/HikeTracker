@@ -389,6 +389,8 @@ app.post('/api/hiking',
         } 
         try {
 
+
+			
 			const hikeID = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
 			const startingPointID = await dao.postPoint(req.body.startingPoint);
 			const endingPointID = await dao.postPoint(req.body.endingPoint);
