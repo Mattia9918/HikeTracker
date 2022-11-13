@@ -404,7 +404,7 @@ app.post('/api/hiking',
 				await dao.postHike_Point(hikeID, "interest", pointID);
 			}
 			
-            return res.status(201).json("Hiking is created");
+            return res.status(201).json({"id": hikeID});
         } catch (err) {
 
           res.status(500).json({ error: `Generic error` }).end();

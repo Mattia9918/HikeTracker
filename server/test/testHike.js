@@ -439,3 +439,222 @@ function postHike(expectedHTTPStatus, hike) {
     })
 }
 
+// GET HIKES 
+
+describe('test Get Hikes', () => {
+  beforeEach(async () => {
+      await agent.delete('/api/points');
+      await agent.delete('/api/hiking/delete');
+  });
+
+  const hike1 = {
+      "title": "hikone1",
+      "length": 10,
+      "description": "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+      "difficulty": "Easy",
+      "estimatedTime": "10",
+      "ascent": 800,
+      "localguideID": 1,
+      "startingPoint": {
+          "latitude": 54,
+          "longitude": 90,
+          "type": "fdsfds",
+          "description": "suer",
+          "city": "nonBiella",
+          "province": "noBiella"
+      },
+      "endingPoint": {
+          "latitude": 23,
+          "longitude": 754,
+          "type": "hut",
+          "description": "hut located in a sure place",
+          "city": "Ivrea",
+          "province": "Torino"
+      },
+      "pointsOfInterest": [
+          {
+              "latitude": 5432,
+              "longitude": 343,
+              "type": "hut",
+              "description": "well, hut",
+              "city": "Alba",
+              "province": "Cuneo"
+          },
+          {
+              "latitude": 63,
+              "longitude": 36,
+              "type": "hut",
+              "description": "warm hut where to drink something",
+              "city": "Cuneo",
+              "province": "Cuneo"
+          }
+      ]
+  }
+
+  const hike2 = {
+      "title": "hikone2",
+      "length": 54,
+      "description": "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+      "difficulty": "Easy",
+      "estimatedTime": "10",
+      "ascent": 300,
+      "localguideID": 1,
+      "startingPoint": {
+          "latitude": 43,
+          "longitude": 10,
+          "type": "fdsfds",
+          "description": "suer",
+          "city": "nonBiella",
+          "province": "noBiella"
+      },
+      "endingPoint": {
+          "latitude": 543,
+          "longitude": 4343,
+          "type": "hut",
+          "description": "hut located in a sus place",
+          "city": "NANANANA",
+          "province": "sus"
+      },
+      "pointsOfInterest": [
+          {
+              "latitude": 53223,
+              "longitude": 6545,
+              "type": "hut",
+              "description": "well, hut",
+              "city": "Alba",
+              "province": "Cuneo"
+          },
+          {
+              "latitude": 4354,
+              "longitude": 4534,
+              "type": "hut",
+              "description": "warm huh where to drink something",
+              "city": "Cuneo",
+              "province": "Cuneo"
+          }
+      ]
+  }
+
+  getHikes(200, hike1, hike2);
+  getHikeById(200, hike1);
+  getHikesByAscent(200, hike1, hike2, 200, 800);
+  getHikesByExpectedTime(200, hike1, hike2, 0, 2);
+  getHikesByLength(200, hike1, hike2, 1, 10);
+  getHikesByDifficulty(200, hike1, hike2, "easy");
+  getHikesByCity(200, hike1, hike2, "Biella");
+  getHikesByProvince(200, hike1, hike2, "Biella");
+  getHikesByDistance(200, hike1, hike2, 40, 40, 1000);
+});
+
+function getHikes(expectedHTTPStatus, hike1, hike2) {
+  it('test getHikes', async () => {
+      let hike1ID, hike2ID;
+      await agent.post('/api/hiking').send(hike1).then(function (res) {
+          hike1ID = res.body.id;
+      });
+      await agent.post('/api/hiking').send(hike2).then(function (res) {
+          hike1ID = res.body.id;
+      });
+
+      await agent.get('/api/hikes').then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          res.body.length.should.equal(2);
+          res.body[0].title.should.equal("hikone1");
+      });
+  });
+}
+
+function getHikeById(expectedHTTPStatus, hike1) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+
+      await agent.get('/api/hike/'+`${hike1.id}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          res.body.length.should.equal(1);
+      });
+  });
+}
+
+function getHikesByAscent(expectedHTTPStatus, hike1, hike2, minAscent, maxAscent) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=ascent&value1=${minAscent}&value2=${maxAscent}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          
+      });
+  });
+}
+
+function getHikesByExpectedTime(expectedHTTPStatus, hike1, hike2, minTime, maxTime) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=expectedTime&value1=${minTime}&value2=${maxTime}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          // res.body.should.eql([]);
+      });
+  });
+}
+
+function getHikesByLength(expectedHTTPStatus, hike1, hike2, minLen, maxLen) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=length&value1=${minLen}&value2=${maxLen}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          // res.body.should.eql([]);
+      });
+  });
+}
+
+function getHikesByDifficulty(expectedHTTPStatus, hike1, hike2, difficulty) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=difficulty&value1=${difficulty}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          // res.body.should.eql([]);
+      });
+  });
+}
+
+function getHikesByCity(expectedHTTPStatus, hike1, hike2, city) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=city&value1=${city}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          // res.body.should.eql([]);
+      });
+  });
+}
+
+function getHikesByProvince(expectedHTTPStatus, hike1, hike2, province) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=ascent&province=${province}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          // res.body.should.eql([]);
+      });
+  });
+}
+
+function getHikesByDistance(expectedHTTPStatus, hike1, hike2, latitude, longitude, maxDist) {
+  it('test getHikes', async () => {
+      await agent.post('/api/hiking').send(hike1);
+      await agent.post('/api/hiking').send(hike2);
+
+      await agent.get(`/api/hikes?filter=distance&longitude=${longitude}&latitude=${latitude}&maxDist=${maxDist}`).then( function (res) {
+          res.should.have.status(expectedHTTPStatus);
+          // res.body.should.eql([]);
+      });
+  });
+}
