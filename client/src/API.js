@@ -23,13 +23,13 @@ async function postHike(Hike) {
         } else {
             /* Application error */
             const appErrText = await response.text();
-
+            console.log(response); 
             throw new TypeError(appErrText);
 
         }
     } catch (error) {
 
-
+        console.log(error); 
         throw (error);
     }
 }

@@ -453,9 +453,6 @@ exports.getHike = () => {
 	})
 }
 
-
-
-
 // Get Hike desc
 exports.getHikeDesc = (id) => {
 	return new Promise((resolve, reject) => {
