@@ -12,46 +12,7 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
 
-
-exports.deleteUser = () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"DELETE FROM user";
-		db.run(sql, [], function(err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		}); 
-		const sql2 =
-			"UPDATE sqlite_sequence SET seq=0 WHERE name=user";
-		db.run(sql2, [], function(err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		}); 
-		
-	})
-}; 
-exports.deleteTableActivation = () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"DELETE FROM activation";
-		db.run(sql, [], function(err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		});
-	})
-};
-
-
-/** USER **/
+/** USER AND ACTIVATION **/
 
 exports.insertUser = (email, hash, salt, role, name, surname, username) => {
 	return new Promise((resolve, reject) => {
@@ -62,7 +23,7 @@ exports.insertUser = (email, hash, salt, role, name, surname, username) => {
 				reject(err);
 				return;
 			}
-			resolve(this);
+			resolve(this.lastID);
 		});
 	});
 };
@@ -121,6 +82,19 @@ exports.getUserByEmail = (email) => {
 	});
 };
 
+exports.getUserByUsername = (username) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT * FROM user WHERE username = ?";
+		db.get(sql, [username], function (err, row) {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(row);
+			}
+		});
+	});
+};
+
 exports.getUserByCredentials = (email, password) => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT * FROM user WHERE email = ?";
@@ -169,6 +143,45 @@ exports.deleteActivation = (email) => {
 			}
 		});
 	});
+};
+
+exports.deleteUser = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM user";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+
+		const sql2 =
+			"UPDATE sqlite_sequence SET seq=0 WHERE name='user'";
+		db.run(sql2, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+
+	})
+};
+
+exports.deleteTableActivation = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM activation";
+		db.run(sql, [], function(err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+	})
 };
 
 /** HIKES **/

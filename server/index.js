@@ -253,6 +253,13 @@ async (req, res) => {
 		const salt = await bcrypt.genSalt(10);
 		const password = await bcrypt.hash(pass, salt);
 
+		if(await dao.getUserByEmail(email) !== undefined) {
+			return res.status(500).json({error: "Email already registered!"});
+		}
+		if(await dao.getUserByUsername(username) !== undefined) {
+			return res.status(500).json({error: "Username already used!"});
+		}
+
 		await dao.insertUser(email, password, salt, role, name, surname, username);
 
 		// Generate activation code
