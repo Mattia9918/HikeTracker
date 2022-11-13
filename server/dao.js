@@ -15,27 +15,28 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 
 exports.deleteUser = () => {
 	return new Promise((resolve, reject) => {
-		const sql =
-			"DELETE FROM user";
-		db.run(sql, [], function(err) {
+		const sql1 = 'DROP TABLE IF EXISTS user';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS user(id INTEGER, email text NOT NULL, hash text NOT NULL, salt text NOT NULL, role text NOT NULL, username text NOT NULL, isActive integer NOT NULL, name text NOT NULL, surname text NOT NULL, PRIMARY KEY(id) ) '
+		db.run(sql1, [], function (err) {
 			if (err) {
+				console.log(err);
 				reject(err);
-				return;
 			}
-			resolve();
-		}); 
-		const sql2 =
-			"UPDATE sqlite_sequence SET seq=0 WHERE name=user";
-		db.run(sql2, [], function(err) {
-			if (err) {
-				reject(err);
-				return;
+			else {
+				db.run(sql2, [], function(err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
 			}
-			resolve();
-		}); 
-		
+		})
 	})
-}; 
+
+};
 exports.deleteTableActivation = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
@@ -405,7 +406,7 @@ exports.getHike = () => {
 			if (err)
 				reject(err);
 			else{
-				const hikes = rows.map(row => new Hike(row.id, row.title, row.lenght, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
+				const hikes = rows.map(row => new Hike(row.id, row.title, row.length, row.description, row.difficulty, row.estimatedTime, row.ascent, row.localguideID));
 				resolve(hikes);
 			}
 		})
@@ -442,7 +443,7 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 exports.deleteHikes = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DROP TABLE IF EXISTS hike';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id integer NOT NULL, title text NOT NULL, lenght integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id INTEGER, title text NOT NULL, length integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);
@@ -463,3 +464,102 @@ exports.deleteHikes = () => {
 	})
 
 };
+
+exports.deletePoint = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DROP TABLE IF EXISTS point';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS point(id INTEGER, latitude real NOT NULL, longitude real NOT NULL, type text NOT NULL, description text NOT NULL, city text NOT NULL, province text NOT NULL, PRIMARY KEY(id) ) '
+		db.run(sql1, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql2, [], function(err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
+};
+
+exports.postPoint = (body) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'DROP TABLE IF EXISTS point';
+		db.run(sql, [body.latitude, body.longitude, body.type, body.description, body.city, body.province], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql, [], function(err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve(this.lastID)
+					}
+				});
+			}
+		})
+	})
+
+};
+
+exports.deleteHike_Point = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DROP TABLE IF EXISTS hike_point';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike_point(hikeID INTEGER, type text NOT NULL, pointID integer NOT NULL, PRIMARY KEY(hikeID, pointID)) '
+		db.run(sql1, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql2, [], function(err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
+};
+
+exports.postHike_Point = (body) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'DROP TABLE IF EXISTS point';
+		db.run(sql, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql, [], function(err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
+};
+

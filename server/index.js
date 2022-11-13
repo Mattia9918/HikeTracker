@@ -383,14 +383,11 @@ app.post('/api/hiking', isLoggedIn, isLocalGuide, async (req, res) => {
 // hiking delete
 app.delete('/api/hiking/delete', async (req, res) => {
 	try {
-		const status = await dao.deleteHikes();
-		if (status === '404'){
-			console.log(status);
-			res.status(404).json({ error: `Validation of request body failed` }).end();
-		}
-		else{
-			return res.status(201).end();}
+		await dao.deleteHikes();
+		return res.status(201).end();
+
 	} catch (err) {
+		console.log(err);
 		res.status(500).end();
 	}
 });

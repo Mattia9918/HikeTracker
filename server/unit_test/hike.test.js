@@ -1,85 +1,88 @@
-const dao = require('../dao');
+const dao = require('../dao.js');
+
+const hike1 = {
+    id: undefined,
+    title: "Hike1",
+    length: 10,
+    description: "I'm Hike1!",
+    difficulty: "Easy",
+    estimatedTime: "1",
+    ascent: 120,
+    localguideID: 1
+ }
+ const hike2 = {
+     id: undefined,
+     title: "Hike2",
+     length: 20,
+     description: "I'm Hike2!",
+     difficulty: "Average",
+     estimatedTime: "2",
+     ascent: 400,
+     localguideID: 2
+ }
+
+ const hike3 = {
+     id: undefined,
+     title: "Hike3",
+     length: 30,
+     description: "I'm Hike3!",
+     difficulty: "Difficult",
+     estimatedTime: "3",
+     ascent: 800,
+     localguideID: 1
+ }
+
+ const hike4 = {
+     id: undefined,
+     title: "Hike4",
+     length: 40,
+     description: "I'm Hike4!",
+     difficulty: "Easy",
+     estimatedTime: "4",
+     ascent: 1500,
+     localguideID: 2
+ }
+
+ const localguide1 = {
+     id: undefined,
+     email: "lg1@polito.it",
+     hash: "foo",
+     salt: "foo",
+     role: "local guide",
+     username: "Francescone",
+     isActive: 1,
+     name: "Francescone",
+     surname: "Bianchi"
+ }
+
+ const localguide2 = {
+     id: undefined,
+     email: "lg2@polito.it",
+     hash: "foo",
+     salt: "foo",
+     role: "local guide",
+     username: "Franceschino",
+     isActive: 1,
+     name: "Franceschino",
+     surname: "Neri"
+ }
 
 describe("test hikes and filtering", () => {
     beforeEach(async () => {
-        await dao.dropTableHike();
-        await dao.dropTableUsers();
-
-        let hike1 = {
-            id: undefined,
-            title: "Hike1",
-            length: 10,
-            description: "I'm Hike1!",
-            difficulty: "Easy",
-            estimatedTime: 1,
-            ascent: 120,
-            localguideID: 1
-        }
-        let hike2 = {
-            id: undefined,
-            title: "Hike2",
-            length: 20,
-            description: "I'm Hike2!",
-            difficulty: "Average",
-            estimatedTime: 2,
-            ascent: 400,
-            localguideID: 2
-        }
-
-        let hike3 = {
-            id: undefined,
-            title: "Hike3",
-            length: 30,
-            description: "I'm Hike3!",
-            difficulty: "Difficult",
-            estimatedTime: 3,
-            ascent: 800,
-            localguideID: 1
-        }
-
-        let hike4 = {
-            id: undefined,
-            title: "Hike4",
-            length: 40,
-            description: "I'm Hike4!",
-            difficulty: "Easy",
-            estimatedTime: 4,
-            ascent: 1500,
-            localguideID: 2
-        }
-
-        let localguide1 = {
-            id: undefined,
-            email: "lg1@polito.it",
-            hash: "foo",
-            salt: "foo",
-            role: "local guide",
-            username: "Francescone",
-            isActive: 1,
-            name: "Francescone",
-            surname: "Bianchi"
-        }
-
-        let localguide2 = {
-            id: undefined,
-            email: "lg2@polito.it",
-            hash: "foo",
-            salt: "foo",
-            role: "local guide",
-            username: "Franceschino",
-            isActive: 1,
-            name: "Franceschino",
-            surname: "Neri"
-        }
+        await dao.deleteUser();
+        await dao.deleteHikes();
+        await dao.deletePoint();
+        await dao.deleteHike_Point();
         
         try {
-            await dao.createTableHike();
-            await dao.postHike(hike1);
-            await dao.postHike(hike2);
-            await dao.postHike(hike3);
-            await dao.postHike(hike4);
-            await dao.insertUser(localguide1);
-            await dao.insertUser(localguide2);
+            
+            await dao.createHiking(hike1.title, hike1.length, hike1.description, hike1.difficulty, hike1.estimatedTime, hike1.ascent, hike1.localguideID);
+            await dao.createHiking(hike2.title, hike2.length, hike2.description, hike2.difficulty, hike2.estimatedTime, hike2.ascent, hike2.localguideID);
+            await dao.createHiking(hike3.title, hike3.length, hike3.description, hike3.difficulty, hike3.estimatedTime, hike3.ascent, hike3.localguideID);
+            await dao.createHiking(hike4.title, hike4.length, hike4.description, hike4.difficulty, hike4.estimatedTime, hike4.ascent, hike4.localguideID);
+            await dao.insertUser(localguide1.email, localguide1.hash, localguide1.salt, localguide1.role, localguide1.name, localguide1.surname, localguide1.username);
+            await dao.insertUser(localguide2.email, localguide2.hash, localguide2.salt, localguide2.role, localguide2.name, localguide2.surname, localguide2.username);
+            
 
 
         } catch (err) {
@@ -87,18 +90,20 @@ describe("test hikes and filtering", () => {
         }
     })
 
-    testGetHikes();
-    testGetHikeByDiffculty();
-    testGetHikeByExpectedTime();
-    testGetHikeByLength();
-    testGetHikeByAscent();
+   testGetHikes();
+   testGetHikeByDiffculty();
+   testGetHikeByExpectedTime();
+   testGetHikeByLength();
+   testGetHikeByAscent();
 });
 
 function testGetHikes() {
 
     describe("Testing getHikes()", () => {
         test("4 hikes posted -> get these 4 hikes", async () => {
-            let res = await dao.getHikes();
+            let res = await dao.getHike();
+            console.log("hereee")
+            console.log(res)
             expect(res).toEqual(
                 [
                     {
@@ -107,13 +112,13 @@ function testGetHikes() {
                         length: 10,
                         description: "I'm Hike1!",
                         difficulty: "Easy",
-                        estimatedTime: 1,
+                        estimatedTime: "1",
                         ascent: 120,
                         localguideID: 1,
-                        localguideUsername: "Francescone",
-                        startingPoint: "",
-					    endingPoint: "",
-					    pointsOfInterest: []
+                        //localguideUsername: "Francescone",
+                        //startingPoint: undefined,
+					    //endingPoint: undefined,
+					    //pointsOfInterest: []
                     },
                     {
                         id: 2,
@@ -121,13 +126,13 @@ function testGetHikes() {
                         length: 20,
                         description: "I'm Hike2!",
                         difficulty: "Average",
-                        estimatedTime: 2,
+                        estimatedTime: "2",
                         ascent: 400,
                         localguideID: 2,
-                        localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
-					    pointsOfInterest: []
+                        //localguideUsername: "Franceschino",
+                       //startingPoint: undefined,
+					   //endingPoint: undefined,
+					   //pointsOfInterest: []
                         
                     },
                     {
@@ -136,13 +141,13 @@ function testGetHikes() {
                         length: 30,
                         description: "I'm Hike3!",
                         difficulty: "Difficult",
-                        estimatedTime: 3,
+                        estimatedTime: "3",
                         ascent: 800,
                         localguideID: 1,
-                        localguideUsername: "Francescone",
-                        startingPoint: "",
-					    endingPoint: "",
-					    pointsOfInterest: []
+                        //localguideUsername: "Francescone",
+                        //startingPoint: undefined,
+					    //endingPoint: undefined,
+					    //pointsOfInterest: []
                     },
                     {
                         id: 4,
@@ -150,13 +155,13 @@ function testGetHikes() {
                         length: 40,
                         description: "I'm Hike4!",
                         difficulty: "Easy",
-                        estimatedTime: 4,
+                        estimatedTime: "4",
                         ascent: 1500,
                         localguideID: 2,
-                        localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
-					    pointsOfInterest: []
+                        //localguideUsername: "Franceschino",
+                        //startingPoint: undefined,
+					    //endingPoint: undefined,
+					    //pointsOfInterest: []
                     }
                 ]
             )
@@ -177,12 +182,12 @@ function testGetHikeByDiffculty() {
                         length: 10,
                         description: "I'm Hike1!",
                         difficulty: "Easy",
-                        estimatedTime: 1,
+                        estimatedTime: "1",
                         ascent: 120,
                         localguideID: 1,
                         localguideUsername: "Francescone",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     },
                     {
@@ -191,12 +196,12 @@ function testGetHikeByDiffculty() {
                         length: 40,
                         description: "I'm Hike4!",
                         difficulty: "Easy",
-                        estimatedTime: 4,
+                        estimatedTime: "4",
                         ascent: 1500,
                         localguideID: 2,
                         localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     }
                 ]
@@ -218,12 +223,12 @@ function testGetHikeByExpectedTime() {
                         length: 10,
                         description: "I'm Hike1!",
                         difficulty: "Easy",
-                        estimatedTime: 1,
+                        estimatedTime: "1",
                         ascent: 120,
                         localguideID: 1,
                         localguideUsername: "Francescone",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     },
                     {
@@ -232,12 +237,12 @@ function testGetHikeByExpectedTime() {
                         length: 20,
                         description: "I'm Hike2!",
                         difficulty: "Average",
-                        estimatedTime: 2,
+                        estimatedTime: "2",
                         ascent: 400,
                         localguideID: 2,
                         localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     }
                 ]
@@ -259,12 +264,12 @@ function testGetHikeByLength() {
                         length: 30,
                         description: "I'm Hike3!",
                         difficulty: "Difficult",
-                        estimatedTime: 3,
+                        estimatedTime: "3",
                         ascent: 800,
                         localguideID: 1,
                         localguideUsername: "Francescone",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     },
                     {
@@ -273,12 +278,12 @@ function testGetHikeByLength() {
                         length: 40,
                         description: "I'm Hike4!",
                         difficulty: "Easy",
-                        estimatedTime: 4,
+                        estimatedTime: "4",
                         ascent: 1500,
                         localguideID: 2,
                         localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     }
                 ]
@@ -300,12 +305,12 @@ function testGetHikeByAscent() {
                         length: 20,
                         description: "I'm Hike2!",
                         difficulty: "Average",
-                        estimatedTime: 2,
+                        estimatedTime: "2",
                         ascent: 400,
                         localguideID: 2,
                         localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     },
                     {
@@ -314,12 +319,12 @@ function testGetHikeByAscent() {
                         length: 30,
                         description: "I'm Hike3!",
                         difficulty: "Difficult",
-                        estimatedTime: 3,
+                        estimatedTime: "3",
                         ascent: 800,
                         localguideID: 1,
                         localguideUsername: "Francescone",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     },
                     {
@@ -328,12 +333,12 @@ function testGetHikeByAscent() {
                         length: 40,
                         description: "I'm Hike4!",
                         difficulty: "Easy",
-                        estimatedTime: 4,
+                        estimatedTime: "4",
                         ascent: 1500,
                         localguideID: 2,
                         localguideUsername: "Franceschino",
-                        startingPoint: "",
-					    endingPoint: "",
+                        startingPoint: undefined,
+					    endingPoint: undefined,
 					    pointsOfInterest: []
                     }
                 ]
