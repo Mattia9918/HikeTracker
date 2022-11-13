@@ -143,6 +143,7 @@ describe("test hikes and filtering", () => {
    testGetHikeByExpectedTime();
    testGetHikeByLength();
    testGetHikeByAscent();
+   testGetHikeDescById
 });
 
 function testGetHikes() {
@@ -270,6 +271,7 @@ function testGetHikes() {
         })
     })
 }
+
 
 function testGetHikeByDiffculty() {
 
@@ -471,6 +473,21 @@ function testGetHikeByLength() {
                             province: "Torino",
                         },
 					    pointsOfInterest: []
+                    }
+                ]
+            )
+        })
+    })
+}
+
+function testGetHikeDescById() {
+    describe("Testing getHikeByAscent()", () => {
+        test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
+            let res = await dao.getHikeDesc(2);
+            expect(res).toEqual(
+                [
+                    {
+                        description: "I'm Hike1!"
                     }
                 ]
             )

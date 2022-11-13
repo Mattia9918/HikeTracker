@@ -438,6 +438,9 @@ exports.getCoordinates = (file) => {
 
 
 
+<<<<<<< HEAD
+
+=======
 // Get Hike info
 exports.getHike = () => {
 	return new Promise((resolve, reject) => {
@@ -452,6 +455,7 @@ exports.getHike = () => {
 		})
 	})
 }
+>>>>>>> 5d38b12f25eedc791d11c4c0693dfbfeaf9f553d
 
 // Get Hike desc
 exports.getHikeDesc = (id) => {
@@ -465,6 +469,8 @@ exports.getHikeDesc = (id) => {
 		})
 	})
 }
+
+
 
 
 
