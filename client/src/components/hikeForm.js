@@ -3,7 +3,7 @@ import './hikeFormCss.css';
 import API from '../API';
 import {Col,Form,Button,Row,Container} from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+//import { useNavigate } from 'react-router-dom';
 import MyNavbar from './navbar';
 import Message from './Message';
 import Progress from './Progress';
@@ -24,18 +24,15 @@ function HikeForm(props) {
     const [estimatedtime, setEstimatedtime] = useState("");
     const [difficulty, setDifficulty] = useState("");
     const [ascent, setAscent] = useState(""); 
-    
     const [spoint, setSpoint] = useState(); 
     const [epoint, setEpoint] = useState(); 
-
-
     const [file, setFile] = useState('');
     const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
     
-    
+    //const navigate = useNavigate(); 
 
     const onChange = e => {
         setFile(e.target.files[0]);
@@ -48,8 +45,7 @@ function HikeForm(props) {
 
         event.preventDefault();
         props.loadHike(info); 
-        
-        
+
         //navigate("/");
     }
 
@@ -189,26 +185,21 @@ function HikeForm(props) {
 
                                 <Progress percentage={uploadPercentage} />
                     </Row>
-                    <Row xs="auto">
-                        
-                        <Col>
+                    <Row>
                             {uploadedFile ? (
                                     
-                                        <div>
-                                            <h6>Filename: </h6>
-                                            <h3>{uploadedFile.fileName}</h3>
-                                            <h6>Starting Point Longitude: {spoint ? spoint.longitude : null} </h6>
-                                            <h6>Starting Point Latitude: {spoint ? spoint.latitude : null}</h6>
-                                            <h6>Starting Point City: {spoint ? spoint.city : null}</h6>
-                                            <h6>Ending Point Longitude: {epoint ? epoint.longitude : null}</h6>
-                                            <h6>Ending Point Latitude: {epoint ? epoint.latitude : null} </h6>
-                                            <h6>Ending Point City: {epoint ? spoint.city : null}</h6>
-                                        </div>
-                                    
-                                ) : null}
-                            
-                        </Col>
-                               
+                                    <div>
+                                        <h6>Filename: </h6>
+                                        <h3>{uploadedFile.fileName}</h3>
+                                        
+                                        
+                                    </div>
+                                
+                            ) : null}
+
+                    </Row>
+                    <Row>
+                        <Col></Col>
                         <Col></Col>
                         <Col>
                                 <input
@@ -218,8 +209,42 @@ function HikeForm(props) {
                                     onClick={onClickButton}
                                 />
                         </Col>
+                        <Col></Col>
+                        <Col></Col>
+                    </Row>
+                    <Row xs="auto">
+                        
+                        <Col>
+                            {uploadedFile ? (
+                                    
+                                        <div>
+                                            <h6>Starting Point Longitude: {spoint ? spoint.longitude : null} </h6>
+                                            <h6>Starting Point Latitude: {spoint ? spoint.latitude : null}</h6>
+                                            <h6>Starting Point City: {spoint ? spoint.city : null}</h6>
+                                            <h6>Starting Point Country: {spoint ? spoint.countryName : null}</h6>
+                                        </div>
+                                    
+                                ) : null}
+                            
+                        </Col>
+                               
+                        <Col>
+                            {uploadedFile ? (
+                                        
+                                        <div>
+                                            <h6>Ending Point Longitude: {epoint ? epoint.longitude : null}</h6>
+                                            <h6>Ending Point Latitude: {epoint ? epoint.latitude : null} </h6>
+                                            <h6>Ending Point City: {epoint ? epoint.city : null}</h6>
+                                            <h6>Starting Point Country: {epoint ? epoint.countryName : null}</h6>
+                                        </div>
+                                    
+                                ) : null}
+                        </Col>
+                        
 
                     </Row>
+
+                    
                     
 
                     <hr></hr>

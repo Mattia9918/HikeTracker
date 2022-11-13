@@ -22,19 +22,19 @@ app.post('/upload', async(req, res) => {
     if (err) {
       console.error(err);
       return res.status(500).send(err);
+    } else {
+      const a = dao.getCoordinates(`../client/public/uploads/${file}`);
+      res.json({ fileName: file.name, filePath: `/uploads/${file.name}`, startPointLong: a[0][1][0], startPointLat: a[0][1][1], endingPointLong: a[0][a[0].length-1][0], endingPointLat: a[0][a[0].length-1][1] });
     }
         
   });
 
-  const a = dao.getCoordinates(`../client/public/uploads/${file.name}`);
   
-  res.json({ fileName: file.name, filePath: `/uploads/${file.name}`, startPointLong: a[0][1][0], startPointLat: a[0][1][1], endingPointLong: a[0][a[0].length-1][0], endingPointLat: a[0][a[0].length-1][1] });
+  
+ 
 });
-/*
-app.get(`${__dirname}/upload`, (req,res)=> {
-    res.download("./uploads/location.gpx");
-});
-*/
+
+
 
 // HIKING TABLE 
 app.get('/api/hiking', async (req, res) => {
