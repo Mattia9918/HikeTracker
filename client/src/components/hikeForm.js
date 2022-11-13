@@ -48,7 +48,7 @@ function HikeForm(props) {
 
 
 
-        //navigate("/");
+        navigate("/");
     }
 
 
