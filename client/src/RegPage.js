@@ -1,7 +1,7 @@
 import { Col, Form, Button, Row, Alert, Container } from 'react-bootstrap';
 import './App.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 
 
@@ -25,7 +25,9 @@ function SignIn(props) {
     setSurname("");
     setUsername("");
   }
-
+  useEffect(() =>{
+    props.setStatus("");
+  },[]); 
   const signInHandler = (event) => {
 
     event.preventDefault();
