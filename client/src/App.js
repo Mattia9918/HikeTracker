@@ -134,7 +134,7 @@ function App2() {
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={ <SignIn addUser={addUser} status={status} msg={msg}/>} /> 
             <Route path='/login' element={ <LoginForm login={login} msg={msg} setMsg={setMsg}/>}/>
-              <Route path='/newhike' element={ <HikeForm loadHike={postHike} ></HikeForm>}/>
+            <Route path='/newhike' element={ <HikeForm postHike={postHike} ></HikeForm>}/>
           </Route>
           
           

@@ -336,14 +336,14 @@ app.post('/upload', async(req, res) => {
 	}
 
 	const file = req.files.file;
+	
 
-
-	await file.mv(`../client/public/uploads/${file}`, err => {
+	await file.mv(`../client/public/uploads/${file.name}`, err => {
 		if (err) {
 			console.error(err);
 			return res.status(500).send(err);
 		} else {
-			const a = dao.getCoordinates(`../client/public/uploads/${file}`);
+			const a = dao.getCoordinates(`../client/public/uploads/${file.name}`);
 			res.json({
 				fileName: file.name,
 				filePath: `/uploads/${file.name}`,

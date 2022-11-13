@@ -1,10 +1,10 @@
 //import "./src/App.css";
 import './hikeFormCss.css';
-import API from '../API';
+
 import {Col,Form,Button,Row,Container} from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-//import { useNavigate } from 'react-router-dom';
-import MyNavbar from './navbar';
+import { useNavigate } from 'react-router-dom';
+
 import Message from './Message';
 import Progress from './Progress';
 import axios from 'axios';
@@ -32,7 +32,7 @@ function HikeForm(props) {
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const onChange = e => {
         setFile(e.target.files[0]);
@@ -41,10 +41,12 @@ function HikeForm(props) {
 
     const submitHandler = (event) => {
         const localguideID = 1;
-        const info = { title, length, description, difficulty, estimatedtime, ascent, localguideID };
+        const info = { title, length, description, difficulty, estimatedtime, ascent, localguideID, spoint, epoint };
 
         event.preventDefault();
-        props.loadHike(info);
+        props.postHike(info);
+
+
 
         //navigate("/");
     }
@@ -55,12 +57,14 @@ function HikeForm(props) {
         e.preventDefault();
         const formData = new FormData();
         formData.append('file', file);
+        console.log(file); 
 
         try {
             const res = await axios.post('/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
+                credentials: 'include',
                 onUploadProgress: progressEvent => {
                     setUploadPercentage(
                         parseInt(
@@ -69,6 +73,8 @@ function HikeForm(props) {
                     );
                 }
             });
+
+            console.log("1"); 
 
             // Clear percentage
             setTimeout(() => setUploadPercentage(0), 10000);
@@ -86,6 +92,7 @@ function HikeForm(props) {
             const startpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+startPointInfo.lat+'&longitude='+startPointInfo.long+'&localityLanguage=en');
             const endpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+endingPointInfo.lat+'&longitude='+endingPointInfo.long+'&localityLanguage=en');
 
+            console.log("2"); 
 
             setSpoint(startpoint.data);
             setEpoint(endpoint.data);
@@ -114,29 +121,29 @@ function HikeForm(props) {
 
     return(
         <>
-            <MyNavbar></MyNavbar>
+            
             <Container className='below-nav'>
 
 
                 <h2>New Hike</h2><h4>Fill the form to insert a new Hike</h4>
 
                 <Form onSubmit={submitHandler}>
-                    <Row>
-                        <Col>
+                    <Row className='r'>
+                        <Col className='c'>
                             <Form.Label>Hike title</Form.Label>
                             <Form.Control value={title} onChange={ev => setTitle(ev.target.value)} placeholder="Enter Hike title" required/>
                         </Col>
-                        <Col>
+                        <Col className='c'>
                             <Form.Label>Hike length</Form.Label>
                             <Form.Control value={length} onChange={ev => setLength(ev.target.value)} placeholder="Enter Hike length" required/>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col>
+                    <Row className='r'>
+                        <Col className='c'>
                             <Form.Label>Hike description</Form.Label>
                             <Form.Control value={description} onChange={ev => setDescription(ev.target.value)} placeholder="Enter Hike description" required/>
                         </Col>
-                        <Col>
+                        <Col className='c'>
                             <Form.Label>Hike difficulty</Form.Label><br></br>
                             <Form.Select value={difficulty} onChange={ev => setDifficulty(ev.target.value)} required>
                                 <option value=""></option>
@@ -146,12 +153,12 @@ function HikeForm(props) {
                             </Form.Select>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col>
+                    <Row className='r'>
+                        <Col className='c'>
                             <Form.Label>Hike estimated time</Form.Label>
                             <Form.Control value={estimatedtime} onChange={ev => setEstimatedtime(ev.target.value)} placeholder="Enter Hike estimated time" required/>
                         </Col>
-                        <Col>
+                        <Col className='c'>
                             <Form.Label>Hike ascent</Form.Label>
                             <Form.Control value={ascent} onChange={ev => setAscent(ev.target.value)} placeholder="Enter Hike ascent" required/>
                         </Col>
@@ -167,25 +174,21 @@ function HikeForm(props) {
 
                         {message ? <Message msg={message} /> : null}
                     </Row>
-                    <Row >
-
-                        <div className='custom-file mb-4'>
+                    <Row className='r'>
+                         <div className='custom-file mb-4'>
                             <input
                                 type='file'
                                 className='custom-file-input'
                                 id='customFile'
                                 onChange={onChange}
-                            />
-                            <label className='custom-file-label' htmlFor='customFile'>
-                                {filename}
-                            </label>
+                            />    
                         </div>
                     </Row>
-                    <Row>
+                    <Row className='r'>
 
                         <Progress percentage={uploadPercentage} />
                     </Row>
-                    <Row>
+                    <Row className='r'>
                         {uploadedFile ? (
 
                             <div>
@@ -198,23 +201,23 @@ function HikeForm(props) {
                         ) : null}
 
                     </Row>
-                    <Row>
-                        <Col></Col>
-                        <Col></Col>
-                        <Col>
+                    <Row className='r'>
+                        <Col className='c'></Col>
+                        <Col className='c'></Col>
+                        <Col className='c'>
                             <input
                                 type='button'
                                 value='Upload'
-                                className='btn btn-success btn-block mt-4'
+                                className='btn btn-success'
                                 onClick={onClickButton}
                             />
                         </Col>
-                        <Col></Col>
-                        <Col></Col>
+                        <Col className='c'></Col>
+                        <Col className='c'></Col>
                     </Row>
-                    <Row xs="auto">
+                    <Row className='r'>
 
-                        <Col>
+                        <Col className='c'>
                             {uploadedFile ? (
 
                                 <div>
@@ -228,7 +231,7 @@ function HikeForm(props) {
 
                         </Col>
 
-                        <Col>
+                        <Col className='c'>
                             {uploadedFile ? (
 
                                 <div>
@@ -248,7 +251,7 @@ function HikeForm(props) {
 
 
                     <hr></hr>
-                    <Row className="justify-content-md-center">
+                    <Row className="justify-content-md-center r">
                         <Button className="d-flex" type="submit" variant="primary">Submit Form</Button>
                     </Row>
 
