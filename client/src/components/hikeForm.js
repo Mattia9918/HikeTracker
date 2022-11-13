@@ -40,7 +40,7 @@ function HikeForm(props) {
     };
 
     const submitHandler = (event) => {
-        const localguideID = 1;
+        const localguideID = props.user.id;
         const info = { title, length, description, difficulty, estimatedtime, ascent, localguideID, spoint, epoint };
 
         event.preventDefault();
@@ -121,7 +121,7 @@ function HikeForm(props) {
 
 
     return(
-        <>
+        <Container>
             
             <Container className='below-nav'>
 
@@ -148,9 +148,9 @@ function HikeForm(props) {
                             <Form.Label>Hike difficulty</Form.Label><br></br>
                             <Form.Select value={difficulty} onChange={ev => setDifficulty(ev.target.value)} required>
                                 <option value=""></option>
-                                <option value="easy">Easy</option>
-                                <option value="medium">Medium</option>
-                                <option value="hard">Hard</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Average">Medium</option>
+                                <option value="Difficult">Hard</option>
                             </Form.Select>
                         </Col>
                     </Row>
@@ -261,7 +261,7 @@ function HikeForm(props) {
 
 
             </Container>
-        </>
+        </Container>
         
     );
 }

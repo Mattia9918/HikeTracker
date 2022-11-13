@@ -27,6 +27,7 @@ function App2() {
   const [msg, setMsg] = useState("");
   const [loggedIn, setLoggedIn] = useState(false); 
   const [user, setUser] = useState(undefined);
+  const [posting, setPosting] = useState();
   
   const navigate = useNavigate(); 
  
@@ -68,8 +69,8 @@ function App2() {
   }
 
     async function postHike(Hike) {
-        console.log(Hike);
         await API.postHike(Hike);
+        setPosting(true);
     }
 
   const login = async (credentials) => {
@@ -103,6 +104,7 @@ function App2() {
     try {
       const hikeList = await API.getHikes();
       setHikes(hikeList);
+      setPosting(false);
       //setErrMessage('');
     } catch (err) {
       //setErrMessage(String(err));
@@ -122,7 +124,7 @@ function App2() {
   useEffect(() => {
     loadHikes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [posting]);
 
 
  
@@ -134,7 +136,7 @@ function App2() {
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={ <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>} /> 
             <Route path='/login' element={ <LoginForm login={login} msg={msg} setMsg={setMsg}/>}/>
-            <Route path='/newhike' element={ <HikeForm postHike={postHike} ></HikeForm>}/>
+            <Route path='/newhike' element={ <HikeForm postHike={postHike} user = {user}></HikeForm>}/>
           </Route>
           
           
