@@ -24,8 +24,8 @@ const crypto = require("crypto");
 // To send email
 const Mailjet = require('node-mailjet');
 const mailjet = Mailjet.apiConnect(
-	'f61dafdde77ab513ec47561f2042d3bc',
-	'8be2479a8cef9de5bdb2aedd81d41cec'
+	'4f786e2ba95d4eed2e8b266cb0dbf59f',
+	'03d9a84bd934d676b9c66b5002a2f6c5'
 );
 
 // initialize and configure passport
@@ -274,7 +274,7 @@ async (req, res) => {
 				"Messages":[
 					{
 						"From": {
-							"Email": "s281936@studenti.polito.it",
+							"Email": "team7sw2@gmail.com",
 							"Name": "HikeTracker"
 						},
 						"To": [
