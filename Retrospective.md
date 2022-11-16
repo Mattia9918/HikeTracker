@@ -29,9 +29,6 @@ HIKE TRACKER (Team 7)
 | HT-2  | 6 | 13 | 12h 30m | 14h 20m |
 | HT-3 | 6 | 5 | 6h 30m | 8h 5m |
 
-
-> place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
-
 - Hours per task average, standard deviation (estimate and actual): 
 
   - Hours per task average:
