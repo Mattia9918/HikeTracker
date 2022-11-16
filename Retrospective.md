@@ -18,9 +18,7 @@ HIKE TRACKER (Team 7)
 - Unit Tests passing: **yes**
 - Code review completed: **yes**
 - Code present on VCS: **yes**
-- End-to-End tests performed: **yes**
-
-> Please refine your DoD if required (you cannot remove items!) 
+- End-to-End tests performed: **yes** 
 
 ### Detailed statistics
 
