@@ -48,8 +48,8 @@ const hike1 = {
     longitude: 2.1,
     type: "hut",
     description: "foo",
-    city: "Torino",
-    province: "Torino",
+    locality: "Torino",
+    principalSubdivision: "Torino",
 }
 
 const point2 = {
@@ -57,8 +57,8 @@ const point2 = {
     longitude: 4.1,
     type: "hut",
     description: "foo",
-    city: "Torino",
-    province: "Torino",
+    locality: "Torino",
+    principalSubdivision: "Torino",
 }
 
 const point3 = {
@@ -66,8 +66,8 @@ const point3 = {
     longitude: 6.1,
     type: "hut",
     description: "foo",
-    city: "Grugliasco",
-    province: "Torino",
+    locality: "Grugliasco",
+    principalSubdivision: "Torino",
 }
 
 const point4 = {
@@ -75,8 +75,8 @@ const point4 = {
     longitude: 8.1,
     type: "hut",
     description: "foo",
-    city: "Grugliasco",
-    province: "Torino",
+    locality: "Grugliasco",
+    principalSubdivision: "Torino",
 }
 
  const localguide1 = {

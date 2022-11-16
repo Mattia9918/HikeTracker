@@ -520,7 +520,7 @@ exports.deletePoint = () => {
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "hut located in a naturalistic place", body.city, body.principalSubdivision], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, "hut", body.description, body.locality, body.principalSubdivision], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
