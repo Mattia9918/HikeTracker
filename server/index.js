@@ -1,4 +1,5 @@
 "use strict";
+require('dotenv').config({ path: './PARAM.env' })
 
 const express = require("express");
 const morgan = require("morgan");
@@ -24,8 +25,8 @@ const crypto = require("crypto");
 // To send email
 const Mailjet = require('node-mailjet');
 const mailjet = Mailjet.apiConnect(
-	'4f786e2ba95d4eed2e8b266cb0dbf59f',
-	'03d9a84bd934d676b9c66b5002a2f6c5'
+	process.env.EMAIL_API_KEY,
+	process.env.EMAIL_SECRET_KEY
 );
 
 // initialize and configure passport
