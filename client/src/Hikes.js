@@ -1,5 +1,7 @@
-import { Container, Card, Row, Col, Form, Button, Badge, Alert } from 'react-bootstrap';
-import { useState } from 'react';
+import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import {MapContainer,TileLayer,Marker,GeoJSON,Popup} from 'react-leaflet'; 
+import API from './API';
 
 function Hikes(props) {
 
@@ -7,7 +9,7 @@ function Hikes(props) {
     const [filter, setFilter] = useState();
     const [value, setValue] = useState();
     const [show, setShow] = useState();
-    
+
 
     /* -- SUBMIT HANDLER --  */
     const submitHandler = (event) => {
@@ -22,11 +24,11 @@ function Hikes(props) {
                 <Col >
                 </Col>
                 <Col sm={8} xs={12}>
-                    {(props.msg.message === "You have been logged out!" || (props.user && props.msg.message === `Welcome ${props.user.username}!`))  && 
-                        <Alert variant = {props.msg.type} onClose={() => {
+                    {(props.msg.message === "You have been logged out!" || (props.user && props.msg.message === `Welcome ${props.user.username}!`)) &&
+                        <Alert variant={props.msg.type} onClose={() => {
                             props.setMsg("");
                             setShow(false);
-                        }} show={show} dismissible> 
+                        }} show={show} dismissible>
                             {props.msg.message}
                         </Alert>
                     }
@@ -77,10 +79,10 @@ function Hikes(props) {
                                         />
                                     </Col>
                                 }
-                                    <Col className="mt-2 ms-1" xs={2}>
-                                        <Button type="submit" disabled={filter != "none" && value == undefined && true}>Filter</Button>
-                                    </Col>
-    
+                                <Col className="mt-2 ms-1" xs={2}>
+                                    <Button type="submit" disabled={filter != "none" && value == undefined && true}>Filter</Button>
+                                </Col>
+
 
                             </Row>
                         </Form>
@@ -108,6 +110,7 @@ function Hikes(props) {
 function HikeCard(props) {
 
     const [open, setOpen] = useState(0);
+    const [showModal, setShowModal] = useState(false);
     const difficulty = props.hike.difficulty
 
     return (
@@ -157,39 +160,113 @@ function HikeCard(props) {
                                     <li><b>Length:</b> {props.hike.length} km</li>
                                     <li><b>Ascent:</b> {props.hike.ascent} m</li>
                                     <li><b>Estimated time:</b> {props.hike.estimatedTime} h</li>
-                                    <li className="mt-4"><b>Intermediate points of interest:</b></li> 
+                                    <li className="mt-4"><b>Intermediate points of interest:</b></li>
                                     {
-                                     open === 1 && <Button variant="link" onClick={() => setOpen(2)}>Show</Button> ||
-                                     open === 2 &&
-                                     <> 
-                                        {props.hike.pointsOfInterest.map((poi) => 
-                                            <ul>
-                                                <li>
-                                                    {poi.type === "hut" &&
-                                                        <img src = "http://localhost:3000/huticon.svg" alt = "huticon"/> ||
-                                                        <img src = "http://localhost:3000/parkingicon.svg" alt = "parkingicon" />
-                                                    }
-                                                    <i>&nbsp; - (lat: {poi.latitude}, lon: {poi.longitude})</i> - {poi.city}, {poi.province}
-                                                </li>
-                                            </ul>)}
-                                        <Button variant="link" onClick={() => setOpen(1)}>Hide</Button>
-                                     </>
-                                    }   
+                                        open === 1 && <Button variant="link" onClick={() => setOpen(2)}>Show</Button> ||
+                                        open === 2 &&
+                                        <>
+                                            {props.hike.pointsOfInterest.map((poi) =>
+                                                <ul>
+                                                    <li>
+                                                        {poi.type === "hut" &&
+                                                            <img src="http://localhost:3000/huticon.svg" alt="huticon" /> ||
+                                                            <img src="http://localhost:3000/parkingicon.svg" alt="parkingicon" />
+                                                        }
+                                                        <i>&nbsp; - (lat: {poi.latitude}, lon: {poi.longitude})</i> - {poi.city}, {poi.province}
+                                                    </li>
+                                                </ul>)}
+                                            <Button variant="link" onClick={() => setOpen(1)}>Hide</Button>
+                                        </>
+                                    }
                                 </ul>
                             </>
                         }
                     </Card.Text>
                     <Col align="right">
                         {open === 0 &&
-                            <Button variant="link" onClick={() => setOpen(1)}>More info</Button> ||
+                            <>
+                                <Button variant="link" onClick={() => setShowModal(true)}>View in map</Button>
+                                <Button variant="link" onClick={() => setOpen(1)}>More info</Button>
+                            </> ||
                             <Button variant="link" onClick={() => setOpen(0)}>Close</Button>
                         }
                     </Col>
                 </Card.Body>
 
             </Card>
+
+            {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} title={props.hike.title} hikeid = {props.hike.id}/>}
+
         </Container>
     );
 };
+
+function MapModal(props) {
+
+    /* -- STATES MANAGEMENT -- */
+
+    const [coordinates, setCoordinates] = useState({});
+    const [firstPoint, setFirstPoint] = useState([]);
+    const [lastPoint, setLastPoint] = useState([]);
+    const [center, setCenter] = useState([]);
+
+    useEffect(() => {
+        const getJson = async () => {
+            try {
+                const json = await API.getFileById(props.hikeid);
+                const c = json.features;
+
+                setCoordinates(c);
+
+                const arrayCoordinates = c[0].geometry.coordinates;
+                const last = arrayCoordinates.length - 1;
+                const middle = Math.round(last / 2);
+
+                const firstPoint = [arrayCoordinates[0][1], arrayCoordinates[0][0]];
+                const center = [arrayCoordinates[middle][1], arrayCoordinates[middle][0]];
+                const lastPoint = [arrayCoordinates[last][1], arrayCoordinates[last][0]];
+
+                setFirstPoint(firstPoint);
+                setCenter(center);
+                setLastPoint(lastPoint);
+
+
+            } catch (err) { }
+        };
+        getJson();
+    }, []);
+
+    /* -- RENDERING -- */
+    return (
+        <Modal size = "lg" show={props.showModal} onHide={() => props.setShowModal(false)}>
+
+            {/* Modal header */}
+            <Modal.Header closeButton>
+                <Modal.Title>{props.title}</Modal.Title>
+            </Modal.Header>
+
+
+            {/* Modal body */}
+            <Modal.Body id = "mapcontainer">
+            {coordinates.length &&
+            <center>
+                <MapContainer style={{ height: "500px", width: "770px"}} center={center} zoom={12} scrollWheelZoom={true}>
+                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                    <GeoJSON data={coordinates} />
+                    <Marker position={firstPoint}></Marker>
+                    <Marker position={lastPoint}></Marker>
+                </MapContainer>
+            </center>
+            }
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={() => props.setShowModal(false)}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+};
+
+
+
 
 export default Hikes;

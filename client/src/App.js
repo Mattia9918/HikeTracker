@@ -68,8 +68,9 @@ function App2() {
       }
   }
 
-    async function postHike(Hike) {
+    async function postHike(Hike, filePath) {
         await API.postHike(Hike);
+        await API.postGpx(filePath);
         setPosting(true);
     }
 

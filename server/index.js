@@ -2,6 +2,9 @@
 
 require('dotenv').config({ path: './PARAM.env' })
 
+const {resolve} = require('path');
+const manageFile = require('./manageGpx');
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -26,11 +29,11 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
 // To send email
-const Mailjet = require('node-mailjet');
-const mailjet = Mailjet.apiConnect(
-	process.env.EMAIL_API_KEY,
-	process.env.EMAIL_SECRET_KEY
-);
+//const Mailjet = require('node-mailjet');
+//const mailjet = Mailjet.apiConnect(
+//	process.env.EMAIL_API_KEY,
+//	process.env.EMAIL_SECRET_KEY
+//);
 
 // initialize and configure passport
 passport.use(new passportLocal.Strategy(
@@ -45,7 +48,7 @@ passport.use(new passportLocal.Strategy(
 		}).catch(err => {
 			done(err);
 		});
-}));
+	}));
 
 // serialize and de-serialize the user (user object <-> session)
 // we serialize the user id and we store it in the session: the session is very small in this way
@@ -59,8 +62,8 @@ passport.deserializeUser((id, done) => {
 		.then(user => {
 			done(null, user); // this will be available in req.user
 		}).catch(err => {
-		done(err, null);
-	});
+			done(err, null);
+		});
 });
 
 /* -- SERVER AND MIDDLEWARE CONFIGURATION */
@@ -112,7 +115,7 @@ const isLocalGuide = (req, res, next) => {
 /** API Login and Logout **/
 // POST /sessions
 // login
-app.post('/api/sessions',function (req, res, next) {
+app.post('/api/sessions', function (req, res, next) {
 	passport.authenticate('local', (err, user, info) => {
 		if (err)
 			return next(err);
@@ -135,7 +138,7 @@ app.post('/api/sessions',function (req, res, next) {
 // DELETE /sessions/current
 // logout
 app.delete('/api/sessions/current', (req, res, next) => {
-	req.logout(function(err) {
+	req.logout(function (err) {
 		if (err) { return next(err); }
 		res.end();
 	});
@@ -232,87 +235,87 @@ app.get(`/api/hike*`, async (req, res) => {
 
 /** Register new user **/
 
-app.post('/api/register',                 
-[ 
-	check('email').isEmail(),
-	check('role').isLength({min:3})
-],
-async (req, res) => {
-	const email = req.body.email;
-	const role = req.body.role;
-	const name = req.body.name;
-	const surname = req.body.surname;
-	const username = req.body.username;
-	const pass = req.body.password; 
-	
-	const errors = validationResult(req); 
-	
-	if (!errors.isEmpty()) {
-    	return res.status(422).json({ error: errors}); 
-  	}
+app.post('/api/register',
+	[
+		check('email').isEmail(),
+		check('role').isLength({ min: 3 })
+	],
+	async (req, res) => {
+		const email = req.body.email;
+		const role = req.body.role;
+		const name = req.body.name;
+		const surname = req.body.surname;
+		const username = req.body.username;
+		const pass = req.body.password;
 
-	try{
-		// Generate hash password
-		const salt = await bcrypt.genSalt(10);
-		const password = await bcrypt.hash(pass, salt);
+		const errors = validationResult(req);
 
-		if(await user_dao.getUserByEmail(email) !== undefined) {
-			return res.status(500).json({error: "Email already registered!"});
-		}
-		if(await user_dao.getUserByUsername(username) !== undefined) {
-			return res.status(500).json({error: "Username already used!"});
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ error: errors });
 		}
 
-		await user_dao.insertUser(email, password, salt, role, name, surname, username);
+		try {
+			// Generate hash password
+			const salt = await bcrypt.genSalt(10);
+			const password = await bcrypt.hash(pass, salt);
 
-		// Generate activation code
-		const code = crypto.randomBytes(64).toString('hex');
+			if (await user_dao.getUserByEmail(email) !== undefined) {
+				return res.status(500).json({ error: "Email already registered!" });
+			}
+			if (await user_dao.getUserByUsername(username) !== undefined) {
+				return res.status(500).json({ error: "Username already used!" });
+			}
 
-		const activation = await user_dao.insertActivation(email, code);
-		const activationUrl = "http://localhost:3000/validate/" + code;
+			await user_dao.insertUser(email, password, salt, role, name, surname, username);
 
-		// Send email with activation code
-		const request = mailjet
-			.post("send", {'version': 'v3.1'})
-			.request({
-				"Messages":[
-					{
-						"From": {
-							"Email": "team7sw2@gmail.com",
-							"Name": "HikeTracker"
-						},
-						"To": [
-							{
-								"Email": email,
-								"Name": name
-							}
-						],
-						"Subject": "Activate your account",
-						"TextPart": "Account activation email",
-						"HTMLPart": `<h3>Hello, ${name}, to activate your account, click <a href=${activationUrl}>here</a>!</h3><br />`,
-						"CustomID": "EmailVerification"
-					}
-				]
-			})
-		request
-			.then((result) => {
-			})
-			.catch((err) => {
-				console.log(err.statusCode)
-			})
+			// Generate activation code
+			const code = crypto.randomBytes(64).toString('hex');
 
-		return res.status(200).json({code: activation});
-	} catch(err){
-		return res.status(500).json({ error: err });
-	}
-})
+			const activation = await user_dao.insertActivation(email, code);
+			const activationUrl = "http://localhost:3000/validate/" + code;
+
+			// Send email with activation code
+			const request = mailjet
+				.post("send", { 'version': 'v3.1' })
+				.request({
+					"Messages": [
+						{
+							"From": {
+								"Email": "team7sw2@gmail.com",
+								"Name": "HikeTracker"
+							},
+							"To": [
+								{
+									"Email": email,
+									"Name": name
+								}
+							],
+							"Subject": "Activate your account",
+							"TextPart": "Account activation email",
+							"HTMLPart": `<h3>Hello, ${name}, to activate your account, click <a href=${activationUrl}>here</a>!</h3><br />`,
+							"CustomID": "EmailVerification"
+						}
+					]
+				})
+			request
+				.then((result) => {
+				})
+				.catch((err) => {
+					console.log(err.statusCode)
+				})
+
+			return res.status(200).json({ code: activation });
+		} catch (err) {
+			return res.status(500).json({ error: err });
+		}
+	})
 
 
 /** Validate user **/
 
 app.get('/api/validate/:code', async (req, res) => {
 	const code = req.params.code;
-	try{
+	try {
 		// Retrieves activation
 		const activation = await user_dao.getActivationByCode(code)
 
@@ -325,8 +328,8 @@ app.get('/api/validate/:code', async (req, res) => {
 		const user = await user_dao.getUserByEmail(activation.email)
 
 		return res.status(200).json(user);
-	}catch(err){
-		return res.status(500).json({error: err})
+	} catch (err) {
+		return res.status(500).json({ error: err })
 	}
 })
 
@@ -334,13 +337,13 @@ app.get('/api/validate/:code', async (req, res) => {
 
 
 // FILE UPLOAD(.gpx*)
-app.post('/upload', async(req, res) => {
+app.post('/upload', async (req, res) => {
 	if (req.files === null) {
 		return res.status(400).json({ msg: 'No file uploaded' });
 	}
 
 	const file = req.files.file;
-	
+
 
 	await file.mv(`../client/public/uploads/${file.name}`, err => {
 		if (err) {
@@ -368,60 +371,60 @@ app.post('/upload', async(req, res) => {
 // hiking desc
 app.get("/api/hikesdesc/:id", async (req, res) => {
 
-  if (isNan(req.params.id)){
-    return res.status(404).json("Id is a wrong entity");
-  }
+	if (isNan(req.params.id)) {
+		return res.status(404).json("Id is a wrong entity");
+	}
 
 	try {
 		const hikedesc = await hike_dao.getHikeDesc(req.params.id);
 		res.status(200).json(hikedesc);
 	} catch (err) {
-		res.status(500).json({error: err});
+		res.status(500).json({ error: err });
 	}
 });
 
 
 
 //hiking post
-app.post('/api/hiking', 
-        [check('length').isInt(),
-        check('estimatedTime').isInt()]
-        ,async (req, res) => {
+app.post('/api/hiking',
+	[check('length').isInt(),
+	check('estimatedTime').isInt()]
+	, async (req, res) => {
 
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-          return res.status(422).json({errors: errors.array()});
-        } 
-        try {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+		try {
 
 
-			
+
 			const hikeID = await hike_dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
 			const startingPointID = await hike_dao.postPoint(req.body.startingPoint);
 			const endingPointID = await hike_dao.postPoint(req.body.endingPoint);
 			await hike_dao.postHike_Point(hikeID, "start", startingPointID);
 			await hike_dao.postHike_Point(hikeID, "arrive", endingPointID);
-	
-			for(let i in req.body.pointsOfInterest) {
+
+			for (let i in req.body.pointsOfInterest) {
 				let pointID = await hike_dao.postPoint(req.body.pointsOfInterest[i]);
 				await hike_dao.postHike_Point(hikeID, "interest", pointID);
 			}
-			
-            return res.status(201).json({"id": hikeID});
-        } catch (err) {
 
-          res.status(500).json({ error: `Generic error` }).end();
-        }
+			return res.status(201).json({ "id": hikeID });
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({ error: `Generic error` }).end();
+		}
 
 
-})
+	})
 
 // hiking delete
 app.delete('/api/hiking/delete', async (req, res) => {
 	try {
 		const status = await hike_dao.deleteHikes();
-			return res.status(204).end();
+		return res.status(204).end();
 	} catch (err) {
 		console.log(err);
 		res.status(500).end();
@@ -438,6 +441,39 @@ app.delete('/api/points', async (req, res) => {
 		res.status(500).end();
 	}
 });
+
+//POST GPX AS BLOB
+app.post('/api/gpx', async (req, res) => {
+
+	try {
+
+		const path = req.body.path;
+		const bin = manageFile.castFileToBinary(resolve(`../client/public${path}`));
+		await hike_dao.saveFile(bin);
+		return res.status(201).end();
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: `Generic error` }).end();
+	}
+
+
+})
+
+//GET BLOB FROM GPX TABLE AND CONVERT BLOB TO GEOJSON
+app.get("/api/gpx/:id", async (req, res) => {
+	try {
+		const id = req.params.id;
+
+		const bin = await hike_dao.getFileContentById(id);
+		const content = manageFile.convertBLOB2String(bin.gpxfile);
+		const json = manageFile.getGeoJSONbyContent(content);
+		res.status(200).json(json);
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
 
 
 

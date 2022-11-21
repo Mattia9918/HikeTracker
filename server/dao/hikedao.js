@@ -345,7 +345,7 @@ exports.deletePoint = () => {
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "hut", body.description, body.locality, body.principalSubdivision], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "da sostituire", body.locality, body.principalSubdivision], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -397,4 +397,35 @@ exports.postHike_Point = (hikeID, type, pointID) => {
 		});
 	})
 };
+
+exports.saveFile = (bin) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'INSERT INTO gpx(gpxfile) VALUES (?)';
+		db.run(sql, [bin], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve()
+			}
+		});
+	})
+};
+
+exports.getFileContentById = (id) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT gpxfile FROM gpx WHERE hikeID = ? ';
+		db.get(sql, [id], function (err, row) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(row)
+			}
+		});
+	})
+};
+
 

@@ -15,7 +15,6 @@ import { useState } from 'react';
 
 
 
-
 function HikeForm(props) {
 
     const [title, setTitle] = useState("");
@@ -44,9 +43,8 @@ function HikeForm(props) {
         const info = { title, length, description, difficulty, estimatedtime, ascent, localguideID, spoint, epoint };
 
         event.preventDefault();
-        props.postHike(info);
-
-
+        console.log(uploadedFile);
+        props.postHike(info, uploadedFile.filePath);
 
         navigate("/");
     }
@@ -144,8 +142,8 @@ function HikeForm(props) {
                                 <Form.Select value={difficulty} onChange={ev => setDifficulty(ev.target.value)} required>
                                     <option value="" disabled={true}>Select difficulty</option>
                                     <option value="Easy">Easy</option>
-                                    <option value="Average">Medium</option>
-                                    <option value="Difficult">Hard</option>
+                                    <option value="Average">Average</option>
+                                    <option value="Difficult">Difficult</option>
                                 </Form.Select>
                             </Col>
                         </Row>
