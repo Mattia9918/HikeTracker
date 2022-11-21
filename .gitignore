@@ -4,4 +4,5 @@
 code/server/coverage/
 node_modules/
 /.idea/
-PARAM.env
+/server/PARAM.env
+/server/coverage/
