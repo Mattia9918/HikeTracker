@@ -1,4 +1,5 @@
-const dao = require('../dao.js');
+const hike_dao = require('../dao/hikedao.js');
+const user_dao = require('../dao/userdao.js');
 
 const hike1 = {
     id: undefined,
@@ -105,31 +106,31 @@ const point4 = {
 
 describe("test hikes and filtering", () => {
     beforeEach(async () => {
-        await dao.deleteUser();
-        await dao.deleteHikes();
-        await dao.deletePoint();
-        await dao.deleteHike_Point();
+        await user_dao.deleteUser();
+        await hike_dao.deleteHikes();
+        await hike_dao.deletePoint();
+        await hike_dao.deleteHike_Point();
         
         try {
             
-            await dao.createHiking(hike1.title, hike1.length, hike1.description, hike1.difficulty, hike1.estimatedTime, hike1.ascent, hike1.localguideID);
-            await dao.createHiking(hike2.title, hike2.length, hike2.description, hike2.difficulty, hike2.estimatedTime, hike2.ascent, hike2.localguideID);
-            await dao.createHiking(hike3.title, hike3.length, hike3.description, hike3.difficulty, hike3.estimatedTime, hike3.ascent, hike3.localguideID);
-            await dao.createHiking(hike4.title, hike4.length, hike4.description, hike4.difficulty, hike4.estimatedTime, hike4.ascent, hike4.localguideID);
-            await dao.postPoint(point1)
-            await dao.postPoint(point2)
-            await dao.postPoint(point3)
-            await dao.postPoint(point4)
-            await dao.postHike_Point(1, 'start', 1)
-            await dao.postHike_Point(1, 'arrive', 2)
-            await dao.postHike_Point(2, 'start', 3)
-            await dao.postHike_Point(2, 'arrive', 4)
-            await dao.postHike_Point(3, 'start', 1)
-            await dao.postHike_Point(3, 'arrive', 2)
-            await dao.postHike_Point(4, 'start', 3)
-            await dao.postHike_Point(4, 'arrive', 4)
-            await dao.insertUser(localguide1.email, localguide1.hash, localguide1.salt, localguide1.role, localguide1.name, localguide1.surname, localguide1.username);
-            await dao.insertUser(localguide2.email, localguide2.hash, localguide2.salt, localguide2.role, localguide2.name, localguide2.surname, localguide2.username);
+            await hike_dao.createHiking(hike1.title, hike1.length, hike1.description, hike1.difficulty, hike1.estimatedTime, hike1.ascent, hike1.localguideID);
+            await hike_dao.createHiking(hike2.title, hike2.length, hike2.description, hike2.difficulty, hike2.estimatedTime, hike2.ascent, hike2.localguideID);
+            await hike_dao.createHiking(hike3.title, hike3.length, hike3.description, hike3.difficulty, hike3.estimatedTime, hike3.ascent, hike3.localguideID);
+            await hike_dao.createHiking(hike4.title, hike4.length, hike4.description, hike4.difficulty, hike4.estimatedTime, hike4.ascent, hike4.localguideID);
+            await hike_dao.postPoint(point1)
+            await hike_dao.postPoint(point2)
+            await hike_dao.postPoint(point3)
+            await hike_dao.postPoint(point4)
+            await hike_dao.postHike_Point(1, 'start', 1)
+            await hike_dao.postHike_Point(1, 'arrive', 2)
+            await hike_dao.postHike_Point(2, 'start', 3)
+            await hike_dao.postHike_Point(2, 'arrive', 4)
+            await hike_dao.postHike_Point(3, 'start', 1)
+            await hike_dao.postHike_Point(3, 'arrive', 2)
+            await hike_dao.postHike_Point(4, 'start', 3)
+            await hike_dao.postHike_Point(4, 'arrive', 4)
+            await user_dao.insertUser(localguide1.email, localguide1.hash, localguide1.salt, localguide1.role, localguide1.name, localguide1.surname, localguide1.username);
+            await user_dao.insertUser(localguide2.email, localguide2.hash, localguide2.salt, localguide2.role, localguide2.name, localguide2.surname, localguide2.username);
             
 
 
@@ -150,7 +151,7 @@ function testGetHikes() {
 
     describe("Testing getHikes()", () => {
         test("4 hikes posted -> get these 4 hikes", async () => {
-            let res = await dao.getHikes();
+            let res = await hike_dao.getHikes();
             expect(res).toEqual(
                 [
                     {
@@ -277,7 +278,7 @@ function testGetHikeByDiffculty() {
 
     describe("Testing getHikeByDifficulty()", () => {
         test("Getting only 'Easy' hikes", async () => {
-            let res = await dao.getHikeByDiffculty("Easy");
+            let res = await hike_dao.getHikeByDiffculty("Easy");
             expect(res).toEqual(
                 [
                     {
@@ -346,7 +347,7 @@ function testGetHikeByExpectedTime() {
 
     describe("Testing getHikeByExpectedTime()", () => {
         test("Getting only hikes with estimatedTime between 1 and 2", async () => {
-            let res = await dao.getHikeByExpectedTime(1,2);
+            let res = await hike_dao.getHikeByExpectedTime(1,2);
             expect(res).toEqual(
                 [
                     {
@@ -415,7 +416,7 @@ function testGetHikeByLength() {
 
     describe("Testing getHikeByLength()", () => {
         test("Getting only hikes with length between 30 km and 40 km", async () => {
-            let res = await dao.getHikeByLength(30,40);
+            let res = await hike_dao.getHikeByLength(30,40);
             expect(res).toEqual(
                 [
                     {
@@ -483,7 +484,7 @@ function testGetHikeByLength() {
 function testGetHikeDescById() {
     describe("Testing getHikeByAscent()", () => {
         test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
-            let res = await dao.getHikeDesc(2);
+            let res = await hike_dao.getHikeDesc(2);
             expect(res).toEqual(
                 [
                     {
@@ -499,7 +500,7 @@ function testGetHikeByAscent() {
 
     describe("Testing getHikeByAscent()", () => {
         test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
-            let res = await dao.getHikeByAscent(400,1500);
+            let res = await hike_dao.getHikeByAscent(400,1500);
             expect(res).toEqual(
                 [
                     {

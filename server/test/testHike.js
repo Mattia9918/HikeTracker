@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
-const dao = require('../dao.js');
+const dao = require('../dao/hikedao.js');
 const { app } = require('../index');
 var agent = chai.request.agent(app);
 

@@ -1,17 +1,20 @@
 "use strict";
+
 require('dotenv').config({ path: './PARAM.env' })
 
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const dao = require("./dao");
+
+const hike_dao = require("./dao/hikedao");
+const user_dao = require("./dao/userdao");
+
 const fileUpload = require("express-fileupload");
 
 const bodyParser = require('body-parser'); // parser middleware
 const session = require('express-session');  // session middleware
 const passport = require('passport');  // authentication
 const passportLocal = require('passport-local');
-
 
 const { check, validationResult } = require('express-validator'); // validation middleware
 
@@ -34,7 +37,7 @@ passport.use(new passportLocal.Strategy(
 	// function of username, password, done(callback)
 	(username, password, done) => {
 		// look for the user data
-		dao.getUserByCredentials(username, password).then(user => {
+		user_dao.getUserByCredentials(username, password).then(user => {
 			if (user)
 				done(null, user);
 			else
@@ -52,7 +55,7 @@ passport.serializeUser((user, done) => {
 
 // starting from the data in the session, we extract the current (logged-in) user
 passport.deserializeUser((id, done) => {
-	dao.getUserById(id)
+	user_dao.getUserById(id)
 		.then(user => {
 			done(null, user); // this will be available in req.user
 		}).catch(err => {
@@ -152,7 +155,7 @@ app.get('/api/sessions/current', (req, res) => {
 
 app.get("/api/user", isLoggedIn, isLocalGuide, async (req, res) => {
 	try {
-		const user = await dao.getUserById(1);
+		const user = await user_dao.getUserById(1);
 		return res.status(200).json(user);
 	} catch (err) {
 		return res.status(500).json({ error: err });
@@ -163,7 +166,7 @@ app.get("/api/user", isLoggedIn, isLocalGuide, async (req, res) => {
 
 app.get("/api/hikes", async (req, res) => {
 	try {
-		const hikes = await dao.getHikes();
+		const hikes = await hike_dao.getHikes();
 		return res.status(200).json(hikes);
 	} catch (err) {
 		return res.status(500).json({ error: err });
@@ -173,7 +176,7 @@ app.get("/api/hikes", async (req, res) => {
 app.get("/api/hike/:id", async (req, res) => {
 	try {
 		const id = req.params.id;
-		const hike = await dao.getHikeById(id);
+		const hike = await hike_dao.getHikeById(id);
 		res.status(200).json(hike);
 	} catch (err) {
 		res.status(500).end();
@@ -186,30 +189,30 @@ app.get(`/api/hike*`, async (req, res) => {
 		const filter = req.query.filter;
 		switch (filter) {
 			case "none":
-				hikes = await dao.getHikes();
+				hikes = await hike_dao.getHikes();
 				break;
 			case "ascent":
-				hikes = await dao.getHikeByAscent(req.query.value1, req.query.value2);
+				hikes = await hike_dao.getHikeByAscent(req.query.value1, req.query.value2);
 				break;
 			case "expectedTime":
-				hikes = await dao.getHikeByExpectedTime(req.query.value1, req.query.value2);
+				hikes = await hike_dao.getHikeByExpectedTime(req.query.value1, req.query.value2);
 				break;
 			case "length":
-				hikes = await dao.getHikeByLength(req.query.value1, req.query.value2);
+				hikes = await hike_dao.getHikeByLength(req.query.value1, req.query.value2);
 				break;
 			case "difficulty":
-				hikes = await dao.getHikeByDiffculty(req.query.value1);
+				hikes = await hike_dao.getHikeByDiffculty(req.query.value1);
 				break;
 			case "city":
-				hikes = await dao.getHikeByCity(req.query.value1);
+				hikes = await hike_dao.getHikeByCity(req.query.value1);
 				console.log(hikes);
 				break;
 			case "province":
-				hikes = await dao.getHikeByProvince(req.query.value1);
+				hikes = await hike_dao.getHikeByProvince(req.query.value1);
 				console.log(hikes);
 				break;
 			case "distance":
-				hikes = await dao.getHikeByDistanceRange(
+				hikes = await hike_dao.getHikeByDistanceRange(
 					req.query.longitude,
 					req.query.latitude,
 					req.query.maxDist
@@ -253,19 +256,19 @@ async (req, res) => {
 		const salt = await bcrypt.genSalt(10);
 		const password = await bcrypt.hash(pass, salt);
 
-		if(await dao.getUserByEmail(email) !== undefined) {
+		if(await user_dao.getUserByEmail(email) !== undefined) {
 			return res.status(500).json({error: "Email already registered!"});
 		}
-		if(await dao.getUserByUsername(username) !== undefined) {
+		if(await user_dao.getUserByUsername(username) !== undefined) {
 			return res.status(500).json({error: "Username already used!"});
 		}
 
-		await dao.insertUser(email, password, salt, role, name, surname, username);
+		await user_dao.insertUser(email, password, salt, role, name, surname, username);
 
 		// Generate activation code
 		const code = crypto.randomBytes(64).toString('hex');
 
-		const activation = await dao.insertActivation(email, code);
+		const activation = await user_dao.insertActivation(email, code);
 		const activationUrl = "http://localhost:3000/validate/" + code;
 
 		// Send email with activation code
@@ -311,15 +314,15 @@ app.get('/api/validate/:code', async (req, res) => {
 	const code = req.params.code;
 	try{
 		// Retrieves activation
-		const activation = await dao.getActivationByCode(code)
+		const activation = await user_dao.getActivationByCode(code)
 
 		// Activate user
-		await dao.activateUser(activation.email)
+		await user_dao.activateUser(activation.email)
 
 		// Delete activation from table
-		await dao.deleteActivation(activation.email)
+		await user_dao.deleteActivation(activation.email)
 
-		const user = await dao.getUserByEmail(activation.email)
+		const user = await user_dao.getUserByEmail(activation.email)
 
 		return res.status(200).json(user);
 	}catch(err){
@@ -344,7 +347,7 @@ app.post('/upload', async(req, res) => {
 			console.error(err);
 			return res.status(500).send(err);
 		} else {
-			const a = dao.getCoordinates(`../client/public/uploads/${file.name}`);
+			const a = hike_dao.getCoordinates(`../client/public/uploads/${file.name}`);
 			res.json({
 				fileName: file.name,
 				filePath: `/uploads/${file.name}`,
@@ -370,7 +373,7 @@ app.get("/api/hikesdesc/:id", async (req, res) => {
   }
 
 	try {
-		const hikedesc = await dao.getHikeDesc(req.params.id);
+		const hikedesc = await hike_dao.getHikeDesc(req.params.id);
 		res.status(200).json(hikedesc);
 	} catch (err) {
 		res.status(500).json({error: err});
@@ -394,15 +397,15 @@ app.post('/api/hiking',
 
 
 			
-			const hikeID = await dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
-			const startingPointID = await dao.postPoint(req.body.startingPoint);
-			const endingPointID = await dao.postPoint(req.body.endingPoint);
-			await dao.postHike_Point(hikeID, "start", startingPointID);
-			await dao.postHike_Point(hikeID, "arrive", endingPointID);
+			const hikeID = await hike_dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
+			const startingPointID = await hike_dao.postPoint(req.body.startingPoint);
+			const endingPointID = await hike_dao.postPoint(req.body.endingPoint);
+			await hike_dao.postHike_Point(hikeID, "start", startingPointID);
+			await hike_dao.postHike_Point(hikeID, "arrive", endingPointID);
 	
 			for(let i in req.body.pointsOfInterest) {
-				let pointID = await dao.postPoint(req.body.pointsOfInterest[i]);
-				await dao.postHike_Point(hikeID, "interest", pointID);
+				let pointID = await hike_dao.postPoint(req.body.pointsOfInterest[i]);
+				await hike_dao.postHike_Point(hikeID, "interest", pointID);
 			}
 			
             return res.status(201).json({"id": hikeID});
@@ -417,7 +420,7 @@ app.post('/api/hiking',
 // hiking delete
 app.delete('/api/hiking/delete', async (req, res) => {
 	try {
-		const status = await dao.deleteHikes();
+		const status = await hike_dao.deleteHikes();
 			return res.status(204).end();
 	} catch (err) {
 		console.log(err);
@@ -427,8 +430,8 @@ app.delete('/api/hiking/delete', async (req, res) => {
 
 app.delete('/api/points', async (req, res) => {
 	try {
-		await dao.deleteHike_Point();
-		await dao.deletePoint();
+		await hike_dao.deleteHike_Point();
+		await hike_dao.deletePoint();
 
 		return res.status(201).end();
 	} catch (err) {
