@@ -29,11 +29,11 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 
 // To send email
-//const Mailjet = require('node-mailjet');
-//const mailjet = Mailjet.apiConnect(
-//	process.env.EMAIL_API_KEY,
-//	process.env.EMAIL_SECRET_KEY
-//);
+const Mailjet = require('node-mailjet');
+const mailjet = Mailjet.apiConnect(
+	process.env.EMAIL_API_KEY,
+	process.env.EMAIL_SECRET_KEY
+);
 
 // initialize and configure passport
 passport.use(new passportLocal.Strategy(
