@@ -26,17 +26,17 @@ function HikeForm(props) {
     const [spoint, setSpoint] = useState();
     const [epoint, setEpoint] = useState();
     const [file, setFile] = useState('');
-    const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
     const navigate = useNavigate();
 
-    const onChange = e => {
+    //When we select the gpx file to upload
+    const onFileSelected = e => {
         setFile(e.target.files[0]);
-        setFilename(e.target.files[0].name);
     };
+
 
     const submitHandler = (event) => {
         const localguideID = props.user.id;
@@ -49,8 +49,8 @@ function HikeForm(props) {
         navigate("/");
     }
 
-
-    const onClickButton = async e => {
+    //When we click on "Upload" on the gpx file
+    const onFileUpload = async e => {
 
         e.preventDefault();
         const formData = new FormData();
@@ -72,30 +72,29 @@ function HikeForm(props) {
                 }
             });
 
-            console.log("1");
-
             // Clear percentage
             setTimeout(() => setUploadPercentage(0), 10000);
+            const { fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat, totalDistance, totalAscent } = res.data;
+            setUploadedFile({fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat, totalDistance, totalAscent});
 
-            const { fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat } = res.data;
-
-            setUploadedFile({ fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat });
+            console.log(uploadedFile);
 
             const startPointInfo = { long: startPointLong, lat: startPointLat };
             const endingPointInfo = { long: endingPointLong, lat: endingPointLat };
 
+            //gpx.parse(res.data)
+            //var totalDistance = gpx.tracks[0].distance.total;
+            //console.log(totalDistance)
 
 
 
             const startpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + startPointInfo.lat + '&longitude=' + startPointInfo.long + '&localityLanguage=en');
             const endpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + endingPointInfo.lat + '&longitude=' + endingPointInfo.long + '&localityLanguage=en');
 
-            console.log("2");
 
             setSpoint(startpoint.data);
             setEpoint(endpoint.data);
 
-            console.log(startpoint);
             setMessage('File uploaded');
         } catch (err) {
             console.log(err);
@@ -173,7 +172,7 @@ function HikeForm(props) {
                                     type='file'
                                     className='custom-file-input'
                                     id='customFile'
-                                    onChange={onChange}
+                                    onChange={onFileSelected}
                                 />
                             </div>
                         </Row>
@@ -186,7 +185,7 @@ function HikeForm(props) {
 
                                 <div>
                                     <h6>Filename: </h6>
-                                    {uploadedFile.fileName === undefined && <i>Nessun file selezionato</i>||uploadedFile.fileName}
+                                    {file.name === undefined && <i>Nessun file selezionato</i>||file.name}
 
 
                                 </div>
@@ -198,9 +197,9 @@ function HikeForm(props) {
                         <Row className="justify-content-md-center r">
                                 <input
                                     type='button'
-                                    value='upload'
+                                    value='Upload'
                                     className='btn btn-success'
-                                    onClick={onClickButton}
+                                    onClick={onFileUpload}
                                 />
                         </Row>
                         <hr></hr>
@@ -228,13 +227,20 @@ function HikeForm(props) {
                                         <h6>Ending Point Longitude: {epoint ? epoint.longitude : null}</h6>
                                         <h6>Ending Point Latitude: {epoint ? epoint.latitude : null} </h6>
                                         <h6>Ending Point City: {epoint ? epoint.locality : null}</h6>
-                                        <h6>Starting Point Country: {epoint ? epoint.countryName : null}</h6>
+                                        <h6>Ending Point Country: {epoint ? epoint.countryName : null}</h6>
                                     </div>
 
                                 ) : null}
                             </Col>
 
 
+                        </Row>
+
+                        <Row>
+                            <center>
+                                <h6>Total distance: {uploadedFile.totalDistance} (km)</h6>
+                                <h6>Total ascent: {uploadedFile.totalAscent} (m)</h6>
+                            </center>
                         </Row>
 
 

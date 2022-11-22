@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {MapContainer,TileLayer,Marker,GeoJSON,Popup} from 'react-leaflet'; 
 import API from './API';
 
+
 function Hikes(props) {
 
     /* -- INPUT STATE MANAGEMENT -- */

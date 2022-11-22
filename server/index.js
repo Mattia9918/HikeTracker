@@ -333,9 +333,6 @@ app.get('/api/validate/:code', async (req, res) => {
 	}
 })
 
-/** SKETCH **/
-
-
 // FILE UPLOAD(.gpx*)
 app.post('/upload', async (req, res) => {
 	if (req.files === null) {
@@ -343,21 +340,23 @@ app.post('/upload', async (req, res) => {
 	}
 
 	const file = req.files.file;
-
-
-	await file.mv(`../client/public/uploads/${file.name}`, err => {
+	let random = String(Math.floor(Math.random() * 1000)) + '.gpx' //per randomizzare il fileName ed evitare le collisioni}`
+	await file.mv(`../client/public/uploads/${random}`, err => {
 		if (err) {
 			console.error(err);
 			return res.status(500).send(err);
 		} else {
-			const a = hike_dao.getCoordinates(`../client/public/uploads/${file.name}`);
+			const info = hike_dao.getGpxInfo(`../client/public/uploads/${random}`);
+			console.log(info);
 			res.json({
-				fileName: file.name,
-				filePath: `/uploads/${file.name}`,
-				startPointLong: a[0][1][0],
-				startPointLat: a[0][1][1],
-				endingPointLong: a[0][a[0].length - 1][0],
-				endingPointLat: a[0][a[0].length - 1][1]
+				fileName: random,
+				filePath: `/uploads/${random}`,
+				startPointLong: info.coordinates[0][0][0],
+				startPointLat: info.coordinates[0][0][1],
+				endingPointLong: info.coordinates[0][info.coordinates[0].length - 1][0],
+				endingPointLat: info.coordinates[0][info.coordinates[0].length - 1][1],
+				totalDistance: Math.round(info.totalDistance * 100) / 100,
+				totalAscent: Math.round(info.totalAscent * 100 / 100)
 			});
 		}
 

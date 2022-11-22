@@ -1,5 +1,6 @@
 "use strict";
 
+
 /* Data Access Object (DAO) module for accessing hike table */
 
 const sqlite = require("sqlite3");
@@ -8,6 +9,9 @@ const sqlite = require("sqlite3");
 const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
+
+/* To calculate the distance between coordinates */
+const haversine = require('haversine-distance');
 
 /** HIKES **/
 
@@ -233,14 +237,14 @@ const rowJsonMapping = (rows) => {
 	return hikes;
 };
 
-/*** SKETCH ***/
+
 /*** HIKE TABLE ***/
 
 const togeojson = require("@mapbox/togeojson"); //convert from xml->json
 const DomParser = require("xmldom").DOMParser; // node doesn't have xml parsing or a dom.
 const fs = require("fs"); //file system manager (readFile)
 
-exports.getCoordinates = (file) => {
+exports.getGpxInfo = (file) => {
 
 
 	if (file) {
@@ -255,11 +259,28 @@ exports.getCoordinates = (file) => {
 
 			i += 1;
 		}
-		return coordinates;
+		const {totalDistance, totalAscent} = calculateDistanceAndAscent(coordinates);
+		return {coordinates: coordinates, totalDistance: totalDistance, totalAscent: totalAscent};
 	}
 	return {};
 
 }
+
+function calculateDistanceAndAscent(coordinates) {
+	let distance = 0;
+	let ascent = 0;
+	console.log(coordinates);
+	console.log(coordinates[0][0][0]);
+	for (let i = 0; i < coordinates[0].length-1; i++) {
+		let pointA = {latitude: coordinates[0][i][0], longitude: coordinates[0][i][1]}
+		let pointB = {latitude: coordinates[0][i+1][0], longitude: coordinates[0][i+1][1]}
+		let relativeAscent = coordinates[0][i+1][2] - coordinates[0][i][2]
+		distance = distance + haversine(pointA, pointB)/1000; //in kilometers
+		ascent = ascent + relativeAscent; //in meters
+	}
+	return {totalDistance: distance, totalAscent: ascent}
+} 
+
 
 
 // Get Hike desc
