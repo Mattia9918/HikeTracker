@@ -1,4 +1,4 @@
-const dao = require('../dao/hikedao');
+const dao = require('../modules/dao/hikedao');
 
 
 

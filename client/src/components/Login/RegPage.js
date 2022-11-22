@@ -1,5 +1,5 @@
 import { Col, Form, Button, Row, Alert, Container } from 'react-bootstrap';
-import './App.css';
+import '../../css/App.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 
@@ -12,7 +12,7 @@ function SignIn(props) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [username, setUsername] = useState("");
-  const [role, setRole] = useState("");
+  //const [role, setRole] = useState("");
 
 
   const [show, setShow] = useState(true);
@@ -20,7 +20,7 @@ function SignIn(props) {
   const resetState = () => {
     setEmail("");
     setPassword("");
-    setRole("");
+    //setRole("");
     setName("");
     setSurname("");
     setUsername("");
@@ -32,7 +32,7 @@ function SignIn(props) {
 
     event.preventDefault();
 
-    props.addUser(email, password, role, name, surname, username);
+    props.addUser(email, password, "hiker", name, surname, username);
 
     resetState();
 
@@ -111,7 +111,7 @@ function SignIn(props) {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+        {/*<Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
           <Col sm="11">
             <Form.Select aria-label="Default select example"
               required={true}
@@ -124,7 +124,7 @@ function SignIn(props) {
               <option value={"platformManager"} >Platform Manager</option>
             </Form.Select>
           </Col>
-        </Form.Group>
+        </Form.Group>*/}
 
         <center><Button variant="primary" size="lg" type="submit">Register</Button></center>
 
