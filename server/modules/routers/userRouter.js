@@ -23,6 +23,37 @@ const mailjet = Mailjet.apiConnect(
 
 /** Register new user **/
 
+function send_email(email, name, activationUrl) {
+    const request = mailjet
+        .post("send", {'version': 'v3.1'})
+        .request({
+            "Messages": [
+                {
+                    "From": {
+                        "Email": "team7sw2@gmail.com",
+                        "Name": "HikeTracker"
+                    },
+                    "To": [
+                        {
+                            "Email": email,
+                            "Name": name
+                        }
+                    ],
+                    "Subject": "Activate your account",
+                    "TextPart": "Account activation email",
+                    "HTMLPart": `<h3>Hello, ${name}, to activate your account, click <a href=${activationUrl}>here</a>!</h3><br />`,
+                    "CustomID": "EmailVerification"
+                }
+            ]
+        })
+    request
+        .then((result) => {
+        })
+        .catch((err) => {
+            console.log(err.statusCode)
+        })
+}
+
 router.post('/register',
     [
         check('email').isEmail(),
@@ -63,34 +94,7 @@ router.post('/register',
             const activationUrl = "http://localhost:3000/validate/" + code;
 
             // Send email with activation code
-            const request = mailjet
-                .post("send", { 'version': 'v3.1' })
-                .request({
-                    "Messages": [
-                        {
-                            "From": {
-                                "Email": "team7sw2@gmail.com",
-                                "Name": "HikeTracker"
-                            },
-                            "To": [
-                                {
-                                    "Email": email,
-                                    "Name": name
-                                }
-                            ],
-                            "Subject": "Activate your account",
-                            "TextPart": "Account activation email",
-                            "HTMLPart": `<h3>Hello, ${name}, to activate your account, click <a href=${activationUrl}>here</a>!</h3><br />`,
-                            "CustomID": "EmailVerification"
-                        }
-                    ]
-                })
-            request
-                .then((result) => {
-                })
-                .catch((err) => {
-                    console.log(err.statusCode)
-                })
+            send_email(email, name, activationUrl);
 
             return res.status(200).json({ code: activation });
         } catch (err) {
