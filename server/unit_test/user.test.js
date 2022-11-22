@@ -1,6 +1,6 @@
 "use strict";
 
-const dao = require('../dao/userdao.js');
+const dao = require('../modules/dao/userdao.js');
 const bcrypt = require("bcrypt");
 
 describe("test user", () => {

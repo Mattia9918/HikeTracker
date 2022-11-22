@@ -1,5 +1,5 @@
-const hike_dao = require('../dao/hikedao.js');
-const user_dao = require('../dao/userdao.js');
+const hike_dao = require('../modules/dao/hikedao.js');
+const user_dao = require('../modules/dao/userdao.js');
 
 const hike1 = {
     id: undefined,
