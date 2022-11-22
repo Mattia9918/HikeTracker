@@ -241,7 +241,6 @@ app.post('/upload', async (req, res) => {
 			return res.status(500).send(err);
 		} else {
 			const info = hike_dao.getGpxInfo(`../client/public/uploads/${random}`);
-			console.log(info);
 			res.json({
 				fileName: random,
 				filePath: `/uploads/${random}`,
@@ -250,7 +249,8 @@ app.post('/upload', async (req, res) => {
 				endingPointLong: info.coordinates[0][info.coordinates[0].length - 1][0],
 				endingPointLat: info.coordinates[0][info.coordinates[0].length - 1][1],
 				totalDistance: Math.round(info.totalDistance * 100) / 100,
-				totalAscent: Math.round(info.totalAscent * 100 / 100)
+				totalAscent: Math.round(info.totalAscent * 100 / 100),
+				difficulty: info.difficulty
 			});
 		}
 
@@ -280,8 +280,8 @@ app.get("/api/hikesdesc/:id", async (req, res) => {
 
 //hiking post
 app.post('/api/hiking',
-	[check('length').isInt(),
-	check('estimatedTime').isInt()]
+	[check('length').isNumeric(),
+	check('estimatedTime').isNumeric()]
 	, async (req, res) => {
 
 

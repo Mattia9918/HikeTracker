@@ -260,7 +260,8 @@ exports.getGpxInfo = (file) => {
 			i += 1;
 		}
 		const {totalDistance, totalAscent} = calculateDistanceAndAscent(coordinates);
-		return {coordinates: coordinates, totalDistance: totalDistance, totalAscent: totalAscent};
+		const difficulty = estimateDifficulty(totalDistance, totalAscent);
+		return {coordinates: coordinates, totalDistance: totalDistance, totalAscent: totalAscent, difficulty: difficulty};
 	}
 	return {};
 
@@ -269,8 +270,6 @@ exports.getGpxInfo = (file) => {
 function calculateDistanceAndAscent(coordinates) {
 	let distance = 0;
 	let ascent = 0;
-	console.log(coordinates);
-	console.log(coordinates[0][0][0]);
 	for (let i = 0; i < coordinates[0].length-1; i++) {
 		let pointA = {latitude: coordinates[0][i][0], longitude: coordinates[0][i][1]}
 		let pointB = {latitude: coordinates[0][i+1][0], longitude: coordinates[0][i+1][1]}
@@ -280,6 +279,54 @@ function calculateDistanceAndAscent(coordinates) {
 	}
 	return {totalDistance: distance, totalAscent: ascent}
 } 
+
+function estimateDifficulty(totalDistance, totalAscent) {
+	let difficultyScore = 0;
+
+	if (totalDistance < 5) {
+		difficultyScore += 1;
+	}
+	else if (totalDistance >= 5 && totalDistance < 10) {
+		difficultyScore += 2;
+	}
+	else if (totalDistance >= 10 && totalDistance < 15) {
+		difficultyScore += 3;
+	} 
+	else {
+		difficultyScore += 4;
+	}
+
+
+	if (totalAscent < 0 && totalAscent > -200) {
+		difficultyScore += 1;
+	}
+	else if (totalAscent <= -200 && totalAscent > -800) {
+		difficultyScore += 2;
+	}
+	else if (totalAscent <= -800) {
+		difficultyScore += 3;
+	}
+	else if (totalAscent >= 0 && totalAscent < 200) {
+		difficultyScore += 1;
+	}
+	else if (totalAscent >= 200 && totalAscent < 600) {
+		difficultyScore += 2;
+	}
+	else if (totalAscent >= 600 && totalAscent < 1000) {
+		difficultyScore += 3;
+	}
+	else {
+		difficultyScore += 4;
+	}
+	
+	if (difficultyScore < 4) {
+		return 'Easy'
+	} else if (difficultyScore >= 4 && difficultyScore <= 6) {
+		return 'Average'
+	} else {
+		return 'Difficult'
+	}
+}
 
 
 
