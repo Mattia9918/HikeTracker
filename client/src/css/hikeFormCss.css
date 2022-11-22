@@ -9,6 +9,7 @@
 
 .below-nav {
     padding-top: 3rem;
+    padding-bottom: 3rem;
 }
 
 .r {
@@ -24,6 +25,19 @@
 .c {
     padding-top: 1rem;
     padding-bottom: 1rem ;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.d {
+    padding-top: 1rem;
+    padding-bottom: 1rem ;
+    padding-left: 16rem;
+    padding-right: 2rem;
+}
+
+.e {
+    padding-top: 1rem;
     padding-left: 2rem;
     padding-right: 2rem;
 }
