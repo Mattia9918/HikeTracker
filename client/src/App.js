@@ -1,14 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import './styles.css';
+import './css/App.css';
+import './css/styles.css';
 import { useState, useEffect } from 'react';
-import Layout from './Layout'
-import Hikes from './Hikes';
+import Layout from './components/Layout'
+import Hikes from './components/Hikes';
 import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
-import ValidatePage from './ValidateUser'
-import SignIn from './RegPage'
-import LoginForm from './Login'
-import HikeForm from './components/hikeForm';
+import ValidatePage from './components/Login/ValidateUser'
+import SignIn from './components/Login/RegPage'
+import LoginForm from './components/Login/Login'
+import HikeForm from './components/HikeForm/hikeForm';
 import API from './API';
 
 function App(){

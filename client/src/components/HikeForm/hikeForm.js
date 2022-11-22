@@ -1,5 +1,5 @@
 //import "./src/App.css";
-import './hikeFormCss.css';
+import '../../css/hikeFormCss.css';
 
 import { Col, Form, Button, Row, Container } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';

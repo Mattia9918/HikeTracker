@@ -1,5 +1,5 @@
 import { Col, Form, Button, Row, Alert, Container } from 'react-bootstrap';
-import './App.css';
+import '../../css/App.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState,useEffect } from 'react';
 

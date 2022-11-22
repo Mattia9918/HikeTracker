@@ -1,4 +1,5 @@
-import './App.css';
+//import '../App.css';
+import '../../css/App.css'; 
 
 import {Col,Form,Button,Alert,Row,Container} from 'react-bootstrap';
 import { BsFillEnvelopeFill,BsLockFill,BsPersonCircle,BsBoxArrowInRight } from "react-icons/bs";

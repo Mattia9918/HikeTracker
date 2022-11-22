@@ -1,7 +1,7 @@
 import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import {MapContainer,TileLayer,Marker,GeoJSON,Popup} from 'react-leaflet'; 
-import API from './API';
+import API from '../API';
 
 function Hikes(props) {
 
@@ -137,9 +137,9 @@ function HikeCard(props) {
                 </Card.Header>
 
                 <Card.Img className="mt-2" variant="top" src={
-                    (difficulty === "Easy" && "http://localhost:3000/easyhike.jpg") ||
-                    (difficulty === "Average" && "http://localhost:3000/averagehike.jpg") ||
-                    (difficulty === "Difficult" && "http://localhost:3000/difficulthike.jpg")
+                    (difficulty === "Easy" && "http://localhost:3000/images/easyhike.jpg") ||
+                    (difficulty === "Average" && "http://localhost:3000/images/averagehike.jpg") ||
+                    (difficulty === "Difficult" && "http://localhost:3000/images/difficulthike.jpg")
                 } />
 
 
