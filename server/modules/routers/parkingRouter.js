@@ -6,7 +6,27 @@ const {check, validationResult} = require("express-validator");
 
 const router = express.Router();
 
-//Parking lot
+//PARKING_LOT TABLE
+
+router.get("/api/parking", async (req, res) => {
+    try {
+        const parks = await parking_dao.getParks();
+        return res.status(200).json(parks);
+    } catch (err) {
+        return res.status(500).json({ error: err });
+    }
+});
+
+router.get("/api/parking/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const park = await parking_dao.getParkById(id);
+        res.status(200).json(park);
+    } catch (err) {
+        res.status(500).end();
+    }
+});
+
 router.post('/api/parking',
 [check('guarded').isNumeric(),
     check('parking_spaces').isNumeric()]
@@ -37,5 +57,17 @@ router.post('/api/parking',
 
 
 });
+
+// hiking delete
+router.delete('/api/parking/delete', async (req, res) => {
+    try {
+        await parking_dao.deleteParks();
+        return res.status(204).end();
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
+
 
 module.exports = router;
