@@ -521,20 +521,5 @@ exports.deleteGpx = () => {
 
 };
 
-//PARKING TABLE 
-
-exports.createParking= (name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable) => {
-
-	return new Promise((resolve, reject) => {
-		const sql = `INSERT INTO parking_lot(name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable) VALUES(?, ?, ?, ?, ?, ?)`;
-		db.run(sql, [name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(this.lastID);
-		});
-	});
-};
 
 
