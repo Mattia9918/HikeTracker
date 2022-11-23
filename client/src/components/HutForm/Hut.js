@@ -3,6 +3,7 @@ import { Container, Form, Row , Col, Button} from "react-bootstrap";
 import 'react-phone-number-input/style.css'; 
 import PhoneInput from 'react-phone-number-input'; 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -27,6 +28,21 @@ function Hut(props) {
     const [restservice, setRestservice] = useState(false); 
     const [disable, setDisable] = useState(false); 
     const [bikefriendly, setBikefriendly] = useState(false); 
+
+    const navigate = useNavigate();
+
+    const submitHandler = (event) => {
+        
+        const info = { hutname, address, phonenumber, email, website , description, latitude, longitude, rooms, bathrooms, beds, city, province, restservice, disable, bikefriendly };
+
+        event.preventDefault();
+        console.log(info);
+        props.postHut(info);
+
+        navigate("/");
+    }
+
+
 
     const onClickButton = async e => {
 

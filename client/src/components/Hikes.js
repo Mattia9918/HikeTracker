@@ -1,7 +1,7 @@
 import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import {MapContainer,TileLayer,Marker,GeoJSON,Popup} from 'react-leaflet'; 
-import API from '../API';
+import API from '../API/APILogin';
 
 
 function Hikes(props) {

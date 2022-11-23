@@ -4,7 +4,7 @@ import {useState,useEffect} from 'react';
 import {Container,Alert,Button} from 'react-bootstrap';
 
 import { BsCheckCircle,BsExclamationDiamondFill } from "react-icons/bs";
-import API from '../../API';
+import API from '../../API/APILogin';
 
 
 function ValidatePage() {

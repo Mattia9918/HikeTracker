@@ -9,7 +9,11 @@ import ValidatePage from './components/Login/ValidateUser'
 import SignIn from './components/Login/RegPage'
 import LoginForm from './components/Login/Login'
 import HikeForm from './components/HikeForm/hikeForm';
-import API from './API';
+import Hut from './components/HutForm/Hut';
+import APILogin from './API/APILogin';
+import APIHikeForm from './API/APIHikeForm';
+import APIpostGpx from './API/APIpostGpx';
+import APIHikes from './API/APIHikes';
 
 function App(){
   return (
@@ -36,7 +40,7 @@ function App2() {
    useEffect(()=> {
     const checkAuth = async() => {
       try {
-        const utente = await API.getUserInfo();
+        const utente = await APILogin.getUserInfo();
         setMsg({message:"",type:""});
         setLoggedIn(true);
         setUser(utente);
@@ -50,7 +54,7 @@ function App2() {
       
       const user = {email,password,role, name, surname,username}
       try {
-        await API.addUser(user); 
+        await APILogin.addUser(user); 
         setStatus("success"); 
         setMsg({message: 'Check email to activate your account', type: "success"}); 
 
@@ -69,16 +73,21 @@ function App2() {
       }
   }
 
-    async function postHike(Hike, filePath) {
-        await API.postHike(Hike);
-        await API.postGpx(filePath);
-        setPosting(true);
-    }
+  async function postHike(Hike, filePath) {
+      await APIHikeForm.postHike(Hike);
+      await APIpostGpx.postGpx(filePath);
+      setPosting(true);
+  }
+
+  async function postHut(hut) {
+   // await API.postHut(hut); 
+
+  }
 
   const login = async (credentials) => {
   
     try {
-      const user = await API.logIn(credentials);
+      const user = await APILogin.logIn(credentials);
       if(user.message !== undefined)
       {
         setMsg({message: user.message, type: "danger"}); 
@@ -95,7 +104,7 @@ function App2() {
   }
   
   const logout = async () => {
-      await API.logOut()
+      await APILogin.logOut()
       setUser(undefined);
       setLoggedIn(false);
       setMsg({message: "You have been logged out!", type: "warning"})
@@ -104,7 +113,7 @@ function App2() {
 
   async function loadHikes() {
     try {
-      const hikeList = await API.getHikes();
+      const hikeList = await APIHikes.getHikes();
       setHikes(hikeList);
       setPosting(false);
       //setErrMessage('');
@@ -115,7 +124,7 @@ function App2() {
 
   async function loadFilter(filter, value) {
     try {
-      const filteredHikeList = await API.getFilter(filter, value);
+      const filteredHikeList = await APIHikes.getFilter(filter, value);
       setHikes(filteredHikeList);
       //setErrMessage('');
     } catch (err) {
