@@ -91,10 +91,10 @@ function Hikes(props) {
                             {(props.hikes.length === 1 && props.hikes[0].id == undefined) ||
                                 <>
                                     <Col>
-                                        {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} />)}
+                                        {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} user = {props.user} />)}
                                     </Col>
                                     <Col>
-                                        {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike} />)}
+                                        {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike} user = {props.user} />)}
                                     </Col>
                                 </>
                             }
@@ -186,7 +186,7 @@ function HikeCard(props) {
                     <Col align="right">
                         {open === 0 &&
                             <>
-                                <Button variant="link" onClick={() => setShowModal(true)}>View in map</Button>
+                                {props.user && <Button variant="link" onClick={() => setShowModal(true)}>View in map</Button>}
                                 <Button variant="link" onClick={() => setOpen(1)}>More info</Button>
                             </> ||
                             <Button variant="link" onClick={() => setOpen(0)}>Close</Button>

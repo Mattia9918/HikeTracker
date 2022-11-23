@@ -4,7 +4,7 @@ import './css/styles.css';
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
 import Hikes from './components/Hikes';
-import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
 import ValidatePage from './components/Login/ValidateUser'
 import SignIn from './components/Login/RegPage'
 import LoginForm from './components/Login/Login'
@@ -29,6 +29,7 @@ function App2() {
   const [user, setUser] = useState(undefined);
   const [posting, setPosting] = useState();
   
+
   const navigate = useNavigate(); 
  
   //check Utente loggato: 
@@ -135,9 +136,9 @@ function App2() {
           <Route element = {<Layout user = {user} logout = {logout}/>}>
             <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter} msg = {msg} user = {user} setMsg = {setMsg} />}/>
             <Route path='/validate/:code' element={ <ValidatePage />} />
-            <Route path='/register' element={ <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>} /> 
-            <Route path='/login' element={ <LoginForm login={login} msg={msg} setMsg={setMsg}/>}/>
-            <Route path='/newhike' element={ <HikeForm postHike={postHike} user = {user}></HikeForm>}/>
+            <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 
+            <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
+            <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
           </Route>
           
           
