@@ -30,19 +30,19 @@ exports.getHikes = () => {
 	});
 };
 
-exports.getHikeById = (id) => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND P.id = HP.pointID AND H.id = ?";
-		db.all(sql, [id], (err, rows) => {
-			if (err) reject(err);
-			else {
-				const hikes = rowJsonMapping(rows);
-				resolve(hikes);
-			}
-		});
-	});
-};
+//exports.getHikeById = (id) => {
+//	return new Promise((resolve, reject) => {
+//		const sql =
+//			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND P.id = HP.pointID AND H.id = ?";
+//		db.all(sql, [id], (err, rows) => {
+//			if (err) reject(err);
+//			else {
+//				const hikes = rowJsonMapping(rows);
+//				resolve(hikes);
+//			}
+//		});
+//	});
+//};
 
 exports.getHikeByAscent = (ascent1, ascent2) => {
 	return new Promise((resolve, reject) => {
@@ -128,27 +128,27 @@ exports.getHikeByCity = (city) => {
 	});
 };
 
-exports.getHikeByDistanceRange = (longitude, latitude, maxDist) => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id";
-		db.all(sql, [], (err, rows) => {
-			if (err) reject(err);
-			else {
-				const hikes = rowJsonMapping(rows);
-				const filteredHikes = hikes.filter((r) => {
-					const distance = Math.sqrt(
-						Math.pow(longitude - r.startingPoint.longitude, 2) +
-						Math.pow(latitude - r.startingPoint.latitude, 2)
-					);
-					if (maxDist >= distance) return true;
-					else return false;
-				});
-				resolve(filteredHikes);
-			}
-		});
-	});
-};
+//exports.getHikeByDistanceRange = (longitude, latitude, maxDist) => {
+//	return new Promise((resolve, reject) => {
+//		const sql =
+//			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id";
+//		db.all(sql, [], (err, rows) => {
+//			if (err) reject(err);
+//			else {
+//				const hikes = rowJsonMapping(rows);
+//				const filteredHikes = hikes.filter((r) => {
+//					const distance = Math.sqrt(
+//						Math.pow(longitude - r.startingPoint.longitude, 2) +
+//						Math.pow(latitude - r.startingPoint.latitude, 2)
+//					);
+//					if (maxDist >= distance) return true;
+//					else return false;
+//				});
+//				resolve(filteredHikes);
+//			}
+//		});
+//	});
+//};
 
 const rowJsonMapping = (rows) => {
 	let id,
@@ -363,7 +363,7 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 exports.deleteHikes = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DROP TABLE IF EXISTS hike';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id INTEGER, title text NOT NULL, length integer NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent integer NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id INTEGER, title text NOT NULL, length real NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent real NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);
@@ -494,6 +494,31 @@ exports.getFileContentById = (id) => {
 			}
 		});
 	})
+};
+
+exports.deleteGpx = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DROP TABLE IF EXISTS gpx';
+		const sql2 = 'CREATE TABLE IF NOT EXISTS gpx(hikeID INTEGER, gpxfile blob NOT NULL, PRIMARY KEY(hikeID))'
+		db.run(sql1, [], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				db.run(sql2, [], function (err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			}
+		})
+	})
+
 };
 
 

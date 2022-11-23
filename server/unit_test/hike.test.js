@@ -1,6 +1,13 @@
 const hike_dao = require('../modules/dao/hikedao.js');
 const user_dao = require('../modules/dao/userdao.js');
 
+// Include fs module
+var fs = require('fs');
+  
+// Use fs.readFile() method to read the file
+//var file = fs.readFileSync('./unit_test/testfile.gpx', 'utf-8');
+  
+console.log('readFile called');
 const hike1 = {
     id: undefined,
     title: "Hike1",
@@ -10,45 +17,45 @@ const hike1 = {
     estimatedTime: "1",
     ascent: 120,
     localguideID: 1
- }
- const hike2 = {
-     id: undefined,
-     title: "Hike2",
-     length: 20,
-     description: "I'm Hike2!",
-     difficulty: "Average",
-     estimatedTime: "2",
-     ascent: 400,
-     localguideID: 2
- }
+}
+const hike2 = {
+    id: undefined,
+    title: "Hike2",
+    length: 20,
+    description: "I'm Hike2!",
+    difficulty: "Average",
+    estimatedTime: "2",
+    ascent: 400,
+    localguideID: 2
+}
 
- const hike3 = {
-     id: undefined,
-     title: "Hike3",
-     length: 30,
-     description: "I'm Hike3!",
-     difficulty: "Difficult",
-     estimatedTime: "3",
-     ascent: 800,
-     localguideID: 1
- }
+const hike3 = {
+    id: undefined,
+    title: "Hike3",
+    length: 30,
+    description: "I'm Hike3!",
+    difficulty: "Difficult",
+    estimatedTime: "3",
+    ascent: 800,
+    localguideID: 1
+}
 
- const hike4 = {
-     id: undefined,
-     title: "Hike4",
-     length: 40,
-     description: "I'm Hike4!",
-     difficulty: "Easy",
-     estimatedTime: "4",
-     ascent: 1500,
-     localguideID: 2
- }
+const hike4 = {
+    id: undefined,
+    title: "Hike4",
+    length: 40,
+    description: "I'm Hike4!",
+    difficulty: "Easy",
+    estimatedTime: "4",
+    ascent: 1500,
+    localguideID: 2
+}
 
- const point1 = {
+const point1 = {
     latitude: 1.1,
     longitude: 2.1,
     type: "hut",
-    description: "foo",
+    description: "da sostituire",
     locality: "Torino",
     principalSubdivision: "Torino",
 }
@@ -57,7 +64,7 @@ const point2 = {
     latitude: 3.1,
     longitude: 4.1,
     type: "hut",
-    description: "foo",
+    description: "da sostituire",
     locality: "Torino",
     principalSubdivision: "Torino",
 }
@@ -66,7 +73,7 @@ const point3 = {
     latitude: 5.1,
     longitude: 6.1,
     type: "hut",
-    description: "foo",
+    description: "da sostituire",
     locality: "Grugliasco",
     principalSubdivision: "Torino",
 }
@@ -75,34 +82,39 @@ const point4 = {
     latitude: 7.1,
     longitude: 8.1,
     type: "hut",
-    description: "foo",
+    description: "da sostituire",
     locality: "Grugliasco",
     principalSubdivision: "Torino",
 }
 
- const localguide1 = {
-     id: undefined,
-     email: "lg1@polito.it",
-     hash: "foo",
-     salt: "foo",
-     role: "local guide",
-     username: "Francescone",
-     isActive: 1,
-     name: "Francescone",
-     surname: "Bianchi"
- }
+const localguide1 = {
+    id: undefined,
+    email: "lg1@polito.it",
+    hash: "foo",
+    salt: "foo",
+    role: "local guide",
+    username: "Francescone",
+    isActive: 1,
+    name: "Francescone",
+    surname: "Bianchi"
+}
 
- const localguide2 = {
-     id: undefined,
-     email: "lg2@polito.it",
-     hash: "foo",
-     salt: "foo",
-     role: "local guide",
-     username: "Franceschino",
-     isActive: 1,
-     name: "Franceschino",
-     surname: "Neri"
- }
+const localguide2 = {
+    id: undefined,
+    email: "lg2@polito.it",
+    hash: "foo",
+    salt: "foo",
+    role: "local guide",
+    username: "Franceschino",
+    isActive: 1,
+    name: "Franceschino",
+    surname: "Neri"
+}
+
+const gpx1 = {
+    hikeID: undefined,
+    gpxfile: '111100 111111'
+}
 
 describe("test hikes and filtering", () => {
     beforeEach(async () => {
@@ -110,9 +122,10 @@ describe("test hikes and filtering", () => {
         await hike_dao.deleteHikes();
         await hike_dao.deletePoint();
         await hike_dao.deleteHike_Point();
-        
+        await hike_dao.deleteGpx();
+
         try {
-            
+
             await hike_dao.createHiking(hike1.title, hike1.length, hike1.description, hike1.difficulty, hike1.estimatedTime, hike1.ascent, hike1.localguideID);
             await hike_dao.createHiking(hike2.title, hike2.length, hike2.description, hike2.difficulty, hike2.estimatedTime, hike2.ascent, hike2.localguideID);
             await hike_dao.createHiking(hike3.title, hike3.length, hike3.description, hike3.difficulty, hike3.estimatedTime, hike3.ascent, hike3.localguideID);
@@ -131,7 +144,8 @@ describe("test hikes and filtering", () => {
             await hike_dao.postHike_Point(4, 'arrive', 4)
             await user_dao.insertUser(localguide1.email, localguide1.hash, localguide1.salt, localguide1.role, localguide1.name, localguide1.surname, localguide1.username);
             await user_dao.insertUser(localguide2.email, localguide2.hash, localguide2.salt, localguide2.role, localguide2.name, localguide2.surname, localguide2.username);
-            
+            await hike_dao.saveFile(gpx1.gpxfile);
+ //           hike_dao.getGpxInfo(file);
 
 
         } catch (err) {
@@ -139,12 +153,18 @@ describe("test hikes and filtering", () => {
         }
     })
 
-   testGetHikes();
-   testGetHikeByDiffculty();
-   testGetHikeByExpectedTime();
-   testGetHikeByLength();
-   testGetHikeByAscent();
-   testGetHikeDescById
+    testGetHikes();
+    testGetHikeByDiffculty();
+    testGetHikeByExpectedTime();
+    testGetHikeByLength();
+    testGetHikeByAscent();
+    testGetHikeDescById();
+    testGetHikeByCity("Grugliasco");
+    testGetHikeByProvince("Torino")
+    testSaveFile();
+    testGetFileContentById(1);
+    testGetGpxInfo();
+    
 });
 
 function testGetHikes() {
@@ -168,19 +188,19 @@ function testGetHikes() {
                             latitude: 1.1,
                             longitude: 2.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 3.1,
                             longitude: 4.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 2,
@@ -196,20 +216,20 @@ function testGetHikes() {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 7.1,
                             longitude: 8.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
-                        
+                        pointsOfInterest: []
+
                     },
                     {
                         id: 3,
@@ -225,19 +245,19 @@ function testGetHikes() {
                             latitude: 1.1,
                             longitude: 2.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 3.1,
                             longitude: 4.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 4,
@@ -253,19 +273,19 @@ function testGetHikes() {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 7.1,
                             longitude: 8.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     }
                 ]
             )
@@ -295,19 +315,19 @@ function testGetHikeByDiffculty() {
                             latitude: 1.1,
                             longitude: 2.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 3.1,
                             longitude: 4.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 4,
@@ -323,19 +343,19 @@ function testGetHikeByDiffculty() {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 7.1,
                             longitude: 8.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     }
                 ]
             )
@@ -347,7 +367,7 @@ function testGetHikeByExpectedTime() {
 
     describe("Testing getHikeByExpectedTime()", () => {
         test("Getting only hikes with estimatedTime between 1 and 2", async () => {
-            let res = await hike_dao.getHikeByExpectedTime(1,2);
+            let res = await hike_dao.getHikeByExpectedTime(1, 2);
             expect(res).toEqual(
                 [
                     {
@@ -364,19 +384,19 @@ function testGetHikeByExpectedTime() {
                             latitude: 1.1,
                             longitude: 2.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 3.1,
                             longitude: 4.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 2,
@@ -392,19 +412,19 @@ function testGetHikeByExpectedTime() {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
-                            city: "Grugliasco",
-                            province: "Torino",  
-                        },
-					    endingPoint: {
-                            latitude: 7.1,
-                            longitude: 8.1,
-                            type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        endingPoint: {
+                            latitude: 7.1,
+                            longitude: 8.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
                     }
                 ]
             )
@@ -416,7 +436,7 @@ function testGetHikeByLength() {
 
     describe("Testing getHikeByLength()", () => {
         test("Getting only hikes with length between 30 km and 40 km", async () => {
-            let res = await hike_dao.getHikeByLength(30,40);
+            let res = await hike_dao.getHikeByLength(30, 40);
             expect(res).toEqual(
                 [
                     {
@@ -433,19 +453,19 @@ function testGetHikeByLength() {
                             latitude: 1.1,
                             longitude: 2.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 3.1,
                             longitude: 4.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 4,
@@ -457,23 +477,23 @@ function testGetHikeByLength() {
                         ascent: 1500,
                         localguideID: 2,
                         localguideUsername: "Franceschino",
-                        startingPoint:{
+                        startingPoint: {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 7.1,
                             longitude: 8.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     }
                 ]
             )
@@ -486,11 +506,9 @@ function testGetHikeDescById() {
         test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
             let res = await hike_dao.getHikeDesc(2);
             expect(res).toEqual(
-                [
                     {
-                        description: "I'm Hike1!"
+                        description: "I'm Hike2!"
                     }
-                ]
             )
         })
     })
@@ -500,7 +518,7 @@ function testGetHikeByAscent() {
 
     describe("Testing getHikeByAscent()", () => {
         test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
-            let res = await hike_dao.getHikeByAscent(400,1500);
+            let res = await hike_dao.getHikeByAscent(400, 1500);
             expect(res).toEqual(
                 [
                     {
@@ -517,19 +535,19 @@ function testGetHikeByAscent() {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 7.1,
                             longitude: 8.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 3,
@@ -545,19 +563,19 @@ function testGetHikeByAscent() {
                             latitude: 1.1,
                             longitude: 2.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 3.1,
                             longitude: 4.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Torino",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     },
                     {
                         id: 4,
@@ -573,21 +591,260 @@ function testGetHikeByAscent() {
                             latitude: 5.1,
                             longitude: 6.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    endingPoint: {
+                        endingPoint: {
                             latitude: 7.1,
                             longitude: 8.1,
                             type: "hut",
-                            description: "foo",
+                            description: "da sostituire",
                             city: "Grugliasco",
                             province: "Torino",
                         },
-					    pointsOfInterest: []
+                        pointsOfInterest: []
                     }
                 ]
+            )
+        })
+    })
+}
+
+function testGetHikeByCity(city) {
+
+    describe("Testing getHikeByCity(city)", () => {
+        test("Getting only hikes having as starting city the given city", async () => {
+            let res = await hike_dao.getHikeByCity(city);
+            expect(res).toEqual(
+                [
+                    {
+                        id: 2,
+                        title: "Hike2",
+                        length: 20,
+                        description: "I'm Hike2!",
+                        difficulty: "Average",
+                        estimatedTime: "2",
+                        ascent: 400,
+                        localguideID: 2,
+                        localguideUsername: "Franceschino",
+                        startingPoint: {
+                            latitude: 5.1,
+                            longitude: 6.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        endingPoint: {
+                            latitude: 7.1,
+                            longitude: 8.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
+                    },
+                    {
+                        id: 4,
+                        title: "Hike4",
+                        length: 40,
+                        description: "I'm Hike4!",
+                        difficulty: "Easy",
+                        estimatedTime: "4",
+                        ascent: 1500,
+                        localguideID: 2,
+                        localguideUsername: "Franceschino",
+                        startingPoint: {
+                            latitude: 5.1,
+                            longitude: 6.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        endingPoint: {
+                            latitude: 7.1,
+                            longitude: 8.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
+                    }
+                ]
+            )
+        })
+    })
+}
+
+function testGetHikeByProvince(province) {
+
+    describe("Testing getHikeByProvince(province)", () => {
+        test("Getting only hikes having as starting province the given province", async () => {
+            let res = await hike_dao.getHikeByProvince(province);
+            expect(res).toEqual(
+                [
+                    {
+                        id: 1,
+                        title: "Hike1",
+                        length: 10,
+                        description: "I'm Hike1!",
+                        difficulty: "Easy",
+                        estimatedTime: "1",
+                        ascent: 120,
+                        localguideID: 1,
+                        localguideUsername: "Francescone",
+                        startingPoint: {
+                            latitude: 1.1,
+                            longitude: 2.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Torino",
+                            province: "Torino",
+                        },
+                        endingPoint: {
+                            latitude: 3.1,
+                            longitude: 4.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Torino",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
+                    },
+                    {
+                        id: 2,
+                        title: "Hike2",
+                        length: 20,
+                        description: "I'm Hike2!",
+                        difficulty: "Average",
+                        estimatedTime: "2",
+                        ascent: 400,
+                        localguideID: 2,
+                        localguideUsername: "Franceschino",
+                        startingPoint: {
+                            latitude: 5.1,
+                            longitude: 6.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        endingPoint: {
+                            latitude: 7.1,
+                            longitude: 8.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
+                    },
+                    {
+                        id: 3,
+                        title: "Hike3",
+                        length: 30,
+                        description: "I'm Hike3!",
+                        difficulty: "Difficult",
+                        estimatedTime: "3",
+                        ascent: 800,
+                        localguideID: 1,
+                        localguideUsername: "Francescone",
+                        startingPoint: {
+                            latitude: 1.1,
+                            longitude: 2.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Torino",
+                            province: "Torino",
+                        },
+                        endingPoint: {
+                            latitude: 3.1,
+                            longitude: 4.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Torino",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
+                    },
+                    {
+                        id: 4,
+                        title: "Hike4",
+                        length: 40,
+                        description: "I'm Hike4!",
+                        difficulty: "Easy",
+                        estimatedTime: "4",
+                        ascent: 1500,
+                        localguideID: 2,
+                        localguideUsername: "Franceschino",
+                        startingPoint: {
+                            latitude: 5.1,
+                            longitude: 6.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        endingPoint: {
+                            latitude: 7.1,
+                            longitude: 8.1,
+                            type: "hut",
+                            description: "da sostituire",
+                            city: "Grugliasco",
+                            province: "Torino",
+                        },
+                        pointsOfInterest: []
+                    }
+                ]
+            )
+        })
+    })
+}
+
+function testSaveFile() {
+
+    describe("Testing saveFile(gpxbinary)", () => {
+        test("Posting a gpx as a blob", async () => {
+            let gpx2 = {
+                hikeID: undefined,
+                gpxfile: "111111 000111"
+            }
+            await hike_dao.saveFile(gpx2.gpxfile);
+            let res = await hike_dao.getFileContentById(2);
+            expect(res).toEqual(
+                {
+                    "gpxfile": "111111 000111"
+                }
+            )
+        })
+    })
+}
+
+function testGetFileContentById(id) {
+    describe("Testing getContentById(id)", () => {
+        test("Getting a specific gpxfile of given id", async () => {
+            let res = await hike_dao.getFileContentById(id);
+            expect(res).toEqual(
+                {
+                    "gpxfile": "111100 111111"
+                }
+            )
+        })
+    })
+}
+
+function testGetGpxInfo(file) {
+    describe("Testing getGpxInfo(file)", () => {
+        test("Getting gpx info given gpx file", async () => {
+            let res = hike_dao.getGpxInfo(file);
+            expect(res).toEqual(
+                {
+                    
+                }
             )
         })
     })
