@@ -19,27 +19,32 @@ function Hut(props) {
     const [website, setWebsite] = useState(""); 
     const [description, setDescription] = useState(""); 
     const [latitude, setLatitude] = useState(""); 
-    const [longitude, setLongitude] = useState(""); 
+    const [longitude, setLongitude] = useState("");
+    const [altitude, setAltitude] = useState(""); 
     const [rooms, setRooms] = useState("");
     const [bathrooms, setBathrooms] = useState(""); 
     const [beds, setBeds] = useState("");     
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
+    const [language, setLanguage] = useState(""); 
     const [restservice, setRestservice] = useState(false); 
     const [disable, setDisable] = useState(false); 
-    const [bikefriendly, setBikefriendly] = useState(false); 
+    const [bikefriendly, setBikefriendly] = useState(0);
+    const [reachability, setReachability] = useState("");  
 
     const navigate = useNavigate();
 
     const submitHandler = (event) => {
         
-        const info = { hutname, address, phonenumber, email, website , description, latitude, longitude, rooms, bathrooms, beds, city, province, restservice, disable, bikefriendly };
+       
+
+        const info = { hutname, address, phonenumber, email, website , altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
         console.log(info);
         props.postHut(info);
 
-        navigate("/");
+        //navigate("/");
     }
 
 
@@ -54,6 +59,7 @@ function Hut(props) {
             const point = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
             console.log(point.data);  
             setCity(point.data.locality); 
+            setProvince(point.data.principalSubdivision); 
             
         } catch (err) {
             
@@ -67,7 +73,7 @@ function Hut(props) {
     return (
         <Container >
             <Container className='below-nav' >
-                <Form>
+                <Form onSubmit={submitHandler}>
                     <Container className="shadow-sm p-5 w-75" id="cardscontainer">
                         <h4>New Hut</h4>
                         <h6>Fill the form to insert a new Hut</h6>
@@ -108,17 +114,35 @@ function Hut(props) {
                         <Row>
                             <Col className="c">
                                 <Form.Label>Additional language spoken</Form.Label>
-                                <Form.Select aria-label="Default select example">
+                                <Form.Select aria-label="Default select example" onChange={ev => setLanguage(ev.target.value)}>
                                     <option ></option>
                                     <option value="english">English</option>
                                     <option value="french">French</option>
                                     <option value="german">German</option>
                                 </Form.Select>
                             </Col>
-                            <Col></Col>
+                            <Col className='c'>
+                                <Form.Label>Reachability Option</Form.Label>
+                                <Form.Select aria-label="Default select example" onChange={ev => setReachability(ev.target.value)}>
+                                    <option ></option>
+                                    <option value="normal">With normal car</option>
+                                    <option value="offroad">With off-road car</option>
+                                    <option value="foot">On foot</option>
+                                    <option value="cable">Cableway</option>
+                                </Form.Select>
+                            </Col>
                         </Row>
                         <br></br>
-                        <h6>Insert Coordinates </h6>
+                        <h6>Hut GeoLocalization  </h6>
+                        <Row>
+                            <Col className="c">
+                                <Form.Label>Hut altitude</Form.Label>
+                                <Form.Control type='number' value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="Enter hut altitude" required />
+                            </Col>
+                            <Col className="c">
+                            </Col>
+                         
+                        </Row>
                         <Row>
                             
                             <Col className="c">
@@ -134,7 +158,7 @@ function Hut(props) {
                         
                         <Row>
                             <Col align = "center">
-                                <Button variant="success" size="sm" onClick={onClickButton()}>upload</Button>
+                                <Button variant="success" size="sm" onClick={onClickButton}>upload</Button>
                             </Col>
                         </Row>
                         <br></br>
@@ -156,10 +180,10 @@ function Hut(props) {
                         <Row>
                             
                             <Col className="c">
-                                <Form.Check   label="Bike Friendly" name="bike_friendly" value={bikefriendly} onChange={ev => {setBikefriendly(!bikefriendly); console.log(bikefriendly)} }></Form.Check>
+                                <Form.Check   label="Bike Friendly" name="bike_friendly" value={bikefriendly} onChange={ev => {bikefriendly == 0 ? setBikefriendly(1): setBikefriendly(0); console.log(bikefriendly)} }></Form.Check>
                             </Col>
                             <Col className="c">    
-                                <Form.Check   label="Restaurant" name="restaurant" value={restservice} onChange={ev => {setRestservice(!restservice); console.log(restservice)} }></Form.Check>
+                                <Form.Check   label="Restaurant" name="restaurant" value={restservice} onChange={ev => {restservice == 0 ? setRestservice(1) : setRestservice(0); console.log(restservice)} }></Form.Check>
                                 
                             </Col>
                             
@@ -167,7 +191,7 @@ function Hut(props) {
 
                         <Row>
                             <Col className="c">
-                                <Form.Check  label="Services for disable" name="disable" value={disable} onChange={ev => {setDisable(!disable); console.log(disable)} }></Form.Check>
+                                <Form.Check  label="Services for disable" name="disable" value={disable} onChange={ev => {disable == 0 ? setDisable(1): setDisable(0); console.log(disable)} }></Form.Check>
                             </Col>
                         </Row>
 

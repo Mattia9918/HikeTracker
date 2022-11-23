@@ -14,6 +14,7 @@ import APILogin from './API/APILogin';
 import APIHikeForm from './API/APIHikeForm';
 import APIpostGpx from './API/APIpostGpx';
 import APIHikes from './API/APIHikes';
+import APIHutForm from './API/APIHutForm';
 
 function App(){
   return (
@@ -80,7 +81,7 @@ function App2() {
   }
 
   async function postHut(hut) {
-   // await API.postHut(hut); 
+    await APIHutForm.postHut(hut); 
 
   }
 
@@ -148,7 +149,7 @@ function App2() {
             <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 
             <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
-            <Route path='/newHut' element={<Hut></Hut>}/>
+            <Route path='/newHut' element={<Hut postHut={postHut}></Hut>}/>
           </Route>
           
           
