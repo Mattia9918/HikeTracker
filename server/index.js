@@ -7,11 +7,13 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const user_dao = require("./modules/dao/userdao");
+
 const hutRouter = require('./modules/routers/hutRouter.js'); 
 const userRouter = require('./modules/routers/userRouter.js');
 const hikeRouter = require('./modules/routers/hikeRouter.js');
 const parkingRouter = require('./modules/routers/parkingRouter.js');
 const gpxRouter = require('./modules/routers/gpxRouter.js');
+const sessionRouter = require('./modules/routers/sessionRouter.js');
 
 const bodyParser = require('body-parser'); // parser middleware
 const session = require('express-session');  // session middleware
@@ -85,8 +87,10 @@ app.use('', hikeRouter);
 app.use('', gpxRouter);
 app.use('', hutRouter ); 
 app.use('', parkingRouter);
+app.use('/api/sessions', sessionRouter);
 
-/** API Login and Logout **/
+/*
+/!** API Login and Logout **!/
 // POST /sessions
 // login
 app.post('/api/sessions', function (req, res, next) {
@@ -127,6 +131,7 @@ app.get('/api/sessions/current', (req, res) => {
 	else
 		res.status(401).json({ error: 'Unauthenticated user!' });;
 });
+*/
 
 
 /* -- SERVER ACTIVATION -- */
