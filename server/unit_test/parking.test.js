@@ -12,6 +12,7 @@ const parking1 = {
     timetable: "gunaydin"
 }
 
+
 const parking2 = {
     id: undefined,
     name: "4 Guys",
