@@ -10,11 +10,13 @@ import SignIn from './components/Login/RegPage'
 import LoginForm from './components/Login/Login'
 import HikeForm from './components/HikeForm/hikeForm';
 import Hut from './components/HutForm/Hut';
+import Parking from './components/ParkingLotForm/Parking';
 import APILogin from './API/APILogin';
 import APIHikeForm from './API/APIHikeForm';
 import APIpostGpx from './API/APIpostGpx';
 import APIHikes from './API/APIHikes';
 import APIHutForm from './API/APIHutForm';
+import APIParkingForm from './API/APIParkingForm';
 
 function App(){
   return (
@@ -85,6 +87,10 @@ function App2() {
 
   }
 
+  async function postParking(parking) {
+    await APIParkingForm.postParking(parking); 
+  }
+
   const login = async (credentials) => {
   
     try {
@@ -150,6 +156,7 @@ function App2() {
             <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
             <Route path='/newHut' element={<Hut postHut={postHut}></Hut>}/>
+            <Route path='/newParking' element={<Parking postParking={postParking}></Parking>}/>
           </Route>
           
           
