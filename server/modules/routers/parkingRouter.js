@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express");
+const hike_dao = require("../dao/hikedao");
 const parking_dao = require("../dao/parkingdao");
 const {check, validationResult} = require("express-validator");
 
@@ -13,6 +14,7 @@ router.get("/api/parking", async (req, res) => {
         const parks = await parking_dao.getParks();
         return res.status(200).json(parks);
     } catch (err) {
+        console.log(err);
         return res.status(500).json({ error: err });
     }
 });
@@ -39,17 +41,17 @@ router.post('/api/parking',
     }
     try {
 
-        const parkID = await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, req.body.timetable);
+        const parkingPointID = await hike_dao.postPoint(req.body.parkingPoint);
+        const parkID = await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, parkingPointID);
         
-        // const endingPointID = await hike_dao.postPoint(req.body.endingPoint);
        
-        // await hike_dao.postHike_Point(hikeID, "arrive", endingPointID);
+        // await hike_dao.postHike_Point(parkID, "parking_lot", parkingPointID);
 
         // for (let i in req.body.pointsOfInterest) {
         //     let pointID = await hike_dao.postPoint(req.body.pointsOfInterest[i]);
         //     await hike_dao.postHike_Point(hikeID, "interest", pointID);
         // }
-        return res.status(201).json(parkID );
+        return res.status(201).json({"id":parkID });
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: `Generic error` }).end();
