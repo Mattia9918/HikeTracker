@@ -77,18 +77,21 @@ router.get(`/api/hike*`, async (req, res) => {
 //hiking post
 router.post('/api/hiking',
     [check('length').isNumeric(),
-        check('estimatedTime').isNumeric()]
-    , async (req, res) => {
+        check('estimatedTime').isNumeric()
+        ],
+        async (req, res) => {
 
+        if (req.user === undefined)
+            return res.status(401).json({ error: 'not authenticated!' });
+
+        if(req.user.role !== "localGuide")
+            return res.status(401).json({ error: 'not authorized!' });
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
         try {
-
-
-
             const hikeID = await hike_dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
             const startingPointID = await hike_dao.postPoint(req.body.startingPoint);
             const endingPointID = await hike_dao.postPoint(req.body.endingPoint);
@@ -105,8 +108,6 @@ router.post('/api/hiking',
             console.log(err);
             res.status(500).json({ error: `Generic error` }).end();
         }
-
-
     })
 
 // hiking delete
