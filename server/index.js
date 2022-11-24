@@ -5,6 +5,7 @@ require('dotenv').config({ path: './PARAM.env' })
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const hike_dao = require('./modules/dao/hikedao')
 
 const user_dao = require("./modules/dao/userdao");
 const hutRouter = require('./modules/routers/hutRouter.js'); 
@@ -17,6 +18,7 @@ const bodyParser = require('body-parser'); // parser middleware
 const session = require('express-session');  // session middleware
 const passport = require('passport');  // authentication
 const passportLocal = require('passport-local');
+
 
 // initialize and configure passport
 passport.use(new passportLocal.Strategy(
@@ -141,6 +143,7 @@ app.get('/api/sessions/current', (req, res) => {
 	else
 		res.status(401).json({ error: 'Unauthenticated user!' });;
 });
+
 
 /* -- SERVER ACTIVATION -- */
 app.listen(port, () => {

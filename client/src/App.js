@@ -12,7 +12,7 @@ import HikeForm from './components/HikeForm/hikeForm';
 import Hut from './components/HutForm/Hut';
 import APILogin from './API/APILogin';
 import APIHikeForm from './API/APIHikeForm';
-import APIpostGpx from './API/APIpostGpx';
+import APIpostGpx from './API/APIGpx';
 import APIHikes from './API/APIHikes';
 import APIHutForm from './API/APIHutForm';
 

@@ -4,8 +4,10 @@ const express = require("express");
 const hike_dao = require("../dao/hikedao");
 const manageFile = require("../../manageGpx");
 const {resolve} = require("path");
+const fileUpload = require('express-fileupload');
 
 const router = express.Router();
+router.use(fileUpload());
 
 router.post('/upload', async (req, res) => {
     if (req.files === null) {
@@ -30,8 +32,6 @@ router.post('/upload', async (req, res) => {
                 totalDistance: Math.round(info.totalDistance * 100) / 100,
                 totalAscent: Math.round(info.totalAscent * 100 / 100),
                 difficulty: info.difficulty
-
-
             });
         }
 
