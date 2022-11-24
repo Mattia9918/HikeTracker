@@ -41,6 +41,12 @@
     padding-left: 2rem;
     padding-right: 2rem;
 }
+
+.f {
+    padding-bottom: 1rem ;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
 .container.doNotLimitWidth {
     max-width: none;
 }

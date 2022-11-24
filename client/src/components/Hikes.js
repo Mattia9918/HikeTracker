@@ -2,6 +2,7 @@ import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal, Accordion
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
 import API from '../API/APIGpx';
+import APIHikes from '../API/APIHikes';
 
 
 function Hikes(props) {
@@ -47,6 +48,28 @@ function Hikes(props) {
     )
 };
 function FilterMenu(props) {
+
+    const [cities, setCities] = useState();
+    const [provinces, setProvinces] = useState();
+    
+    async function loadList(type) {
+
+        let citieslist;
+        let provincelist;
+
+        switch(type) {
+            case "city":
+                citieslist = await APIHikes.getHikeCities();
+                setCities(citieslist);
+                break;
+
+            case "province":
+                provincelist = await APIHikes.getHikeProvinces();
+                setProvinces(provincelist);
+                break;
+        }
+    }
+
     return (
         <Row className = "mt-3 mb-1 ms-1 me-1">
                 <Accordion >
@@ -59,7 +82,7 @@ function FilterMenu(props) {
                                 <Accordion.Item eventKey="1" id = "secondaryaccordion">
                                     <Accordion.Header id = "filter" >Length</Accordion.Header>
                                     <Accordion.Body>
-                                        <ListGroup>
+                                        <ListGroup variant = "flush">
                                             <ListGroup.Item  id = "smallgroups" action={true} onClick={() => props.loadFilter("length", "0,10")}>
                                                 Between 0 and 10 km
                                             </ListGroup.Item>
@@ -77,7 +100,7 @@ function FilterMenu(props) {
                                 <Accordion.Item eventKey="2" id = "secondaryaccordion">
                                     <Accordion.Header>Estimated time</Accordion.Header>
                                     <Accordion.Body>
-                                        <ListGroup>
+                                        <ListGroup variant = "flush">
                                             <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("expectedTime", "0,1")}>
                                                 Less than 1 hour
                                             </ListGroup.Item>
@@ -97,7 +120,7 @@ function FilterMenu(props) {
                                 <Accordion.Item eventKey="3" id = "secondaryaccordion">
                                     <Accordion.Header>Difficulty</Accordion.Header>
                                     <Accordion.Body>
-                                        <ListGroup>
+                                        <ListGroup variant = "flush">
                                             <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("difficulty", "Easy")}>
                                                 Easy
                                             </ListGroup.Item>
@@ -115,7 +138,7 @@ function FilterMenu(props) {
                                 <Accordion.Item eventKey="4" id = "secondaryaccordion">
                                     <Accordion.Header>Ascent</Accordion.Header>
                                     <Accordion.Body>
-                                        <ListGroup>
+                                        <ListGroup variant = "flush">
                                             <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "0,300")}>
                                                 Less than 300 m
                                             </ListGroup.Item>
@@ -132,14 +155,22 @@ function FilterMenu(props) {
                                     </Accordion.Body>
                                 </Accordion.Item>
 
-                                <Accordion.Item eventKey="5" id = "secondaryaccordion">
+                                <Accordion.Item eventKey="5" id = "secondaryaccordion" onClick={() => loadList("province")}>
                                     <Accordion.Header>Province</Accordion.Header>
-                                    <Accordion.Body></Accordion.Body>
+                                    <Accordion.Body>
+                                        <ListGroup variant = "flush">
+                                            {provinces && provinces.map(({province}) => <ListGroup.Item key = {province} id = "smallgroups" action = {true} onClick={() => props.loadFilter("province", province)}>{province}</ListGroup.Item>)}
+                                        </ListGroup>
+                                    </Accordion.Body>
                                 </Accordion.Item>
 
-                                <Accordion.Item eventKey="6" id = "secondaryaccordion">
+                                <Accordion.Item eventKey="6" id = "secondaryaccordion" onClick={() => loadList("city")}>
                                     <Accordion.Header>City</Accordion.Header>
-                                    <Accordion.Body></Accordion.Body>
+                                    <Accordion.Body>
+                                        <ListGroup variant = "flush">
+                                            {cities && cities.map(({city}) => <ListGroup.Item key = {city} id = "smallgroups" action = {true} onClick={() => props.loadFilter("city", city)}>{city}</ListGroup.Item>)}
+                                        </ListGroup>
+                                    </Accordion.Body>
                                 </Accordion.Item>
                                 </Col>
                                 <Col>
