@@ -109,6 +109,10 @@ router.get(`/api/hut*`, async (req, res) => {
             case "reach":
                 huts = await hut_dao.getHutByReachability(req.query.value1);
                 break;
+            case "area":
+                /* Gets huts that are in a rectangular area with diagonal from bottom-left to upper right */
+                huts = await hut_dao.getHutByArea(req.query.value1, req.query.value2, req.query.value3, req.query.value4);
+                break;
             default:
                 console.log("wrong filter error");
                 return res.status(422).json({ error: `Validation of request body failed` }).end();
@@ -119,6 +123,7 @@ router.get(`/api/hut*`, async (req, res) => {
         return res.status(500).json({ error: err });
     }
 });
+
 
 
 

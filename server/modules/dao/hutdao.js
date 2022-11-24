@@ -192,13 +192,37 @@ exports.getHutWithBeds = () => {
 
 exports.getHutByReachability = (reachability) => {
 	return new Promise((resolve, reject) => {
-		console.log(reachability)
 		const sql =
 			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE H.reachability = ? AND H.point_id = P.id"
 
 		db.all(sql, [reachability], (err, rows) => {
+			if (err)
+				reject(err);
+			else {
+				resolve(rows);
+			}
+		});
+	});
+};
+
+/**
+ * Gets huts that are in a rectangular area with diagonal from bottom-left to upper right
+ * @param lat1
+ * @param lon1
+ * @param lat2
+ * @param lon2
+ * @returns {Promise<unknown>}
+ */
+exports.getHutByArea = (lat1, lon1, lat2, lon2) => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
+			"FROM hut H, point P WHERE (latitude BETWEEN ? AND ?) AND (longitude BETWEEN ? AND ?) AND H.point_id = P.id"
+
+		db.all(sql, [lat1, lat2, lon1, lon2], (err, rows) => {
 			if (err)
 				reject(err);
 			else {
