@@ -16,7 +16,7 @@ function Hikes(props) {
             <Row>
                 <Col >
                 </Col>
-                <Col sm={8} xs={12}>
+                <Col lg={8} xs={12}>
                     {(props.msg.message === "You have been logged out!" || (props.user && props.msg.message === `Welcome ${props.user.username}!`)) &&
                         <Alert variant={props.msg.type} onClose={() => {
                             props.setMsg("");
@@ -30,7 +30,7 @@ function Hikes(props) {
                         <Row>
                             {(props.hikes.length === 1 && props.hikes[0].id == undefined) ||
                                 <>
-                                    <Col>
+                                    <Col lg = {6} xs = {12}>
                                         {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} user={props.user} />)}
                                     </Col>
                                     <Col>
