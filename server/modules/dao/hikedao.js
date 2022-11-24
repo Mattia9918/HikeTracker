@@ -410,10 +410,28 @@ exports.deletePoint = () => {
 
 };
 
+exports.deletePointCCs = () => {
+	return new Promise((resolve, reject) => {
+		const sql1 = 'DELETE FROM point';
+		db.run(sql1, [], function (err) {
+				db.run(sql1, [], function (err) {
+					if (err) {
+						console.log(err);
+						reject(err)
+					}
+					else {
+						resolve()
+					}
+				});
+			
+		})
+	})
+
+};
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "da sostituire", body.locality, body.principalSubdivision], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.description, body.locality, body.principalSubdivision], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);

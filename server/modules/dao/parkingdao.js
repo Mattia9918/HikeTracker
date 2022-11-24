@@ -19,12 +19,13 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 // Get Parks
 exports.getParks = () => {
 	return new Promise((resolve, reject) => {
-		const sql = 'SELECT * FROM parking_lot';
+		const sql ="SELECT P.id AS parkID, name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id,  latitude, longitude, PO.type , PO.description AS pointDescription, city, province FROM parking_lot P, point PO WHERE P.point_id = PO.id";
 		db.all(sql, [], (err, rows) => {
 			if (err)
 				reject(err);
 			else
 				resolve(rows);
+				console.log(rows);
 		})
 	})
 }
@@ -32,7 +33,7 @@ exports.getParks = () => {
 // Get Park
 exports.getParkById = (id) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'SELECT * FROM parking_lot WHERE id=?';
+		const sql ="SELECT P.id AS parkID, name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id,  latitude, longitude, PO.type , PO.description AS pointDescription, city, province FROM parking_lot P, point PO WHERE parkID=? AND P.point_id = PO.id";;
 		db.get(sql, [id], (err, row) => {
 			if (err)
 				reject(err);
@@ -41,11 +42,11 @@ exports.getParkById = (id) => {
 		})
 	})
 }
-exports.createParking= (name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable) => {
+exports.createParking= (name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id) => {
 
 	return new Promise((resolve, reject) => {
-		const sql = `INSERT INTO parking_lot(name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable) VALUES(?, ?, ?, ?, ?, ?)`;
-		db.run(sql, [name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable], function (err) {
+		const sql = `INSERT INTO parking_lot(name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id) VALUES(?, ?, ?, ?, ?, ?, ?)`;
+		db.run(sql, [name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id], function (err) {
 			if (err) {
 				reject(err);
 				return;
