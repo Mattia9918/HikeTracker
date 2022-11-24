@@ -72,6 +72,7 @@ router.get("/api/hut/:id", async (req, res) => {
     }
 });
 
+/** Get huts with filters **/
 router.get(`/api/hut*`, async (req, res) => {
 
     if (req.user === undefined)
