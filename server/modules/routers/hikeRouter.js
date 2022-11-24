@@ -110,6 +110,27 @@ router.post('/api/hiking',
         }
     })
 
+    router.get("/api/cities", async (req, res) => {
+        try {
+            const cities = await hike_dao.getHikeCities();
+            res.status(200).json(cities);
+        } catch (err) {
+            console.log(err);
+            res.status(500).end();
+        }
+    });
+
+    router.get("/api/provinces", async (req, res) => {
+        try {
+            const provinces = await hike_dao.getHikeProvinces();
+            res.status(200).json(provinces);
+        } catch (err) {
+            console.log(err);
+            res.status(500).end();
+        }
+    });
+
+
 // hiking delete
 router.delete('/api/hiking/delete', async (req, res) => {
     try {

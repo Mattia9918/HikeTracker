@@ -59,7 +59,7 @@ function Hut(props) {
             const point = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
             console.log(point.data);  
             setCity(point.data.locality); 
-            setProvince(point.data.principalSubdivision); 
+            setProvince(point.data.localityInfo.administrative[2].name); 
             
         } catch (err) {
             

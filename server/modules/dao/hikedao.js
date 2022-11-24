@@ -431,7 +431,7 @@ exports.deletePointCCs = () => {
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "da sostituire", body.locality, body.principalSubdivision], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "da sostituire", body.locality, body.localityInfo.administrative[2].name], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -513,6 +513,39 @@ exports.getFileContentById = (id) => {
 		});
 	})
 };
+
+/* Gets all the cities in which there's an hike */
+exports.getHikeCities = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT DISTINCT city FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = "start")';
+		db.all(sql, [], function (err, rows) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(rows)
+			}
+		});
+	})
+};
+
+/* Gets all the provinces in which there's an hike */
+exports.getHikeProvinces = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT DISTINCT province FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = "start")';
+		db.all(sql, [], function (err, rows) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(rows)
+			}
+		});
+	})
+};
+
 
 exports.deleteGpx = () => {
 	return new Promise((resolve, reject) => {
