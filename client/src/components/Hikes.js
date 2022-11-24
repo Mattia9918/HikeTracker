@@ -1,23 +1,14 @@
-import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal } from 'react-bootstrap';
+import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal, Accordion, ListGroup } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import {MapContainer,TileLayer,Marker,GeoJSON,Popup} from 'react-leaflet'; 
+import { MapContainer, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
 import API from '../API/APILogin';
 
 
 function Hikes(props) {
 
     /* -- INPUT STATE MANAGEMENT -- */
-    const [filter, setFilter] = useState();
-    const [value, setValue] = useState();
+
     const [show, setShow] = useState();
-
-
-    /* -- SUBMIT HANDLER --  */
-    const submitHandler = (event) => {
-        event.preventDefault();
-        props.loadFilter(filter, value)
-
-    };
 
     return (
         <>
@@ -34,67 +25,15 @@ function Hikes(props) {
                         </Alert>
                     }
                     <Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
-                        <Form onSubmit={submitHandler}>
-                            <Row>
-                                <Col className="mt-2 ms-3" xs={3}>
-                                    <Form.Select aria-label="select filter"
-                                        onChange={(event) => {
-                                            setValue();
-                                            setFilter(event.target.value)
-                                        }}>
-                                        <option disabled={true}>Filter by</option>
-                                        <option value="none">None</option>
-                                        <option value="length">Length</option>
-                                        <option value="expectedTime">Expected time</option>
-                                        <option value="difficulty">Difficulty</option>
-                                        <option value="ascent">Ascent</option>
-                                        <option value="province">Province</option>
-                                        <option value="city">City</option>
-                                    </Form.Select>
-                                </Col>
-                                {(filter == "length" || filter == "difficulty" || filter == "expectedTime" || filter == "ascent") &&
-                                    <Col className="mt-2 ms-1" xs={3}>
-                                        <Form.Select aria-label="select filter" onChange={(event) => setValue(event.target.value)}>
-                                            <option value={filter == "length" && "0,10" || filter == "difficulty" && "Easy" || filter == "expectedTime" && "0,1" || filter == "ascent" && "0,300"}>
-                                                {filter == "length" && "between 0 and 10 km" || filter == "difficulty" && "Easy" || filter == "expectedTime" && "less than 1 hour" || filter == "ascent" && "less than 300 m"}
-                                            </option>
-                                            <option value={filter == "length" && "11,20" || filter == "difficulty" && "Average" || filter == "expectedTime" && "1,2" || filter == "ascent" && "301,600"}>
-                                                {filter == "length" && "between 10 and 20 km" || filter == "difficulty" && "Average" || filter == "expectedTime" && "between 1 and 2 hours" || filter == "ascent" && "between 300 and 600 m"}
-                                            </option>
-                                            <option value={filter == "length" && "21,1000" || filter == "difficulty" && "Difficult" || filter == "expectedTime" && "2,3" || filter == "ascent" && "601,1000"}>
-                                                {filter == "length" && "more than 20 km" || filter == "difficulty" && "Difficult" || filter == "expectedTime" && "between 2 and 3 hours" || filter == "ascent" && "between 600 and 1000 m"}
-                                            </option>
-                                            {filter == "expectedTime" && <option value="3,1000">more than 3 hours</option> || filter == "ascent" && <option value="1001,100000">more than 1000 m</option>}
-                                        </Form.Select>
-                                    </Col>
-                                }
-
-                                {(filter == "city" || filter == "province") &&
-                                    <Col className="mt-2 ms-1" xs={3}>
-                                        <Form.Control
-                                            type="text"
-                                            placeholder={filter == "city" && "Insert a city" || "Insert a province"}
-                                            value={value}
-                                            required={true}
-                                            onChange={(event) => setValue(event.target.value)}
-                                        />
-                                    </Col>
-                                }
-                                <Col className="mt-2 ms-1" xs={2}>
-                                    <Button type="submit" disabled={filter != "none" && value == undefined && true}>Filter</Button>
-                                </Col>
-
-
-                            </Row>
-                        </Form>
+                        <FilterMenu loadFilter = {props.loadFilter} />
                         <Row>
                             {(props.hikes.length === 1 && props.hikes[0].id == undefined) ||
                                 <>
                                     <Col>
-                                        {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} user = {props.user} />)}
+                                        {props.hikes.filter((hike) => hike.id % 2 != 0).map((hike) => <HikeCard key={hike.id} hike={hike} user={props.user} />)}
                                     </Col>
                                     <Col>
-                                        {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike} user = {props.user} />)}
+                                        {props.hikes.filter((hike) => hike.id % 2 == 0).map((hike) => <HikeCard key={hike.id} hike={hike} user={props.user} />)}
                                     </Col>
                                 </>
                             }
@@ -107,7 +46,113 @@ function Hikes(props) {
         </>
     )
 };
+function FilterMenu(props) {
+    return (
+        <Row className = "mt-3 mb-1 ms-1 me-1">
+                <Accordion >
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>Filtering options</Accordion.Header>
+                        <Accordion.Body>
+                            <Accordion>
+                                <Row>
+                                <Col>
+                                <Accordion.Item eventKey="1" id = "secondaryaccordion">
+                                    <Accordion.Header id = "filter" >Length</Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup>
+                                            <ListGroup.Item  id = "smallgroups" action={true} onClick={() => props.loadFilter("length", "0,10")}>
+                                                Between 0 and 10 km
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("length", "11,20")}>
+                                                Between 10 and 20 km
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("length", "21,1000")}>
+                                                More than 20 km
+                                            </ListGroup.Item>
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
 
+
+                                <Accordion.Item eventKey="2" id = "secondaryaccordion">
+                                    <Accordion.Header>Estimated time</Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("expectedTime", "0,1")}>
+                                                Less than 1 hour
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("expectedTime", "1,2")}>
+                                                Between 1 and 2 hours
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("expectedTime", "2,3")}>
+                                                Between 2 and 3 hours
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("expectedTime", "3,1000")}>
+                                                More than 3 hours
+                                            </ListGroup.Item>
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+
+                                <Accordion.Item eventKey="3" id = "secondaryaccordion">
+                                    <Accordion.Header>Difficulty</Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("difficulty", "Easy")}>
+                                                Easy
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("difficulty", "Average")}>
+                                                Average
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("difficulty", "Difficult")}>
+                                                Difficult
+                                            </ListGroup.Item>
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                                </Col>
+                                <Col>
+                                <Accordion.Item eventKey="4" id = "secondaryaccordion">
+                                    <Accordion.Header>Ascent</Accordion.Header>
+                                    <Accordion.Body>
+                                        <ListGroup>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "0,300")}>
+                                                Less than 300 m
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "301,600")}>
+                                                Between 300 m and 600 m
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "601,1000")}>
+                                                Between 600 m and 1000 m
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "1001,100000")}>
+                                                More than 1000 m
+                                            </ListGroup.Item>
+                                        </ListGroup>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+
+                                <Accordion.Item eventKey="5" id = "secondaryaccordion">
+                                    <Accordion.Header>Province</Accordion.Header>
+                                    <Accordion.Body></Accordion.Body>
+                                </Accordion.Item>
+
+                                <Accordion.Item eventKey="6" id = "secondaryaccordion">
+                                    <Accordion.Header>City</Accordion.Header>
+                                    <Accordion.Body></Accordion.Body>
+                                </Accordion.Item>
+                                </Col>
+                                <Col>
+                                <Button onClick={() => props.loadFilter("none")}>Reset</Button>
+                                </Col>
+                                </Row>
+                            </Accordion>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+        </Row>
+    );
+}
 function HikeCard(props) {
 
     const [open, setOpen] = useState(0);
@@ -196,7 +241,7 @@ function HikeCard(props) {
 
             </Card>
 
-            {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} title={props.hike.title} hikeid = {props.hike.id}/>}
+            {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} title={props.hike.title} hikeid={props.hike.id} />}
 
         </Container>
     );
@@ -239,7 +284,7 @@ function MapModal(props) {
 
     /* -- RENDERING -- */
     return (
-        <Modal size = "lg" show={props.showModal} onHide={() => props.setShowModal(false)}>
+        <Modal size="lg" show={props.showModal} onHide={() => props.setShowModal(false)}>
 
             {/* Modal header */}
             <Modal.Header closeButton>
@@ -248,17 +293,17 @@ function MapModal(props) {
 
 
             {/* Modal body */}
-            <Modal.Body id = "mapcontainer">
-            {coordinates.length &&
-            <center>
-                <MapContainer style={{ height: "500px", width: "770px"}} center={center} zoom={12} scrollWheelZoom={true}>
-                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                    <GeoJSON data={coordinates} />
-                    <Marker position={firstPoint}></Marker>
-                    <Marker position={lastPoint}></Marker>
-                </MapContainer>
-            </center>
-            }
+            <Modal.Body id="mapcontainer">
+                {coordinates.length &&
+                    <center>
+                        <MapContainer style={{ height: "500px", width: "770px" }} center={center} zoom={12} scrollWheelZoom={true}>
+                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                            <GeoJSON data={coordinates} />
+                            <Marker position={firstPoint}></Marker>
+                            <Marker position={lastPoint}></Marker>
+                        </MapContainer>
+                    </center>
+                }
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={() => props.setShowModal(false)}>Close</Button>

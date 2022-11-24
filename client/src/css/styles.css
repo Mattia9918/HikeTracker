@@ -18,3 +18,16 @@
     color:#0d6efdd0;
     font-weight: 600;
 }
+
+#secondaryaccordion {
+    width: 300px;
+}
+
+.accordion-button {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+#smallgroups {
+    font-size: small;
+}

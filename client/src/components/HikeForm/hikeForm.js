@@ -121,6 +121,9 @@ function HikeForm(props) {
                             <Col className='c'>
                                 <Form.Label>Hike estimated time</Form.Label>
                                 <Form.Control type="number" value={estimatedtime} onChange={ev => setEstimatedtime(ev.target.value)} placeholder="Enter hike estimated time" required />
+                                <Form.Text className="text-muted">
+                                    Estimation of time in <i>hours</i> required to complete the hike.
+                                </Form.Text>
                             </Col>
                         </Row>
                         <Row className='r'>
