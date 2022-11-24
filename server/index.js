@@ -7,9 +7,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const user_dao = require("./modules/dao/userdao");
-
+const hutRouter = require('./modules/routers/hutRouter.js'); 
 const userRouter = require('./modules/routers/userRouter.js');
 const hikeRouter = require('./modules/routers/hikeRouter.js');
+const parkingRouter = require('./modules/routers/parkingRouter.js');
 const gpxRouter = require('./modules/routers/gpxRouter.js');
 
 const bodyParser = require('body-parser'); // parser middleware
@@ -69,6 +70,8 @@ app.use(cors(corsOptions));
 app.use('/api', userRouter);
 app.use('', hikeRouter);
 app.use('', gpxRouter);
+app.use('', hutRouter ); 
+app.use('', parkingRouter);
 
 app.use(session({
 	secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
