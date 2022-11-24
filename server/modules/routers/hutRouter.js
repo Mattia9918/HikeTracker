@@ -2,18 +2,20 @@
 
 const express = require("express");
 const hut_dao = require("../dao/hutdao");
-const hike_dao = require("../dao/hikedao"); 
 const {check, validationResult} = require("express-validator");
 
 const router = express.Router();
 
-
+// TODO: aggiungere inserimento punto
 router.post('/api/hut',
     []
     , async (req, res) => {
 
-        
-        console.log(req.body); 
+        if (req.user === undefined)
+            return res.status(401).json({ error: 'not authenticated!' });
+
+        if(req.user.role !== "localGuide")
+            return res.status(401).json({ error: 'not authorized!' });
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -37,6 +39,86 @@ router.post('/api/hut',
 
 
     })
+
+/** Get all huts **/
+router.get("/api/huts", async (req, res) => {
+
+    if (req.user === undefined)
+        return res.status(401).json({ error: 'not authenticated!' });
+
+    try {
+        const huts = await hut_dao.getHuts();
+        return res.status(200).json(huts);
+    } catch (err) {
+        return res.status(500).json({ error: err });
+    }
+});
+
+/** Get hut by id **/
+router.get("/api/hut/:id", async (req, res) => {
+
+    if (req.user === undefined)
+        return res.status(401).json({ error: 'not authenticated!' });
+
+    try {
+        const id = req.params.id;
+        const hut = await hut_dao.getHutById(id);
+        if(hut === undefined) {
+            return res.status(404).json({error: "Hut not found!"})
+        }
+        return res.status(200).json(hut);
+    } catch (err) {
+        return res.status(500).end();
+    }
+});
+
+router.get(`/api/hut*`, async (req, res) => {
+
+    if (req.user === undefined)
+        return res.status(401).json({ error: 'not authenticated!' });
+
+    try {
+        let huts;
+        const filter = req.query.filter;
+        switch (filter) {
+            case "none":
+                huts = await hut_dao.getHuts();
+                break;
+            case "altitude":
+                huts = await hut_dao.getHutByAltitude(req.query.value1, req.query.value2);
+                break;
+            case "restaurant_service":
+                huts = await hut_dao.getHutWithRestaurant()
+                break;
+            case "disabled_services":
+                huts = await hut_dao.getHutWithDisabledServices()
+                break;
+            case "bike_friendly":
+                huts = await hut_dao.getHutBikeFriendly()
+                break;
+            case "city":
+                huts = await hut_dao.getHutByCity(req.query.value1);
+                break;
+            case "province":
+                huts = await hut_dao.getHutByProvince(req.query.value1);
+                break;
+            case "beds":
+                huts = await hut_dao.getHutWithBeds();
+                break;
+            case "reach":
+                huts = await hut_dao.getHutByReachability(req.query.value1);
+                break;
+            default:
+                console.log("wrong filter error");
+                return res.status(422).json({ error: `Validation of request body failed` }).end();
+        }
+        return res.status(200).json(huts);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ error: err });
+    }
+});
+
 
 
 module.exports = router; 
