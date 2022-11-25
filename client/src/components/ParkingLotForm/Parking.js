@@ -30,12 +30,12 @@ function Parking(props) {
         
         const type = "parking";
         const description = "Torchiano 4ever";
-        
+        const user= props.user;
         const timetable = timetablebegin + "-" + timetableend; 
-        console.log(timetable); 
+        console.log(user); 
         const parkingPoint = {latitude, longitude, type, description, locality, principalSubdivision}
-        const info = { name , guarded, parkingspaces, priceperhour, disabledparkings, timetable, parkingPoint};
-
+        const info = { name , guarded, parkingspaces, priceperhour, disabledparkings, timetable, user, parkingPoint};
+        
         event.preventDefault();
         console.log(info);
         props.postParking(info);
@@ -73,7 +73,7 @@ function Parking(props) {
                         <Row className='r'>
                             <Col className='c'>
                                 <Form.Label>Parking Lot name</Form.Label>
-                                <Form.Control value={name} onChange={ev => setName(ev.target.value)} placeholder="Enter hut name" required />
+                                <Form.Control value={name} onChange={ev => setName(ev.target.value)} placeholder="Enter parking lot name" required />
                             </Col>
                         </Row>
                         <Row>
@@ -107,23 +107,23 @@ function Parking(props) {
                                 <Form.Check   label="Disabled Parkings" name="disabled_parkings" value={disabledparkings} onChange={ev => {disabledparkings == 0 ? setDisableparkings(1): setDisableparkings(0); console.log(disabledparkings)} }></Form.Check>
                             </Col>
                             <Col className="c">    
-                                <Form.Check   label="Guarded Prking" name="guarded" value={guarded} onChange={ev => {guarded == 0 ? setGuarded(1) : setGuarded(0); console.log(guarded)} }></Form.Check>   
+                                <Form.Check   label="Guarded Parking" name="guarded" value={guarded} onChange={ev => {guarded == 0 ? setGuarded(1) : setGuarded(0); console.log(guarded)} }></Form.Check>   
                             </Col>
                             
                         </Row>
 
                         <br></br>
-                        <h6>Hut GeoLocalization  </h6>
+                        <h6>Parking GeoLocalization  </h6>
                         
                         <Row>
                             
                             <Col className="c">
-                                <Form.Label>Hut Latitude</Form.Label>
-                                <Form.Control type='number' value={latitude} onChange={ev => setLatitude(ev.target.value)} placeholder="Enter hut latitude" required />
+                                <Form.Label>Parking Latitude</Form.Label>
+                                <Form.Control type='number' value={latitude} onChange={ev => setLatitude(ev.target.value)} placeholder="Enter park latitude" required />
                             </Col>
                             <Col className="c">
-                                <Form.Label>Hut Longitude</Form.Label>
-                                <Form.Control type='number' value={longitude} onChange={ev => setLongitude(ev.target.value)} placeholder="Enter hut longitude" required />
+                                <Form.Label>Parking Longitude</Form.Label>
+                                <Form.Control type='number' value={longitude} onChange={ev => setLongitude(ev.target.value)} placeholder="Enter park longitude" required />
                             </Col>
                             
                         </Row>
@@ -137,11 +137,11 @@ function Parking(props) {
 
                         <Row>
                             <Col className="c">
-                                <Form.Label>Hut City</Form.Label>
+                                <Form.Label>Park City</Form.Label>
                                 <Form.Control type='text' value={locality} onChange={ev => setLocality(ev.target.value)} disabled />                                
                             </Col>
                             <Col className="c">
-                                <Form.Label>Hut Province</Form.Label>
+                                <Form.Label>Park Province</Form.Label>
                                 <Form.Control type='text' value={principalSubdivision} onChange={ev => setPrincipalSubdivision(ev.target.value)} disabled />
                             </Col>
                             

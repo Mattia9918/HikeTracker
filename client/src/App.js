@@ -100,6 +100,7 @@ function App2() {
         setMsg({message: user.message, type: "danger"}); 
       } else {
         setUser(user);
+        console.log(user);
         setLoggedIn(true);
         navigate(`/`);
         setMsg({message: `Welcome ${user.username}!`, type: "success"})
@@ -144,7 +145,7 @@ function App2() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posting]);
 
-
+    console.log(user);
  
   return (
       <Routes>
@@ -156,7 +157,7 @@ function App2() {
             <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
             <Route path='/newHut' element={<Hut postHut={postHut}></Hut>}/>
-            <Route path='/newParking' element={<Parking postParking={postParking}></Parking>}/>
+            <Route path='/newParking' element={<Parking postParking={postParking} user={user}></Parking>}/>
           </Route>
           
           
