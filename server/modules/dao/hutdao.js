@@ -13,21 +13,19 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 
 // TODO: aggiungere inserimento punto
 exports.postHut = (name, address, phone_number, email,
-                    website, description, province,
+                    website, description,
                     altitude, languages, bike_friendly,
-                    reachability, disabled_services, rooms, bathrooms,beds, restaurant_services) => {
-
-                        
+                    reachability, disabled_services, rooms, bathrooms,beds, restaurant_services, point_id) => {
 
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO hut(name, address, phone_number, email, web_site,
-            description, province, altitude, languages, bike_friendly,
+            description, altitude, languages, bike_friendly,
             reachability, disabled_services, rooms,
-            bathrooms,beds, restaurant_service) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
+            bathrooms,beds, restaurant_service, point_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
 		db.run(sql, [name, address, phone_number, email, website,
-                    description, province, altitude, languages, bike_friendly,
+                    description, altitude, languages, bike_friendly,
                     reachability, disabled_services, rooms,
-                    bathrooms,beds, restaurant_services], function (err) {
+                    bathrooms,beds, restaurant_services, point_id], function (err) {
 			if (err) {
 				reject(err);
 				return;

@@ -81,11 +81,15 @@ router.post('/api/hiking',
         ],
         async (req, res) => {
 
-        if (req.user === undefined)
+        console.log(req)
+
+        /*if (req.user === undefined)
             return res.status(401).json({ error: 'not authenticated!' });
 
         if(req.user.role !== "localGuide")
             return res.status(401).json({ error: 'not authorized!' });
+
+         */
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
