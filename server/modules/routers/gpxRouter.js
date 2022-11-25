@@ -25,10 +25,10 @@ router.post('/upload', async (req, res) => {
             res.json({
                 fileName: random,
                 filePath: `/uploads/${random}`,
-                startPointLong: info.coordinates[0][0][0],
-                startPointLat: info.coordinates[0][0][1],
-                endingPointLong: info.coordinates[0][info.coordinates[0].length - 1][0],
-                endingPointLat: info.coordinates[0][info.coordinates[0].length - 1][1],
+                startPointLong: info.startingPoint.longitude,
+                startPointLat: info.startingPoint.latitude,
+                endingPointLong: info.endingPoint.longitude,
+                endingPointLat: info.endingPoint.latitude,
                 totalDistance: Math.round(info.totalDistance * 100) / 100,
                 totalAscent: Math.round(info.totalAscent * 100 / 100),
                 difficulty: info.difficulty

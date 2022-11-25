@@ -55,12 +55,8 @@ router.get(`/api/hike*`, async (req, res) => {
                 hikes = await hike_dao.getHikeByProvince(req.query.value1);
                 console.log(hikes);
                 break;
-            case "distance":
-                hikes = await hike_dao.getHikeByDistanceRange(
-                    req.query.longitude,
-                    req.query.latitude,
-                    req.query.maxDist
-                );
+            case "area":
+                hikes = await hike_dao.getHikesByArea(req.query.value1, req.query.value2);
                 break;
             default:
                 console.log("wrong filter error");

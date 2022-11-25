@@ -128,28 +128,21 @@ exports.getHikeByCity = (city) => {
 	});
 };
 
-//exports.getHikeByDistanceRange = (longitude, latitude, maxDist) => {
-//	return new Promise((resolve, reject) => {
-//		const sql =
-//			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id";
-//		db.all(sql, [], (err, rows) => {
-//			if (err) reject(err);
-//			else {
-//				const hikes = rowJsonMapping(rows);
-//				const filteredHikes = hikes.filter((r) => {
-//					const distance = Math.sqrt(
-//						Math.pow(longitude - r.startingPoint.longitude, 2) +
-//						Math.pow(latitude - r.startingPoint.latitude, 2)
-//					);
-//					if (maxDist >= distance) return true;
-//					else return false;
-//				});
-//				resolve(filteredHikes);
-//			}
-//		});
-//	});
-//};
-
+exports.getHikesByArea = (northEastPoint, southWestPoint) => {
+	return new Promise((resolve, reject) => {
+		const neCoordinates = northEastPoint.split(',');
+		const swCoordinates = southWestPoint.split(',');
+		const sql =
+			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND H.id IN (SELECT H.id FROM hike H, point P, hike_point HP WHERE H.id = HP.hikeID AND P.id = HP.pointID AND HP.type = 'start' AND P.latitude BETWEEN ? AND ? AND P.longitude BETWEEN ? AND ?)";
+		db.all(sql, [Number(swCoordinates[0]), Number(neCoordinates[0]), Number(swCoordinates[1]), Number(neCoordinates[1])], (err, rows) => {
+			if (err) reject(err);
+			else {
+				const hikes = rowJsonMapping(rows);
+				resolve(hikes);
+			}
+		});
+	});
+};
 const rowJsonMapping = (rows) => {
 	let id,
 		title,
@@ -245,23 +238,24 @@ const DomParser = require("xmldom").DOMParser; // node doesn't have xml parsing 
 const fs = require("fs"); //file system manager (readFile)
 
 exports.getGpxInfo = (file) => {
-
-
 	if (file) {
 		const fileParsedFromDom = new DomParser().parseFromString(fs.readFileSync(file, "utf-8"));
 		// Convert GPX to GeoJSON
 		const converted = togeojson.gpx(fileParsedFromDom);
-		const coordinates = {};
-		let i = 0;
-		for (const geometries of converted.features) {
-			const c = geometries.geometry.coordinates;
-			coordinates[i] = c;
-
-			i += 1;
+		const coordinates = converted.features[0].geometry.coordinates;
+		const start = coordinates[0];
+		const end = coordinates[coordinates.length-1];
+		const startingPoint = {
+			latitude: start[1],
+			longitude: start[0]
+		};
+		const endingPoint = {
+			latitude: end[1],
+			longitude: end[0]
 		}
 		const {totalDistance, totalAscent} = calculateDistanceAndAscent(coordinates);
 		const difficulty = estimateDifficulty(totalDistance, totalAscent);
-		return {coordinates: coordinates, totalDistance: totalDistance, totalAscent: totalAscent, difficulty: difficulty};
+		return {startingPoint: startingPoint, endingPoint: endingPoint, totalDistance: totalDistance, totalAscent: totalAscent, difficulty: difficulty};
 	}
 	return {};
 
@@ -270,10 +264,10 @@ exports.getGpxInfo = (file) => {
 function calculateDistanceAndAscent(coordinates) {
 	let distance = 0;
 	let ascent = 0;
-	for (let i = 0; i < coordinates[0].length-1; i++) {
-		let pointA = {latitude: coordinates[0][i][0], longitude: coordinates[0][i][1]}
-		let pointB = {latitude: coordinates[0][i+1][0], longitude: coordinates[0][i+1][1]}
-		let relativeAscent = coordinates[0][i+1][2] - coordinates[0][i][2]
+	for (let i = 0; i < coordinates.length-1; i++) {
+		let pointA = {latitude: coordinates[i][0], longitude: coordinates[i][1]}
+		let pointB = {latitude: coordinates[i+1][0], longitude: coordinates[i+1][1]}
+		let relativeAscent = coordinates[i+1][2] - coordinates[i][2]
 		distance = distance + haversine(pointA, pointB)/1000; //in kilometers
 		ascent = ascent + relativeAscent; //in meters
 	}

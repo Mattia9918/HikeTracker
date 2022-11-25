@@ -29,7 +29,9 @@ const point5 = {
     type: "parking lot",
     description: "Welcome dude!",
     locality: "Torino",
-    principalSubdivision: "Torino",
+    localityInfo: {
+        administrative: [{}, {}, {name: "Torino"}]
+    }
 }
 
 const point6 = {
@@ -38,7 +40,9 @@ const point6 = {
     type: "parking lot",
     description: "You are parking!",
     locality: "Torino",
-    principalSubdivision: "Torino",
+    localityInfo: {
+        administrative: [{}, {}, {name: "Torino"}]
+    }
 }
 
 describe("test hikes and filtering", () => {
