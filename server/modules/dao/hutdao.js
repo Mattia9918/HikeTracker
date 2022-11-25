@@ -246,7 +246,7 @@ exports.getHutByArea = (lat1, lon1, lat2, lon2) => {
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE (latitude BETWEEN ? AND ?) AND (longitude BETWEEN ? AND ?) AND H.point_id = P.id"
 
-		db.all(sql, [lat1, lat2, lon1, lon2], (err, rows) => {
+		db.all(sql, [lat1, lat2, lon2, lon1], (err, rows) => {
 			if (err)
 				reject(err);
 			else {

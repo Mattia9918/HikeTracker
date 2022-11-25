@@ -3,7 +3,7 @@ import './css/App.css';
 import './css/styles.css';
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
-import Hikes from './components/Hikes';
+import {Hikes} from './components/Hikes';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
 import ValidatePage from './components/Login/ValidateUser'
 import SignIn from './components/Login/RegPage'
@@ -156,6 +156,16 @@ function App2() {
     }
   };
 
+  async function loadByArea(filter, value) {
+    try {
+      const filteredHikeList = await APIHuts.getByArea(filter, value);
+      setHuts(filteredHikeList);
+      //setErrMessage('');
+    } catch (err) {
+      //setErrMessage(String(err));
+    }
+  };
+
   async function loadHutFilter(filter, value) {
     try {
       const filteredHutList = await APIHuts.getFilter(filter, value);
@@ -185,7 +195,7 @@ function App2() {
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
             <Route path='/newHut' element={<Hut postHut={postHut}></Hut>}/>
             <Route path='/newParking' element={<Parking postParking={postParking} user={user}></Parking>}/>
-            <Route path='/huts' element={<HutList loadHutsFilter={loadHutFilter} huts={huts}/>}/>
+            <Route path='/huts' element={<HutList loadHutsFilter={loadHutFilter} huts={huts} loadByArea={loadByArea}/>}/>
           </Route>
           
           
