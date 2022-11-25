@@ -78,7 +78,48 @@ async function getHikes() {
       }
   };
 
+  async function getHikeCities() {
+    const url = APIURL + `cities`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const citieslist = await response.json();
+             return citieslist;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         throw (err);
+     }
+ };
+
+ 
+ async function getHikeProvinces() {
+    const url = APIURL + `provinces`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const provinceslist = await response.json();
+             return provinceslist;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         throw (err);
+     }
+ };
 
 
-  const APIHikes = {getFilter, getHikes}; 
+
+  const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces}; 
   export default APIHikes; 

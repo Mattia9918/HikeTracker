@@ -5,14 +5,15 @@ require('dotenv').config({ path: './PARAM.env' })
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const hike_dao = require('./modules/dao/hikedao')
 
 const user_dao = require("./modules/dao/userdao");
+
 const hutRouter = require('./modules/routers/hutRouter.js'); 
 const userRouter = require('./modules/routers/userRouter.js');
 const hikeRouter = require('./modules/routers/hikeRouter.js');
 const parkingRouter = require('./modules/routers/parkingRouter.js');
 const gpxRouter = require('./modules/routers/gpxRouter.js');
+const sessionRouter = require('./modules/routers/sessionRouter.js');
 
 const bodyParser = require('body-parser'); // parser middleware
 const session = require('express-session');  // session middleware
@@ -68,13 +69,6 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
-/* Routers */
-app.use('/api', userRouter);
-app.use('', hikeRouter);
-app.use('', gpxRouter);
-app.use('', hutRouter ); 
-app.use('', parkingRouter);
-
 app.use(session({
 	secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
 	resave: false,
@@ -87,22 +81,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// custom middleware: check if a given request is coming from an authenticated user
-const isLoggedIn = (req, res, next) => {
-	if (req.isAuthenticated())
-		return next();
+/* Routers */
+app.use('/api', userRouter);
+app.use('', hikeRouter);
+app.use('', gpxRouter);
+app.use('', hutRouter ); 
+app.use('', parkingRouter);
+app.use('/api/sessions', sessionRouter);
 
-	return res.status(401).json({ error: 'not authenticated' });
-}
-
-const isLocalGuide = (req, res, next) => {
-	if (req.user.role === "local guide")
-		return next();
-
-	return res.status(401).json({ error: 'not authorized!' });
-}
-
-/** API Login and Logout **/
+/*
+/!** API Login and Logout **!/
 // POST /sessions
 // login
 app.post('/api/sessions', function (req, res, next) {
@@ -143,6 +131,7 @@ app.get('/api/sessions/current', (req, res) => {
 	else
 		res.status(401).json({ error: 'Unauthenticated user!' });;
 });
+*/
 
 
 /* -- SERVER ACTIVATION -- */

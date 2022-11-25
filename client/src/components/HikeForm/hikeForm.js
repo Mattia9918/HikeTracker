@@ -27,6 +27,7 @@ function HikeForm(props) {
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
+
     const navigate = useNavigate();
 
     //When we select the gpx file to upload
@@ -127,7 +128,7 @@ function HikeForm(props) {
                             </Col>
                         </Row>
                         <Row className='r'>
-                            <Col className='c'>
+                            <Col className='f'>
                                 <Form.Label>Hike description</Form.Label>
                                 <Form.Control as="textarea" rows="3" value={description} onChange={ev => setDescription(ev.target.value)} type = "text" placeholder="Enter hike description" required />
                             </Col>
@@ -178,7 +179,7 @@ function HikeForm(props) {
                                         <b>Starting Point Longitude:</b> {spoint ? spoint.longitude : null} <br></br>
                                         <b>Starting Point Latitude:</b> {spoint ? spoint.latitude : null}<br></br>
                                         <b>Starting Point City:</b> {spoint ? spoint.locality : null}<br></br>
-                                        <b>Starting Point Country:</b> {spoint ? spoint.countryName : null}<br></br>
+                                        <b>Starting Point Province:</b> {spoint ? spoint.localityInfo.administrative[2].name : null}<br></br>
                                     </div>
 
                                 ) : null}
@@ -191,7 +192,7 @@ function HikeForm(props) {
                                         <b>Ending Point Longitude:</b> {epoint ? epoint.longitude : null}<br></br>
                                         <b>Ending Point Latitude:</b> {epoint ? epoint.latitude : null} <br></br>
                                         <b>Ending Point City:</b> {epoint ? epoint.locality : null}<br></br>
-                                        <b>Ending Point Country:</b> {epoint ? epoint.countryName : null}<br></br>
+                                        <b>Ending Point Province:</b> {epoint ? epoint.localityInfo.administrative[2].name : null}<br></br>
                                     </div>
 
                                 ) : null}
