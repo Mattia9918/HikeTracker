@@ -10,11 +10,13 @@ const router = express.Router();
 router.use(fileUpload());
 
 router.post('/upload', async (req, res) => {
-    if (req.user === undefined)
+    /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
 
     if(req.user.role !== "localGuide")
         return res.status(401).json({ error: 'not authorized!' });
+
+     */
 
     if (req.files === undefined) {
         return res.status(400).json({ msg: 'No file uploaded' });

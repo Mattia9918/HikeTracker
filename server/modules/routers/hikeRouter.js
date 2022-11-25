@@ -81,8 +81,6 @@ router.post('/api/hiking',
         ],
         async (req, res) => {
 
-        console.log(req)
-
         /*if (req.user === undefined)
             return res.status(401).json({ error: 'not authenticated!' });
 
