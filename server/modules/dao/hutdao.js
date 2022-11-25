@@ -38,7 +38,7 @@ exports.postHut = (name, address, phone_number, email,
 exports.getHuts = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE H.point_id = P.id"
 
@@ -55,7 +55,7 @@ exports.getHuts = () => {
 exports.getHutById = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE H.id = ? AND H.point_id = P.id"
 
@@ -72,7 +72,7 @@ exports.getHutById = (id) => {
 exports.getHutByCity = (city) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE P.city = ? AND H.point_id = P.id"
 
@@ -89,7 +89,7 @@ exports.getHutByCity = (city) => {
 exports.getHutByProvince = (province) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE P.province = ? AND H.point_id = P.id"
 
@@ -106,7 +106,7 @@ exports.getHutByProvince = (province) => {
 exports.getHutByAltitude = (altitude1, altitude2) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE altitude BETWEEN ? AND ? AND H.point_id = P.id"
 
@@ -123,7 +123,7 @@ exports.getHutByAltitude = (altitude1, altitude2) => {
 exports.getHutWithRestaurant = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE restaurant_service = 1 AND H.point_id = P.id"
 
@@ -140,7 +140,7 @@ exports.getHutWithRestaurant = () => {
 exports.getHutWithDisabledServices = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE disabled_services = 1 AND H.point_id = P.id"
 
@@ -157,7 +157,7 @@ exports.getHutWithDisabledServices = () => {
 exports.getHutBikeFriendly = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE bike_friendly = 1 AND H.point_id = P.id"
 
@@ -174,7 +174,7 @@ exports.getHutBikeFriendly = () => {
 exports.getHutWithBeds = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE beds > 0 AND H.point_id = P.id"
 
@@ -191,7 +191,7 @@ exports.getHutWithBeds = () => {
 exports.getHutByReachability = (reachability) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE H.reachability = ? AND H.point_id = P.id"
 
@@ -205,6 +205,7 @@ exports.getHutByReachability = (reachability) => {
 	});
 };
 
+// TODO: eventualmente modificare se la diagonale è up-left, bottom-right
 /**
  * Gets huts that are in a rectangular area with diagonal from bottom-left to upper right
  * @param lat1
@@ -216,7 +217,7 @@ exports.getHutByReachability = (reachability) => {
 exports.getHutByArea = (lat1, lon1, lat2, lon2) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE (latitude BETWEEN ? AND ?) AND (longitude BETWEEN ? AND ?) AND H.point_id = P.id"
 
