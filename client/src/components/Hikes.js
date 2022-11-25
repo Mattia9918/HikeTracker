@@ -177,10 +177,12 @@ function FilterMenu(props) {
                                 </Accordion.Item>
                                 </Col>
                                 <Col lg = {4}>
-                                <Button onClick = {() => {setShowModal(true)}}>Area
-                                </Button>
                                 <center>
-                                <Button align = "right" onClick={() => props.loadFilter("none")}>Reset</Button>
+                                    <Button variant = "outline-primary" onClick = {() => {setShowModal(true)}}>Find in geographic area</Button>
+                                </center>
+                                <br></br>
+                                <center>
+                                    <Button align = "right" onClick={() => props.loadFilter("none")}>Reset filters</Button>
                                 </center>
                                 </Col>
                                 </Row>
