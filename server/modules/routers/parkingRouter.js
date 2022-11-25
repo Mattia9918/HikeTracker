@@ -42,16 +42,11 @@ router.post('/api/parking',
     try {
 
         const parkingPointID = await hike_dao.postPoint(req.body.parkingPoint);
-        const parkID = await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, parkingPointID);
-        
+        if(parkingPointID){
+          await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, req.body.timetable, parkingPointID);
+        }
        
-        // await hike_dao.postHike_Point(parkID, "parking_lot", parkingPointID);
-
-        // for (let i in req.body.pointsOfInterest) {
-        //     let pointID = await hike_dao.postPoint(req.body.pointsOfInterest[i]);
-        //     await hike_dao.postHike_Point(hikeID, "interest", pointID);
-        // }
-        return res.status(201).json({"id":parkID });
+        return res.status(201).json();
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: `Generic error` }).end();

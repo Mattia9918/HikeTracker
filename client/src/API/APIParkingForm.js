@@ -15,7 +15,7 @@ async function postParking(Parking) {
             },
             body: JSON.stringify({ name : Parking.name, guarded : Parking.guarded, parking_spaces : Parking.parkingspaces,
                                     price_per_hour : Parking.priceperhour, disabled_parkings : Parking.disabledparkings,
-                                     timetable : Parking.timetable })
+                                     timetable : Parking.timetable, parkingPoint:Parking.parkingPoint  })
         });
         if (response.ok) {
             return true;
