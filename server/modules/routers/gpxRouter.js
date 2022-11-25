@@ -47,11 +47,13 @@ router.post('/upload', async (req, res) => {
 //POST GPX AS BLOB
 router.post('/api/gpx', async (req, res) => {
 
-    if (req.user === undefined)
+    /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
 
     if(req.user.role !== "localGuide")
         return res.status(401).json({ error: 'not authorized!' });
+
+     */
 
     try {
 

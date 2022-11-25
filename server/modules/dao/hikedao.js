@@ -426,8 +426,25 @@ exports.deletePointCCs = () => {
 			
 		})
 	})
-
 };
+
+exports.postPointHut = (latitude, longitude, city, province) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'INSERT INTO point(latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?)';
+		db.run(sql, [latitude, longitude, "hut", "descrizione", city, province], function (err) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(this.lastID)
+			}
+		});
+	})
+};
+
+
+
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';

@@ -10,6 +10,7 @@ const router = express.Router();
 //PARKING_LOT TABLE
 
 router.get("/api/parking", async (req, res) => {
+
     try {
         const parks = await parking_dao.getParks();
         return res.status(200).json(parks);
@@ -33,12 +34,19 @@ router.post('/api/parking',
 [/*check('guarded').isNumeric(),
     check('parking_spaces').isNumeric()*/]
 , async (req, res) => {
+<<<<<<< HEAD
     console.log(req.body.user)
     if (req.body.user === undefined)
+=======
+
+    /*if (req.user === undefined)
+>>>>>>> dcf481e8f998723d1b3910e52cb8a07c1d3d0964
         return res.status(401).json({ error: 'not authenticated!' });
 
      if(req.body.user.role !== "localGuide")
          return res.status(401).json({ error: 'not authorized!' });
+
+     */
 
 
     const errors = validationResult(req);

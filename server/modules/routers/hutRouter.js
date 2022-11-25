@@ -3,6 +3,7 @@
 const express = require("express");
 const hut_dao = require("../dao/hutdao");
 const {check, validationResult} = require("express-validator");
+const hike_dao = require("../dao/hikedao");
 
 const router = express.Router();
 
@@ -11,24 +12,31 @@ router.post('/api/hut',
     []
     , async (req, res) => {
 
-        if (req.user === undefined)
+        /*if (req.user === undefined)
             return res.status(401).json({ error: 'not authenticated!' });
 
         if(req.user.role !== "localGuide")
             return res.status(401).json({ error: 'not authorized!' });
+
+         */
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
         try {
+            console.log(req.body)
+
+            const pointId = await hike_dao.postPointHut(
+                req.body.latitude,
+                req.body.longitude,
+                req.body.city,
+                req.body.province);
 
             const hutID = await hut_dao.postHut(req.body.name, req.body.address, req.body.phone_number, req.body.email,
                 req.body.website, req.body.description, req.body.province, req.body.altitude, req.body.languages,
                 req.body.bike_friendly, req.body.reachability, req.body.disabled_services, req.body.rooms, req.body.bathrooms,
-                req.body.beds, req.body.restaurant_services ); 
-
-            //await hike_dao.postPoint(); 
+                req.body.beds, req.body.restaurant_services, pointId );
 
             return res.status(201).json({ "id": hutID });
             
@@ -43,8 +51,10 @@ router.post('/api/hut',
 /** Get all huts **/
 router.get("/api/huts", async (req, res) => {
 
-    if (req.user === undefined)
+    /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
+
+     */
 
     try {
         const huts = await hut_dao.getHuts();
@@ -57,8 +67,10 @@ router.get("/api/huts", async (req, res) => {
 /** Get hut by id **/
 router.get("/api/hut/:id", async (req, res) => {
 
-    if (req.user === undefined)
+    /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
+
+     */
 
     try {
         const id = req.params.id;
@@ -75,8 +87,10 @@ router.get("/api/hut/:id", async (req, res) => {
 /** Get huts with filters **/
 router.get(`/api/hut*`, async (req, res) => {
 
-    if (req.user === undefined)
+    /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
+
+     */
 
     try {
         let huts;

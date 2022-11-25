@@ -38,7 +38,7 @@ function Hut(props) {
         
        
 
-        const info = { hutname, address, phonenumber, email, website , altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
+        const info = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
         console.log(info);
