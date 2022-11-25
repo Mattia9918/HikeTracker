@@ -35,11 +35,13 @@ router.post('/api/parking',
     check('parking_spaces').isNumeric()*/]
 , async (req, res) => {
     console.log(req.body.user)
-    if (req.body.user === undefined)
-        return res.status(401).json({ error: 'not authenticated!' });
+    if (req.body.user === undefined){
+        return res.status(401).json({ error: 'not authenticated!' });}
 
-     if(req.body.user.role !== "localGuide")
+    if(req.body.user.role !== "localGuide"){
+        console.log(req.body.user.role);
          return res.status(401).json({ error: 'not authorized!' });
+    }
 
     
 
@@ -50,7 +52,7 @@ router.post('/api/parking',
     }
     try {
 
-        const parkingPointID = await hike_dao.postPoint(req.body.parkingPoint);
+        const parkingPointID = await hike_dao.postParkPoint(req.body.parkingPoint);
         if(parkingPointID){
           await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, req.body.timetable, parkingPointID);
         }
