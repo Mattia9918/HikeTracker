@@ -1,11 +1,5 @@
 const hike_dao = require('../modules/dao/hikedao.js');
 const user_dao = require('../modules/dao/userdao.js');
-
-// Include fs module
-var fs = require('fs');
-  
-// Use fs.readFile() method to read the file
-//var file = fs.readFileSync('./unit_test/testfile.gpx', 'utf-8');
   
 console.log('readFile called');
 const hike1 = {
@@ -57,7 +51,9 @@ const point1 = {
     type: "hut",
     description: "da sostituire",
     locality: "Torino",
-    principalSubdivision: "Torino",
+    localityInfo: {
+        administrative: [{}, {}, {name: "Torino"}]
+    },
 }
 
 const point2 = {
@@ -66,7 +62,9 @@ const point2 = {
     type: "hut",
     description: "da sostituire",
     locality: "Torino",
-    principalSubdivision: "Torino",
+    localityInfo: {
+        administrative: [{}, {}, {name: "Torino"}]
+    },
 }
 
 const point3 = {
@@ -75,7 +73,9 @@ const point3 = {
     type: "hut",
     description: "da sostituire",
     locality: "Grugliasco",
-    principalSubdivision: "Torino",
+    localityInfo: {
+        administrative: [{}, {}, {name: "Torino"}]
+    },
 }
 
 const point4 = {
@@ -84,7 +84,9 @@ const point4 = {
     type: "hut",
     description: "da sostituire",
     locality: "Grugliasco",
-    principalSubdivision: "Torino",
+    localityInfo: {
+        administrative: [{}, {}, {name: "Torino"}]
+    },
 }
 
 const localguide1 = {
@@ -145,7 +147,6 @@ describe("test hikes and filtering", () => {
             await user_dao.insertUser(localguide1.email, localguide1.hash, localguide1.salt, localguide1.role, localguide1.name, localguide1.surname, localguide1.username);
             await user_dao.insertUser(localguide2.email, localguide2.hash, localguide2.salt, localguide2.role, localguide2.name, localguide2.surname, localguide2.username);
             await hike_dao.saveFile(gpx1.gpxfile);
- //           hike_dao.getGpxInfo(file);
 
 
         } catch (err) {
@@ -163,7 +164,9 @@ describe("test hikes and filtering", () => {
     testGetHikeByProvince("Torino")
     testSaveFile();
     testGetFileContentById(1);
-    testGetGpxInfo();
+    testGetGpxInfo('./unit_test/testfile.gpx');
+    testGetHikeCities();
+    testGetHikeProvinces();
     
 });
 
@@ -841,10 +844,125 @@ function testGetGpxInfo(file) {
     describe("Testing getGpxInfo(file)", () => {
         test("Getting gpx info given gpx file", async () => {
             let res = hike_dao.getGpxInfo(file);
-            expect(res).toEqual(
+                    expect(res).toEqual(
                 {
-                    
+                   "endingPoint": {
+                     "latitude": 7.395708,
+                     "longitude": 45.295813,
+                   },
+                   "startingPoint": {
+                     "latitude": 7.30556,
+                     "longitude": 45.313864,
+                   },
+                   "totalAscent": -393.20000000000005,
+                   "totalDistance": 13.40820509184726,
+                   "difficulty": "Average",
                 }
+            )
+        })
+    })
+}
+
+
+function testGetHikeCities() {
+    describe("Testing getHikeCities()", () => {
+        test("Getting the list of cities where there's a hike starting point", async () => {
+            const hike5 = {
+                id: undefined,
+                title: "Hike5!",
+                length: 20,
+                description: "I'm Hike5!",
+                difficulty: "Easy",
+                estimatedTime: "3",
+                ascent: 1100,
+                localguideID: 2
+            }
+            
+            const point5 = {
+                latitude: 5.0,
+                longitude: 6.0,
+                type: "hut",
+                description: "da sostituire",
+                locality: "Alba",
+                localityInfo: {
+                    administrative: [{}, {}, {name: "Provincia di Cuneo"}]
+                }
+            }
+            
+            const point6 = {
+                latitude: 7.0,
+                longitude: 8.0,
+                type: "hut",
+                description: "da sostituire",
+                locality: "Biella",
+                localityInfo: {
+                    administrative: [{}, {}, {name: "Provincia di Biella"}]
+                }
+            }
+            await hike_dao.createHiking(hike5.title, hike5.length, hike5.description, hike5.difficulty, hike5.estimatedTime, hike5.ascent, hike5.localguideID);
+            await hike_dao.postPoint(point5)
+            await hike_dao.postPoint(point6)
+            await hike_dao.postHike_Point(5, 'start', 5)
+            await hike_dao.postHike_Point(5, 'arrive', 6)
+            let res = await hike_dao.getHikeCities();
+            expect(res).toEqual(
+                    [
+                        {city: "Torino"},
+                        {city: "Grugliasco"},
+                        {city: "Alba"}
+                    ]
+            )
+        })
+    })
+}
+
+
+function testGetHikeProvinces() {
+    describe("Testing getHikeProvinces()", () => {
+        test("Getting the list of provinces where there's a hike starting point", async () => {
+            const hike5 = {
+                id: undefined,
+                title: "Hike5!",
+                length: 20,
+                description: "I'm Hike5!",
+                difficulty: "Easy",
+                estimatedTime: "3",
+                ascent: 1100,
+                localguideID: 2
+            }
+            
+            const point5 = {
+                latitude: 5.0,
+                longitude: 6.0,
+                type: "hut",
+                description: "da sostituire",
+                locality: "Alba",
+                localityInfo: {
+                    administrative: [{}, {}, {name: "Provincia di Cuneo"}]
+                }
+            }
+            
+            const point6 = {
+                latitude: 7.0,
+                longitude: 8.0,
+                type: "hut",
+                description: "da sostituire",
+                locality: "Biella",
+                localityInfo: {
+                    administrative: [{}, {}, {name: "Provincia di Biella"}]
+                }
+            }
+            await hike_dao.createHiking(hike5.title, hike5.length, hike5.description, hike5.difficulty, hike5.estimatedTime, hike5.ascent, hike5.localguideID);
+            await hike_dao.postPoint(point5)
+            await hike_dao.postPoint(point6)
+            await hike_dao.postHike_Point(5, 'start', 5)
+            await hike_dao.postHike_Point(5, 'arrive', 6)
+            let res = await hike_dao.getHikeProvinces();
+            expect(res).toEqual(
+                    [
+                        {province: "Torino"},
+                        {province: "Provincia di Cuneo"},
+                    ]
             )
         })
     })

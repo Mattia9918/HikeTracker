@@ -38,9 +38,18 @@ async function getHikes() {
  };
  
  async function getFilter(filter, value) {
-     var couple;
-     if (value != undefined) {
+    var couple;
+
+     if (value != undefined && typeof value !== "object") {
          couple = value.split(',')
+     } else if (typeof value === "object") {
+        var northEastLimit = value._northEast;
+        var southWestLimit = value._southWest;
+        var neLat = northEastLimit.lat;
+        var neLng = northEastLimit.lng;
+        var swLat = southWestLimit.lat;
+        var swLng = southWestLimit.lng;
+        couple = [[neLat, neLng], [swLat, swLng]]
      } else {
          couple = [undefined, undefined]
      }
