@@ -129,7 +129,7 @@ router.get(`/api/hut*`, async (req, res) => {
                 break;
             case "area":
                 /* Gets huts that are in a rectangular area with diagonal from bottom-left to upper right */
-                huts = await hut_dao.getHutByArea(req.query.value1, req.query.value2, req.query.value3, req.query.value4);
+                huts = await hut_dao.getHutByArea(req.query.value1, req.query.value2);
                 break;
             default:
                 console.log("wrong filter error");

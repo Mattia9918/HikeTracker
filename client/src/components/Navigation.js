@@ -1,12 +1,39 @@
 import {Navbar, Container, Col, Nav, Form, Row, Button} from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import {useState} from 'react';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
 
 function Navigation(props) {
 
     const url = window.location.href;
     const navigate = useNavigate();
+    const localGuideActions = [
+        {
+            name: "New hike",
+            link: "/newhike"
+        },
+        {
+            name: "New hut",
+            link: "/newhut"
+        },
+        {
+            name: "New parking lot",
+            link: "/newparking"
+        }
+    ]
+
+    const hikerActions = [
+        {
+            name: "Hikes",
+            link: "/"
+        },
+        {
+            name: "Huts",
+            link: "/huts"
+        },
+    ]
     return (
         <>
 
@@ -24,11 +51,6 @@ function Navigation(props) {
                                 alt = "navicon"/>
                             <b id = "title1" style = {{'cursor': 'pointer'}} onClick = {() => navigate('/')}>Hike</b>
                             <b id = "title2" style = {{'cursor': 'pointer'}} onClick = {() => navigate('/')}>Tracker</b>
-                            <b id = "title1" style = {{'cursor': 'pointer'}} onClick={() => {
-                                if(props.user !== undefined)
-                                    navigate('/huts');
-                                }
-                            }> Search Huts </b>
                         </Navbar.Brand>
                         </Container>
                     </Col>
@@ -40,28 +62,15 @@ function Navigation(props) {
                    <Container>
                     <Navbar.Collapse id="basic-navbar-nav" >
                         <Nav className="ms-auto">
+                        {props.user !== undefined && props.user.role === "localGuide" && <NavDropdown array = {localGuideActions} label = "Local Guide Menu"/>}
+                        {props.user !== undefined && <NavDropdown array = {hikerActions} label = "Menu"/>}
                         <Nav.Item>
-                            {
-                                props.user === undefined && <Nav.Link id = "navlink" onClick = {() => navigate('/login')}>Login</Nav.Link> ||
-                                props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhike" && <Nav.Link onClick = {() => navigate('/newhike')}>New hike</Nav.Link>
-                            }
-                        </Nav.Item>
-                        <Nav.Item>
-                            {
-                                props.user === undefined && <></> ||
-                                props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhut" && <Nav.Link onClick = {() => navigate('/newhut')}>New Hut</Nav.Link>
-                            }
-                        </Nav.Item>
-                        <Nav.Item>
-                            {
-                                props.user === undefined && <></> ||
-                                props.user.role === "localGuide" &&  url !== "http://localhost:3000/newparking" && <Nav.Link onClick = {() => navigate('/newparking')}>New Parking Lot</Nav.Link>
-                            }
+                            {props.user === undefined && <Nav.Link id = "navlink" onClick = {() => navigate('/login')}>Login</Nav.Link>}
                         </Nav.Item>
                         <Nav.Item>
                             {props.user === undefined && 
-                                <Nav.Link id = "navlink" onClick = {() => navigate('/register')}>Register</Nav.Link> ||
-                                <Nav.Link id = "navlink" onClick = {() => props.logout()}>Logout</Nav.Link>
+                                    <Nav.Link id = "navlink" onClick = {() => navigate('/register')}>Register</Nav.Link> ||
+                                    <Nav.Link id = "navlink" onClick = {() => props.logout()}>Logout</Nav.Link>
                             }
                         </Nav.Item>
                         </Nav>
@@ -73,4 +82,37 @@ function Navigation(props) {
     );
 };
 
+function NavDropdown(props) {
+
+    const navigate = useNavigate();
+
+    return (
+      <DropdownButton variant = "outline-primary" id="dropdown-basic-button" title={props.label}>
+        {props.array.map(a => <Dropdown.Item onClick = {() => navigate(a.link)}>{a.name}</Dropdown.Item>)}
+      </DropdownButton>
+    );
+  }
+  
+  
+
 export default Navigation;
+
+//<Nav.Item>
+                        //    {
+                        //        ||
+                        //        props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhike" && <Nav.Link onClick = {() => navigate('/newhike')}>New hike</Nav.Link>
+                        //    }
+                        //</Nav.Item>
+                        //<Nav.Item>
+                        //    {
+                        //        props.user === undefined && <></> ||
+                        //        props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhut" && <Nav.Link onClick = {() => navigate('/newhut')}>New Hut</Nav.Link>
+                        //    }
+                        //</Nav.Item>
+                        //<Nav.Item>
+                        //    {
+                        //        props.user === undefined && <></> ||
+                        //        props.user.role === "localGuide" &&  url !== "http://localhost:3000/newparking" && <Nav.Link onClick = {() => navigate('/newparking')}>New Parking Lot</Nav.Link>
+                        //    }
+                        //</Nav.Item>
+                       

@@ -12,18 +12,18 @@ import { useNavigate } from 'react-router-dom';
 
 function Hut(props) {
 
-    const [hutname, setHikename] = useState("hut1"); 
-    const [address, setAddress] = useState("Corso Duca degli abruzzi"); 
-    const [phonenumber, setPhonenumber] = useState("3333333333"); 
-    const [email, setEmail] = useState("c@gmail.com"); 
-    const [website, setWebsite] = useState("www.test.it"); 
-    const [description, setDescription] = useState("description"); 
-    const [latitude, setLatitude] = useState("44.9927"); 
-    const [longitude, setLongitude] = useState("8.067591");
-    const [altitude, setAltitude] = useState("100"); 
-    const [rooms, setRooms] = useState("2");
-    const [bathrooms, setBathrooms] = useState("3"); 
-    const [beds, setBeds] = useState("4");     
+    const [hutname, setHikename] = useState(""); 
+    const [address, setAddress] = useState(""); 
+    const [phonenumber, setPhonenumber] = useState(""); 
+    const [email, setEmail] = useState(""); 
+    const [website, setWebsite] = useState(""); 
+    const [description, setDescription] = useState(""); 
+    const [latitude, setLatitude] = useState(""); 
+    const [longitude, setLongitude] = useState("");
+    const [altitude, setAltitude] = useState(""); 
+    const [rooms, setRooms] = useState("");
+    const [bathrooms, setBathrooms] = useState(""); 
+    const [beds, setBeds] = useState("");     
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
     const [language, setLanguage] = useState(""); 

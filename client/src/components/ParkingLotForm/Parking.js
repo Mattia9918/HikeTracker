@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 function Parking(props) {
 
     const [name, setName] = useState(""); 
+    const [address, setAddress] = useState(""); 
     const [guarded, setGuarded] = useState(0); 
     const [parkingspaces, setParkingspaces] = useState(0); 
     const [priceperhour, setPriceperhour] = useState(0); 
@@ -23,12 +24,12 @@ function Parking(props) {
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
 
-    const navigate = useNavigate();
+    
 
     const submitHandler = (event) => {
         
         const type = "parking";
-        const description = "bella descrizione";
+        const description = "Torchiano 4ever";
         const user= props.user;
         const timetable = timetablebegin + "-" + timetableend; 
         console.log(user); 
@@ -39,7 +40,7 @@ function Parking(props) {
         console.log(info);
         props.postParking(info);
         
-        navigate("/");
+        //navigate("/");
     }
 
     const onClickButton = async e => {

@@ -323,4 +323,4 @@ function MapModal(props) {
 
 
 
-export default Hikes;
+export {Hikes, MapModal};
