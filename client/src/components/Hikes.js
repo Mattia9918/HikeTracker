@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
 import API from '../API/APIGpx';
 import APIHikes from '../API/APIHikes';
+import {AreaDragMap, MapItem} from './Map/Maps';
 
 
 function Hikes(props) {
@@ -51,6 +52,7 @@ function FilterMenu(props) {
 
     const [cities, setCities] = useState();
     const [provinces, setProvinces] = useState();
+    const [showModal, setShowModal] = useState(false);
     
     async function loadList(type) {
 
@@ -71,6 +73,7 @@ function FilterMenu(props) {
     }
 
     return (
+        <>
         <Row className = "mt-3 mb-1 ms-1 me-1">
                 <Accordion >
                     <Accordion.Item eventKey="0">
@@ -78,7 +81,7 @@ function FilterMenu(props) {
                         <Accordion.Body>
                             <Accordion>
                                 <Row>
-                                <Col>
+                                <Col lg = {4}>
                                 <Accordion.Item eventKey="1" id = "secondaryaccordion">
                                     <Accordion.Header id = "filter" >Length</Accordion.Header>
                                     <Accordion.Body>
@@ -134,7 +137,7 @@ function FilterMenu(props) {
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 </Col>
-                                <Col>
+                                <Col lg = {4}>
                                 <Accordion.Item eventKey="4" id = "secondaryaccordion">
                                     <Accordion.Header>Ascent</Accordion.Header>
                                     <Accordion.Body>
@@ -173,8 +176,14 @@ function FilterMenu(props) {
                                     </Accordion.Body>
                                 </Accordion.Item>
                                 </Col>
-                                <Col>
-                                <Button onClick={() => props.loadFilter("none")}>Reset</Button>
+                                <Col lg = {4}>
+                                <center>
+                                    <Button variant = "outline-primary" onClick = {() => {setShowModal(true)}}>Find in geographic area</Button>
+                                </center>
+                                <br></br>
+                                <center>
+                                    <Button align = "right" onClick={() => props.loadFilter("none")}>Reset filters</Button>
+                                </center>
                                 </Col>
                                 </Row>
                             </Accordion>
@@ -182,6 +191,9 @@ function FilterMenu(props) {
                     </Accordion.Item>
                 </Accordion>
         </Row>
+
+        {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} areadragmap = {true} loadFilter = {props.loadFilter}/>}
+        </>
     );
 }
 function HikeCard(props) {
@@ -279,39 +291,8 @@ function HikeCard(props) {
 };
 
 function MapModal(props) {
-
-    /* -- STATES MANAGEMENT -- */
-
-    const [coordinates, setCoordinates] = useState({});
-    const [firstPoint, setFirstPoint] = useState([]);
-    const [lastPoint, setLastPoint] = useState([]);
-    const [center, setCenter] = useState([]);
-
-    useEffect(() => {
-        const getJson = async () => {
-            try {
-                const json = await API.getFileById(props.hikeid);
-                const c = json.features;
-
-                setCoordinates(c);
-
-                const arrayCoordinates = c[0].geometry.coordinates;
-                const last = arrayCoordinates.length - 1;
-                const middle = Math.round(last / 2);
-
-                const firstPoint = [arrayCoordinates[0][1], arrayCoordinates[0][0]];
-                const center = [arrayCoordinates[middle][1], arrayCoordinates[middle][0]];
-                const lastPoint = [arrayCoordinates[last][1], arrayCoordinates[last][0]];
-
-                setFirstPoint(firstPoint);
-                setCenter(center);
-                setLastPoint(lastPoint);
-
-
-            } catch (err) { }
-        };
-        getJson();
-    }, []);
+    const [latlng,setLatlng] = useState([]); 
+    const [bounds,setBounds] = useState([]);
 
     /* -- RENDERING -- */
     return (
@@ -319,25 +300,21 @@ function MapModal(props) {
 
             {/* Modal header */}
             <Modal.Header closeButton>
-                <Modal.Title>{props.title}</Modal.Title>
+                <Modal.Title>{(props.areadragmap && "Filter hikes by geographic area") || props.title}</Modal.Title>
             </Modal.Header>
 
 
             {/* Modal body */}
             <Modal.Body id="mapcontainer">
-                {coordinates.length &&
-                    <center>
-                        <MapContainer style={{ height: "500px", width: "770px" }} center={center} zoom={12} scrollWheelZoom={true}>
-                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                            <GeoJSON data={coordinates} />
-                            <Marker position={firstPoint}></Marker>
-                            <Marker position={lastPoint}></Marker>
-                        </MapContainer>
-                    </center>
+                {props.areadragmap && <>Press ctrl + mouse drag to define a geographic area where you want to find hikes<br></br><hr></hr></>}
+                {(props.areadragmap &&
+                    <AreaDragMap mode = {2} bounds = {bounds} setBounds = {setBounds} />) ||
+                    <MapItem hikeid={props.hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
                 }
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={() => props.setShowModal(false)}>Close</Button>
+                <Button onClick={() => props.loadFilter("area", bounds)}>Search</Button>
+                <Button variant = "secondary" onClick={() => props.setShowModal(false)}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -346,4 +323,4 @@ function MapModal(props) {
 
 
 
-export default Hikes;
+export {Hikes, MapModal};

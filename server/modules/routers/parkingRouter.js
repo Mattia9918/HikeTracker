@@ -34,7 +34,7 @@ router.post('/api/parking',
 [/*check('guarded').isNumeric(),
     check('parking_spaces').isNumeric()*/]
 , async (req, res) => {
-    console.log(req.body.user)
+    /*console.log(req.body.user)
     if (req.body.user === undefined){
         return res.status(401).json({ error: 'not authenticated!' });}
 
@@ -42,9 +42,14 @@ router.post('/api/parking',
         console.log(req.body.user.role);
          return res.status(401).json({ error: 'not authorized!' });
     }
+     */
+        /*if (req.user === undefined){
+            return res.status(401).json({ error: 'not authenticated!' });}
 
-    
-
+        if(req.user.role !== "localGuide"){
+            console.log(req.body.user.role);
+            return res.status(401).json({ error: 'not authorized!' });
+        }*/
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

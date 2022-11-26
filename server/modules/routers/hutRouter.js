@@ -60,6 +60,7 @@ router.get("/api/huts", async (req, res) => {
         const huts = await hut_dao.getHuts();
         return res.status(200).json(huts);
     } catch (err) {
+        console.log(err);
         return res.status(500).json({ error: err });
     }
 });

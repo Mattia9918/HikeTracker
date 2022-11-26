@@ -10,11 +10,13 @@ const router = express.Router();
 router.use(fileUpload());
 
 router.post('/upload', async (req, res) => {
-    if (req.user === undefined)
+    /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
 
     if(req.user.role !== "localGuide")
         return res.status(401).json({ error: 'not authorized!' });
+
+     */
 
     if (req.files === undefined) {
         return res.status(400).json({ msg: 'No file uploaded' });
@@ -31,10 +33,10 @@ router.post('/upload', async (req, res) => {
             res.json({
                 fileName: random,
                 filePath: `/uploads/${random}`,
-                startPointLong: info.coordinates[0][0][0],
-                startPointLat: info.coordinates[0][0][1],
-                endingPointLong: info.coordinates[0][info.coordinates[0].length - 1][0],
-                endingPointLat: info.coordinates[0][info.coordinates[0].length - 1][1],
+                startPointLong: info.startingPoint.longitude,
+                startPointLat: info.startingPoint.latitude,
+                endingPointLong: info.endingPoint.longitude,
+                endingPointLat: info.endingPoint.latitude,
                 totalDistance: Math.round(info.totalDistance * 100) / 100,
                 totalAscent: Math.round(info.totalAscent * 100 / 100),
                 difficulty: info.difficulty
@@ -73,11 +75,17 @@ router.get("/api/gpx/:id", async (req, res) => {
         const id = req.params.id;
 
         const bin = await hike_dao.getFileContentById(id);
-        const content = manageFile.convertBLOB2String(bin.gpxfile);
-        const json = manageFile.getGeoJSONbyContent(content);
-        res.status(200).json(json);
+        if(bin!==undefined)
+        {
+            const content = manageFile.convertBLOB2String(bin.gpxfile);
+            const json = manageFile.getGeoJSONbyContent(content);
+            res.status(200).json(json);
+        }
+        else 
+            res.status(404).json({err:"Not Found"}); 
+
     } catch (err) {
-        console.log(err);
+        //console.log(err);
         res.status(500).end();
     }
 });
