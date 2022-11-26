@@ -5,6 +5,7 @@ import CurrencyInput from 'react-currency-input-field';
 import PhoneInput from 'react-phone-number-input'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { MapModal } from '../Hikes'
 
 
 
@@ -20,16 +21,16 @@ function Parking(props) {
     const [timetableend, setTimetableend] = useState("");
     const [latitude, setLatitude] = useState(""); 
     const [longitude, setLongitude] = useState("");
-    
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
+    const [showModal, setShowModal] = useState(false);
 
     
 
     const submitHandler = (event) => {
         
         const type = "parking";
-        const description = "Torchiano 4ever";
+        const description = "descrizione parcheggio";
         const user= props.user;
         const timetable = timetablebegin + "-" + timetableend; 
         console.log(user); 
@@ -43,14 +44,10 @@ function Parking(props) {
         //navigate("/");
     }
 
-    const onClickButton = async e => {
-
-        e.preventDefault();
-       
-
+    const onClickButton = async (lat, lng) => {
         try {
            
-            const parkingPoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
+            const parkingPoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=en');
             console.log(parkingPoint.data);  
             setCity(parkingPoint.data.locality); 
             setProvince(parkingPoint.data.localityInfo.administrative[2].name); 
@@ -130,7 +127,7 @@ function Parking(props) {
                         
                         <Row>
                             <Col align = "center">
-                                <Button variant="success" size="sm" onClick={onClickButton}>upload</Button>
+                                <Button variant="success" size="sm" onClick={() => setShowModal(true)}>Find on map</Button>
                             </Col>
                         </Row>
                         <br></br>
@@ -157,7 +154,9 @@ function Parking(props) {
                     </Container>
                 </Form>
 
+                {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} markermap = {true} setLatitude = {setLatitude} setLongitude = {setLongitude} onClickButton = {onClickButton} />}
             </Container>
+           
         </Container>
 
     ); 

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
 import API from '../API/APIGpx';
 import APIHikes from '../API/APIHikes';
-import {AreaDragMap, MapItem} from './Map/Maps';
+import {AreaDragMap, MapItem, MarkerMap} from './Map/Maps';
 
 
 function Hikes(props) {
@@ -82,7 +82,7 @@ function FilterMenu(props) {
                             <Accordion>
                                 <Row>
                                 <Col lg = {4}>
-                                <Accordion.Item eventKey="1" id = "secondaryaccordion">
+                                <Accordion.Item eventKey="1">
                                     <Accordion.Header id = "filter" >Length</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
@@ -100,7 +100,7 @@ function FilterMenu(props) {
                                 </Accordion.Item>
 
 
-                                <Accordion.Item eventKey="2" id = "secondaryaccordion">
+                                <Accordion.Item eventKey="2">
                                     <Accordion.Header>Estimated time</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
@@ -120,7 +120,7 @@ function FilterMenu(props) {
                                     </Accordion.Body>
                                 </Accordion.Item>
 
-                                <Accordion.Item eventKey="3" id = "secondaryaccordion">
+                                <Accordion.Item eventKey="3">
                                     <Accordion.Header>Difficulty</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
@@ -138,7 +138,7 @@ function FilterMenu(props) {
                                 </Accordion.Item>
                                 </Col>
                                 <Col lg = {4}>
-                                <Accordion.Item eventKey="4" id = "secondaryaccordion">
+                                <Accordion.Item eventKey="4">
                                     <Accordion.Header>Ascent</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
@@ -158,7 +158,7 @@ function FilterMenu(props) {
                                     </Accordion.Body>
                                 </Accordion.Item>
 
-                                <Accordion.Item eventKey="5" id = "secondaryaccordion" onClick={() => loadList("province")}>
+                                <Accordion.Item eventKey="5" onClick={() => loadList("province")}>
                                     <Accordion.Header>Province</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
@@ -167,7 +167,7 @@ function FilterMenu(props) {
                                     </Accordion.Body>
                                 </Accordion.Item>
 
-                                <Accordion.Item eventKey="6" id = "secondaryaccordion" onClick={() => loadList("city")}>
+                                <Accordion.Item eventKey="6" onClick={() => loadList("city")}>
                                     <Accordion.Header>City</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
@@ -300,7 +300,11 @@ function MapModal(props) {
 
             {/* Modal header */}
             <Modal.Header closeButton>
-                <Modal.Title>{(props.areadragmap && "Filter hikes by geographic area") || props.title}</Modal.Title>
+                <Modal.Title>{
+                    (props.areadragmap && "Filter by geographic area") || 
+                    (props.markermap && "Click to add a pointer on a location") ||
+                     props.title}
+                </Modal.Title>
             </Modal.Header>
 
 
@@ -309,11 +313,22 @@ function MapModal(props) {
                 {props.areadragmap && <>Press ctrl + mouse drag to define a geographic area where you want to find hikes<br></br><hr></hr></>}
                 {(props.areadragmap &&
                     <AreaDragMap mode = {2} bounds = {bounds} setBounds = {setBounds} />) ||
-                    <MapItem hikeid={props.hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
+                 (props.markermap && 
+                    <MarkerMap latlng = {latlng} setLatlng = {setLatlng} iconmode = {props.iconmode} />) ||
+                <MapItem hikeid={props.hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
                 }
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={() => props.loadFilter("area", bounds)}>Search</Button>
+                {
+                 (props.areadragmap && <Button onClick={() => props.loadFilter("area", bounds)}>Search</Button>) ||
+                 (props.markermap && <Button onClick={() => { 
+                    props.setLatitude(latlng.lat); 
+                    props.setLongitude(latlng.lng);
+                    props.onClickButton(latlng.lat, latlng.lng);
+                    props.setShowModal(false);
+                }}>
+                    Continue</Button>)
+                }
                 <Button variant = "secondary" onClick={() => props.setShowModal(false)}>Close</Button>
             </Modal.Footer>
         </Modal>
