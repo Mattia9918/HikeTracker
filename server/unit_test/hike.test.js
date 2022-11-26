@@ -847,12 +847,12 @@ function testGetGpxInfo(file) {
                     expect(res).toEqual(
                 {
                    "endingPoint": {
-                     "latitude": 7.395708,
-                     "longitude": 45.295813,
+                     "latitude": 45.295813,
+                     "longitude": 7.395708,
                    },
                    "startingPoint": {
-                     "latitude": 7.30556,
-                     "longitude": 45.313864,
+                     "latitude": 45.313864,
+                     "longitude": 7.30556,
                    },
                    "totalAscent": -393.20000000000005,
                    "totalDistance": 13.40820509184726,
