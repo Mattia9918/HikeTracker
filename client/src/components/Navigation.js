@@ -1,8 +1,7 @@
-import {Navbar, Container, Col, Nav, Form, Row, Button} from 'react-bootstrap';
+import {Navbar, Container, Col, Nav, Form, Row, Button, NavDropdown} from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import {useState} from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+
 
 
 function Navigation(props) {
@@ -62,8 +61,8 @@ function Navigation(props) {
                    <Container>
                     <Navbar.Collapse id="basic-navbar-nav" >
                         <Nav className="ms-auto">
-                        {props.user !== undefined && props.user.role === "localGuide" && <NavDropdown array = {localGuideActions} label = "Local Guide Menu"/>}
-                        {props.user !== undefined && <NavDropdown array = {hikerActions} label = "Menu"/>}
+                        {props.user !== undefined && props.user.role === "localGuide" && <MyNavDropdown array = {localGuideActions} label = "Local Guide Menu"/>}
+                        {props.user !== undefined && <MyNavDropdown array = {hikerActions} label = "Menu"/>}
                         <Nav.Item>
                             {props.user === undefined && <Nav.Link id = "navlink" onClick = {() => navigate('/login')}>Login</Nav.Link>}
                         </Nav.Item>
@@ -82,14 +81,14 @@ function Navigation(props) {
     );
 };
 
-function NavDropdown(props) {
+function MyNavDropdown(props) {
 
     const navigate = useNavigate();
 
     return (
-      <DropdownButton variant = "outline-primary" id="dropdown-basic-button" title={props.label}>
-        {props.array.map(a => <Dropdown.Item onClick = {() => navigate(a.link)}>{a.name}</Dropdown.Item>)}
-      </DropdownButton>
+      <NavDropdown title={props.label}>
+        {props.array.map(a => <NavDropdown.Item onClick = {() => navigate(a.link)}>{a.name}</NavDropdown.Item>)}
+      </NavDropdown>
     );
   }
   
