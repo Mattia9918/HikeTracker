@@ -442,7 +442,7 @@ exports.postPointHut = (latitude, longitude, city, province) => {
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "descrizione", body.locality, body.localityInfo.administrative[2].name], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "da sostituire", body.locality, body.localityInfo.administrative[2].name], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
