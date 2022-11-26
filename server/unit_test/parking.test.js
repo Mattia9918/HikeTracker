@@ -14,6 +14,7 @@ const parking1 = {
 
 
 const parking2 = {
+    
     id: undefined,
     name: "4 Guys",
     guarded: 4,
