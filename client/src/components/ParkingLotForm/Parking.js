@@ -52,8 +52,8 @@ function Parking(props) {
            
             const parkingPoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
             console.log(parkingPoint.data);  
-            setCity(parkingPoint.data.city); 
-            setProvince(parkingPoint.data.province); 
+            setCity(parkingPoint.data.locality); 
+            setProvince(parkingPoint.data.localityInfo.administrative[2].name); 
             
         } catch (err) {
             
