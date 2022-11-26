@@ -32,9 +32,11 @@ router.post('/api/hut',
                 req.body.longitude,
                 req.body.city,
                 req.body.province);
+            
+            console.log(pointId);
 
             const hutID = await hut_dao.postHut(req.body.name, req.body.address, req.body.phone_number, req.body.email,
-                req.body.website, req.body.description, req.body.province, req.body.altitude, req.body.languages,
+                req.body.website, req.body.description, req.body.altitude, req.body.languages,
                 req.body.bike_friendly, req.body.reachability, req.body.disabled_services, req.body.rooms, req.body.bathrooms,
                 req.body.beds, req.body.restaurant_services, pointId );
 
@@ -58,6 +60,7 @@ router.get("/api/huts", async (req, res) => {
 
     try {
         const huts = await hut_dao.getHuts();
+        console.log(huts);
         return res.status(200).json(huts);
     } catch (err) {
         console.log(err);

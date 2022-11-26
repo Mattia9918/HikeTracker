@@ -12,25 +12,27 @@ import { useNavigate } from 'react-router-dom';
 
 function Hut(props) {
 
-    const [hutname, setHikename] = useState(""); 
-    const [address, setAddress] = useState(""); 
-    const [phonenumber, setPhonenumber] = useState(""); 
-    const [email, setEmail] = useState(""); 
-    const [website, setWebsite] = useState(""); 
-    const [description, setDescription] = useState(""); 
-    const [latitude, setLatitude] = useState(""); 
-    const [longitude, setLongitude] = useState("");
-    const [altitude, setAltitude] = useState(""); 
-    const [rooms, setRooms] = useState("");
-    const [bathrooms, setBathrooms] = useState(""); 
-    const [beds, setBeds] = useState("");     
+    const [hutname, setHikename] = useState("hut1"); 
+    const [address, setAddress] = useState("Corso Duca degli abruzzi"); 
+    const [phonenumber, setPhonenumber] = useState("3333333333"); 
+    const [email, setEmail] = useState("c@gmail.com"); 
+    const [website, setWebsite] = useState("www.test.it"); 
+    const [description, setDescription] = useState("description"); 
+    const [latitude, setLatitude] = useState("44.9927"); 
+    const [longitude, setLongitude] = useState("8.067591");
+    const [altitude, setAltitude] = useState("100"); 
+    const [rooms, setRooms] = useState("2");
+    const [bathrooms, setBathrooms] = useState("3"); 
+    const [beds, setBeds] = useState("4");     
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
     const [language, setLanguage] = useState(""); 
     const [restservice, setRestservice] = useState(false); 
     const [disable, setDisable] = useState(false); 
-    const [bikefriendly, setBikefriendly] = useState(0);
+    const [bikefriendly, setBikefriendly] = useState(false);
     const [reachability, setReachability] = useState("");  
+
+    console.log(props);
 
     const navigate = useNavigate();
 
@@ -44,7 +46,7 @@ function Hut(props) {
         console.log(info);
         props.postHut(info);
 
-        //navigate("/");
+        navigate("/huts");
     }
 
 
@@ -57,7 +59,7 @@ function Hut(props) {
         try {
            
             const point = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
-            console.log(point.data);  
+            //console.log(point.data);  
             setCity(point.data.locality); 
             setProvince(point.data.localityInfo.administrative[2].name); 
             
@@ -180,10 +182,10 @@ function Hut(props) {
                         <Row>
                             
                             <Col className="c">
-                                <Form.Check   label="Bike Friendly" name="bike_friendly" value={bikefriendly} onChange={ev => {bikefriendly == 0 ? setBikefriendly(1): setBikefriendly(0); console.log(bikefriendly)} }></Form.Check>
+                                <Form.Check   label="Bike Friendly" name="bike_friendly" value={bikefriendly} onChange={()=>setBikefriendly(old=>!old)} ></Form.Check>
                             </Col>
                             <Col className="c">    
-                                <Form.Check   label="Restaurant" name="restaurant" value={restservice} onChange={ev => {restservice == 0 ? setRestservice(1) : setRestservice(0); console.log(restservice)} }></Form.Check>
+                                <Form.Check   label="Restaurant" name="restaurant" value={restservice} onChange={()=>setRestservice(old=>!old) }></Form.Check>
                                 
                             </Col>
                             
@@ -191,7 +193,7 @@ function Hut(props) {
 
                         <Row>
                             <Col className="c">
-                                <Form.Check  label="Services for disable" name="disable" value={disable} onChange={ev => {disable == 0 ? setDisable(1): setDisable(0); console.log(disable)} }></Form.Check>
+                                <Form.Check  label="Services for disable" name="disable" value={disable} onChange={()=>setDisable(old=>!old) }></Form.Check>
                             </Col>
                         </Row>
 
