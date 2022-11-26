@@ -14,6 +14,7 @@ const parking1 = {
 
 
 const parking2 = {
+    
     id: undefined,
     name: "4 Guys",
     guarded: 4,
@@ -28,10 +29,9 @@ const point5 = {
     longitude: 52.1,
     type: "parking lot",
     description: "Welcome dude!",
-    locality: "Torino",
-    localityInfo: {
-        administrative: [{}, {}, {name: "Torino"}]
-    }
+    city: "Torino",
+    province: "Torino"
+    
 }
 
 const point6 = {
@@ -39,10 +39,9 @@ const point6 = {
     longitude: 84.1,
     type: "parking lot",
     description: "You are parking!",
-    locality: "Torino",
-    localityInfo: {
-        administrative: [{}, {}, {name: "Torino"}]
-    }
+    city: "Torino",
+    province: "Torino"
+        
 }
 
 describe("test hikes and filtering", () => {
@@ -53,8 +52,8 @@ describe("test hikes and filtering", () => {
 
         try {
 
-            let p5=await hike_dao.postPoint(point5);
-            let p6=await hike_dao.postPoint(point6);
+            let p5=await hike_dao.postParkPoint(point5);
+            let p6=await hike_dao.postParkPoint(point6);
             await parking_dao.createParking(parking1.name, parking1.guarded, parking1.parking_spaces, parking1.price_per_hour, parking1.disabled_parkings, parking1.timetable,p5);
             await parking_dao.createParking(parking2.name, parking2.guarded, parking2.parking_spaces, parking2.price_per_hour, parking2.disabled_parkings, parking2.timetable,p6);
             
