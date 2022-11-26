@@ -44,6 +44,7 @@ exports.getParkById = (id) => {
 }
 exports.createParking= (name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id) => {
 
+
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO parking_lot(name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id) VALUES(?, ?, ?, ?, ?, ?, ?)`;
 		db.run(sql, [name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id], function (err) {

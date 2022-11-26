@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 function Parking(props) {
 
     const [name, setName] = useState(""); 
-    const [address, setAddress] = useState(""); 
     const [guarded, setGuarded] = useState(0); 
     const [parkingspaces, setParkingspaces] = useState(0); 
     const [priceperhour, setPriceperhour] = useState(0); 
@@ -52,8 +51,8 @@ function Parking(props) {
            
             const parkingPoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
             console.log(parkingPoint.data);  
-            setCity(parkingPoint.data.city); 
-            setProvince(parkingPoint.data.province); 
+            setCity(parkingPoint.data.locality); 
+            setProvince(parkingPoint.data.localityInfo.administrative[2].name); 
             
         } catch (err) {
             

@@ -6,7 +6,6 @@ import {useState} from 'react';
 function Navigation(props) {
 
     const url = window.location.href;
-    console.log(url);
     const navigate = useNavigate();
     return (
         <>

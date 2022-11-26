@@ -51,12 +51,16 @@ router.post('/api/parking',
             return res.status(401).json({ error: 'not authorized!' });
         }*/
 
+    /* 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    try {
+    */
 
+    try {
+        console.log("index");
+        console.log(req.body);
         const parkingPointID = await hike_dao.postParkPoint(req.body.parkingPoint);
         if(parkingPointID){
           await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, req.body.timetable, parkingPointID);

@@ -15,10 +15,14 @@ import API from '../API/APIGpx';
 import {useMap,useMapEvents} from 'react-leaflet/hooks';
 import "leaflet-area-select";
 import {MapContainer,TileLayer,Marker,GeoJSON,Popup,Circle, Rectangle} from 'react-leaflet';
+
+
 function HutList(props) {
 	const halfArray = Math.ceil(props.huts.length / 2);
 	const leftArray = props.huts.slice(0, halfArray);
 	const rightArray = props.huts.slice(halfArray);
+
+	console.log(props.huts);
 
 	return (
 		<>
