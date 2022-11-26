@@ -67,13 +67,13 @@ function HutCard(props) {
 					className="mt-2"
 					variant="top"
 					src={
-						(props.Hut.reachability === "With normal car" &&
+						(props.Hut.reachability === "normal" &&
 							"http://localhost:3000/nicehut.jpg") ||
-						(props.Hut.reachability === "With off-road car" &&
+						(props.Hut.reachability === "offroad" &&
 							"http://localhost:3000/huttra.jpg") ||
-						(props.Hut.reachability === "On foot" &&
+						(props.Hut.reachability === "foot" &&
 							"http://localhost:3000/rifugetto.jpg") ||
-						(props.Hut.reachability === "Cableway" &&
+						(props.Hut.reachability === "cable" &&
 							"http://localhost:3000/rifugiobello.jpg") ||
 						"http://localhost:3000/hutbike.jpg"
 					}
@@ -243,33 +243,33 @@ function FilterMenu(props) {
 													id="smallgroups"
 													action={true}
 													onClick={() =>
-														props.loadFilter("reach", "With normal car")
+														props.loadFilter("reach", "normal")
 													}
 												>
-													With normal car
+													normal
 												</ListGroup.Item>
 												<ListGroup.Item
 													id="smallgroups"
 													action={true}
 													onClick={() =>
-														props.loadFilter("reach", "With off-road car")
+														props.loadFilter("reach", "offroad")
 													}
 												>
-													With off-road car
+													offroad
 												</ListGroup.Item>
 												<ListGroup.Item
 													id="smallgroups"
 													action={true}
-													onClick={() => props.loadFilter("reach", "On foot")}
+													onClick={() => props.loadFilter("reach", "foot")}
 												>
-													On foot
+													foot
 												</ListGroup.Item>
 												<ListGroup.Item
 													id="smallgroups"
 													action={true}
-													onClick={() => props.loadFilter("reach", "Cableway")}
+													onClick={() => props.loadFilter("reach", "cable")}
 												>
-													Cableway
+													cable
 												</ListGroup.Item>
 											</ListGroup>
 										</Accordion.Body>
