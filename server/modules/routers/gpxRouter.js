@@ -75,11 +75,17 @@ router.get("/api/gpx/:id", async (req, res) => {
         const id = req.params.id;
 
         const bin = await hike_dao.getFileContentById(id);
-        const content = manageFile.convertBLOB2String(bin.gpxfile);
-        const json = manageFile.getGeoJSONbyContent(content);
-        res.status(200).json(json);
+        if(bin!==undefined)
+        {
+            const content = manageFile.convertBLOB2String(bin.gpxfile);
+            const json = manageFile.getGeoJSONbyContent(content);
+            res.status(200).json(json);
+        }
+        else 
+            res.status(404).json({err:"Not Found"}); 
+
     } catch (err) {
-        console.log(err);
+        //console.log(err);
         res.status(500).end();
     }
 });
