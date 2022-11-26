@@ -44,7 +44,7 @@ function Hut(props) {
         console.log(info);
         props.postHut(info);
 
-        //navigate("/");
+        navigate("/huts");
     }
 
 
