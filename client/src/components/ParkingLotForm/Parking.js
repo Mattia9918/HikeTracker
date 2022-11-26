@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 function Parking(props) {
 
     const [name, setName] = useState(""); 
-    const [address, setAddress] = useState(""); 
     const [guarded, setGuarded] = useState(0); 
     const [parkingspaces, setParkingspaces] = useState(0); 
     const [priceperhour, setPriceperhour] = useState(0); 
@@ -21,8 +20,8 @@ function Parking(props) {
     const [latitude, setLatitude] = useState(""); 
     const [longitude, setLongitude] = useState("");
     
-    const [locality, setLocality] = useState(""); 
-    const [principalSubdivision, setPrincipalSubdivision] = useState(""); 
+    const [city, setCity] = useState(""); 
+    const [province, setProvince] = useState(""); 
 
     
 
@@ -33,7 +32,7 @@ function Parking(props) {
         const user= props.user;
         const timetable = timetablebegin + "-" + timetableend; 
         console.log(user); 
-        const parkingPoint = {latitude, longitude, type, description, locality, principalSubdivision}
+        const parkingPoint = {latitude, longitude, type, description, city, province}
         const info = { name , guarded, parkingspaces, priceperhour, disabledparkings, timetable, user, parkingPoint};
         
         event.preventDefault();
@@ -52,8 +51,8 @@ function Parking(props) {
            
             const parkingPoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
             console.log(parkingPoint.data);  
-            setLocality(parkingPoint.data.locality); 
-            setPrincipalSubdivision(parkingPoint.data.principalSubdivision); 
+            setCity(parkingPoint.data.locality); 
+            setProvince(parkingPoint.data.localityInfo.administrative[2].name); 
             
         } catch (err) {
             
@@ -138,11 +137,11 @@ function Parking(props) {
                         <Row>
                             <Col className="c">
                                 <Form.Label>Park City</Form.Label>
-                                <Form.Control type='text' value={locality} onChange={ev => setLocality(ev.target.value)} disabled />                                
+                                <Form.Control type='text' value={city} onChange={ev => setProvince(ev.target.value)} disabled />                                
                             </Col>
                             <Col className="c">
                                 <Form.Label>Park Province</Form.Label>
-                                <Form.Control type='text' value={principalSubdivision} onChange={ev => setPrincipalSubdivision(ev.target.value)} disabled />
+                                <Form.Control type='text' value={province} onChange={ev => setProvince(ev.target.value)} disabled />
                             </Col>
                             
                         </Row>

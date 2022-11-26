@@ -457,7 +457,7 @@ exports.postPoint = (body) => {
 exports.postParkPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.description, body.locality, body.principalSubdivision], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.description, body.city, body.province], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);

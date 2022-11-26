@@ -6,7 +6,6 @@ async function getHuts() {
         const response = await fetch(url, {
             credentials: 'include',
         });
-        console.log(response);
         if (response.ok) {
             const list = await response.json();
             return list;

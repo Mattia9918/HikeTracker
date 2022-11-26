@@ -3,7 +3,7 @@ import './css/App.css';
 import './css/styles.css';
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
-import {Hikes} from './components/Hikes';
+import Hikes from './components/Hikes';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
 import ValidatePage from './components/Login/ValidateUser'
 import SignIn from './components/Login/RegPage'
@@ -88,6 +88,7 @@ function App2() {
 
   async function postHut(hut) {
     await APIHutForm.postHut(hut); 
+    
     setHutPosting(true);
 
   }
@@ -105,7 +106,7 @@ function App2() {
         setMsg({message: user.message, type: "danger"}); 
       } else {
         setUser(user);
-        console.log(user);
+        //console.log(user);
         setLoggedIn(true);
         navigate(`/`);
         setMsg({message: `Welcome ${user.username}!`, type: "success"})
@@ -178,12 +179,15 @@ function App2() {
 
   useEffect(() => {
     loadHikes();
-    loadHuts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posting]);
 
-    console.log(user);
- 
+    useEffect(() => {
+      loadHuts();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [hutPosting]);
+
+    
   return (
       <Routes>
       
