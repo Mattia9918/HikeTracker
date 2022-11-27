@@ -3,7 +3,7 @@ import './css/App.css';
 import './css/styles.css';
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
-import Hikes from './components/Hikes';
+import { Hikes } from './components/Hikes';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
 import ValidatePage from './components/Login/ValidateUser'
 import SignIn from './components/Login/RegPage'
@@ -159,8 +159,8 @@ function App2() {
 
   async function loadByArea(filter, value) {
     try {
-      const filteredHikeList = await APIHuts.getByArea(filter, value);
-      setHuts(filteredHikeList);
+      const filteredHutList = await APIHuts.getHutFilter(filter, value);
+      setHuts(filteredHutList);
       //setErrMessage('');
     } catch (err) {
       //setErrMessage(String(err));

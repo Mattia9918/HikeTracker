@@ -231,23 +231,19 @@ exports.getHutByReachability = (reachability) => {
 	});
 };
 
-// TODO: eventualmente modificare se la diagonale è up-left, bottom-right
 /**
  * Gets huts that are in a rectangular area with diagonal from bottom-left to upper right
- * @param lat1
- * @param lon1
- * @param lat2
- * @param lon2
- * @returns {Promise<unknown>}
  */
-exports.getHutByArea = (lat1, lon1, lat2, lon2) => {
+exports.getHutByArea = (northEastPoint, southWestPoint) => {
 	return new Promise((resolve, reject) => {
+		const neCoordinates = northEastPoint.split(',');
+		const swCoordinates = southWestPoint.split(',');
 		const sql =
 			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE (latitude BETWEEN ? AND ?) AND (longitude BETWEEN ? AND ?) AND H.point_id = P.id"
 
-		db.all(sql, [lat1, lat2, lon2, lon1], (err, rows) => {
+		db.all(sql, [Number(swCoordinates[0]), Number(neCoordinates[0]), Number(swCoordinates[1]), Number(neCoordinates[1])], (err, rows) => {
 			if (err)
 				reject(err);
 			else {

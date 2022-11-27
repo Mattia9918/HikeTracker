@@ -4,6 +4,7 @@ import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input'; 
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { MapModal } from '../Hikes';
 
 
 
@@ -12,18 +13,18 @@ import { useNavigate } from 'react-router-dom';
 
 function Hut(props) {
 
-    const [hutname, setHikename] = useState("hut1"); 
-    const [address, setAddress] = useState("Corso Duca degli abruzzi"); 
-    const [phonenumber, setPhonenumber] = useState("3333333333"); 
-    const [email, setEmail] = useState("c@gmail.com"); 
-    const [website, setWebsite] = useState("www.test.it"); 
-    const [description, setDescription] = useState("description"); 
-    const [latitude, setLatitude] = useState("44.9927"); 
-    const [longitude, setLongitude] = useState("8.067591");
-    const [altitude, setAltitude] = useState("100"); 
-    const [rooms, setRooms] = useState("2");
-    const [bathrooms, setBathrooms] = useState("3"); 
-    const [beds, setBeds] = useState("4");     
+    const [hutname, setHikename] = useState(""); 
+    const [address, setAddress] = useState(""); 
+    const [phonenumber, setPhonenumber] = useState(""); 
+    const [email, setEmail] = useState(""); 
+    const [website, setWebsite] = useState(""); 
+    const [description, setDescription] = useState(""); 
+    const [latitude, setLatitude] = useState(""); 
+    const [longitude, setLongitude] = useState("");
+    const [altitude, setAltitude] = useState(""); 
+    const [rooms, setRooms] = useState("");
+    const [bathrooms, setBathrooms] = useState(""); 
+    const [beds, setBeds] = useState("");     
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
     const [language, setLanguage] = useState(""); 
@@ -31,15 +32,12 @@ function Hut(props) {
     const [disable, setDisable] = useState(false); 
     const [bikefriendly, setBikefriendly] = useState(false);
     const [reachability, setReachability] = useState("");  
-
-    console.log(props);
+    const [showModal, setShowModal] = useState(false);
 
     const navigate = useNavigate();
 
     const submitHandler = (event) => {
         
-       
-
         const info = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
@@ -51,14 +49,9 @@ function Hut(props) {
 
 
 
-    const onClickButton = async e => {
-
-        e.preventDefault();
-       
-
+    const onClickButton = async (lat, lng) => {
         try {
-           
-            const point = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + latitude + '&longitude=' + longitude + '&localityLanguage=en');
+            const point = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=en');
             //console.log(point.data);  
             setCity(point.data.locality); 
             setProvince(point.data.localityInfo.administrative[2].name); 
@@ -66,8 +59,6 @@ function Hut(props) {
         } catch (err) {
             
         }
-
-
     };
     
 
@@ -149,18 +140,18 @@ function Hut(props) {
                             
                             <Col className="c">
                                 <Form.Label>Hut Latitude</Form.Label>
-                                <Form.Control type='number' value={latitude} onChange={ev => setLatitude(ev.target.value)} placeholder="Enter hut latitude" required />
+                                <Form.Control type='number' value={latitude} onChange={ev => setLatitude(ev.target.value)} placeholder="Enter hut latitude" disabled />
                             </Col>
                             <Col className="c">
                                 <Form.Label>Hut Longitude</Form.Label>
-                                <Form.Control type='number' value={longitude} onChange={ev => setLongitude(ev.target.value)} placeholder="Enter hut longitude" required />
+                                <Form.Control type='number' value={longitude} onChange={ev => setLongitude(ev.target.value)} placeholder="Enter hut longitude" disabled />
                             </Col>
                             
                         </Row>
                         
                         <Row>
                             <Col align = "center">
-                                <Button variant="success" size="sm" onClick={onClickButton}>upload</Button>
+                                <Button variant="success" size="sm" onClick={() => setShowModal(true)}>Find on map</Button>
                             </Col>
                         </Row>
                         <br></br>
@@ -232,6 +223,8 @@ function Hut(props) {
                     </Container>
 
                 </Form>
+
+                {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} markermap = {true} setLatitude = {setLatitude} setLongitude = {setLongitude} onClickButton = {onClickButton} />}
             </Container>
 
         </Container>

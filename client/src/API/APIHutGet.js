@@ -46,14 +46,15 @@ async function getFilter(filter, value) {
     }
 };
 
-async function getByArea(filter, value) {
-    var couple;
-    if (value != undefined) {
-        couple = value.split(',')
-    } else {
-        couple = [undefined, undefined]
-    }
-    const url = APIURL + `hut?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}&value3=${couple[2]}&value4=${couple[3]}`;
+async function getHutFilter(filter, value) {
+    var northEastLimit = value._northEast;
+    var southWestLimit = value._southWest;
+    var neLat = northEastLimit.lat;
+    var neLng = northEastLimit.lng;
+    var swLat = southWestLimit.lat;
+    var swLng = southWestLimit.lng;
+    var couple = [[neLat, neLng], [swLat, swLng]]
+    const url = APIURL + `hut?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}`;
     try {
         const response = await fetch(url, {
             credentials: 'include',
@@ -72,5 +73,5 @@ async function getByArea(filter, value) {
     }
 };
 
-const APIHuts = {getFilter, getHuts, getByArea};
+const APIHuts = {getFilter, getHuts, getHutFilter};
 export default APIHuts;

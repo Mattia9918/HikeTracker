@@ -58,6 +58,17 @@ const MapItem = (props)=>{
     </>;
 }
 
+const MarkerMap = (props)=>{
+  return <>
+          <center>
+            <MapContainer style={{ height: "500px", width: "770px"}} center = {{lat: 44.763765, lng: 10.929165}} zoom={5} scrollWheelZoom={true}>
+                  <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                  <CreateMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />
+            </MapContainer>
+          </center>
+  </>;
+}
+
 function CreateMarker(props) {
     const map = useMapEvents({
       click:(ev)=>{
@@ -82,6 +93,7 @@ function CreateMarker(props) {
             </center>
     </>;
 }
+
 
 
   function AreaSelect(props) {
@@ -114,5 +126,5 @@ function CreateMarker(props) {
     return null;
   }
 
-export {MapItem, AreaDragMap}; 
+export {MapItem, AreaDragMap, MarkerMap}; 
 
