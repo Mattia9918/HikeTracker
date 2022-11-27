@@ -7,6 +7,9 @@
     "apiTest": "mocha test --timeout 10000 --exit",
     "test": "node ./node_modules/jest/bin/jest.js --runInBand --coverage"
   },
+  "jest": {
+    "testTimeout": 20000
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
