@@ -144,7 +144,7 @@ router.get(`/api/hut*`, async (req, res) => {
 
 router.get("/api/citiesHut", async (req, res) => {
     try {
-        const cities = await hike_dao.getHikeCities();
+        const cities = await hut_dao.getHutCities();
         res.status(200).json(cities);
     } catch (err) {
         console.log(err);
@@ -154,7 +154,7 @@ router.get("/api/citiesHut", async (req, res) => {
 
 router.get("/api/provincesHut", async (req, res) => {
     try {
-        const provinces = await hike_dao.getHikeProvinces();
+        const provinces = await hut_dao.getHutProvinces();
         res.status(200).json(provinces);
     } catch (err) {
         console.log(err);

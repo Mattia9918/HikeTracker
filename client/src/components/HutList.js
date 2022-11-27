@@ -51,7 +51,6 @@ function HutList(props) {
 
 function HutCard(props) {
 	const [open, setOpen] = useState(false);
-
 	return (
 		<Container className="mt-3 mb-3">
 			<Card className="shadow-sm p-2">
@@ -121,8 +120,6 @@ function HutCard(props) {
 						)}
 						{open && (
 							<>
-								<br></br>
-								<br></br>
 								<b>Details:</b>
 								<br></br>
 								<ul className="mt-2">
@@ -146,9 +143,9 @@ function HutCard(props) {
 											<b>Bike friendly <BsCheckCircle style={{ "color": "green" }} /></b>
 										</li>
 									)}
-									{props.Hut.resturant_service !== 0 && (
+									{props.Hut.restaurant_service !== 0 && (
 										<li>
-											<b>Resturant service <BsCheckCircle style={{ "color": "green" }} /></b>
+											<b>Restaurant service <BsCheckCircle style={{ "color": "green" }} /></b>
 										</li>
 									)}
 									{props.Hut.disabled_services !== 0 && (
@@ -189,7 +186,7 @@ function FilterMenu(props) {
 	const [showModal, setShowModal] = useState(false);
 
 	const buttonValues = [];
-	buttonValues["resturant"] = "outline-primary";
+	buttonValues["restaurant"] = "outline-primary";
 	buttonValues["disability"] = "outline-primary";
 	buttonValues["sleep"] = "outline-primary";
 	buttonValues["bike"] = "outline-primary";
@@ -361,13 +358,13 @@ function FilterMenu(props) {
 										<Button
 											size="sm"
 											style={{ width: "10" }}
-											variant={buttonValues["resturant"]}
+											variant={buttonValues["restaurant"]}
 											onClick={() => {
-												setSelected("resturant");
+												setSelected("restaurant");
 												props.loadFilter("restaurant_service");
 											}}
 										>
-											Have Resturant
+											Have Restaurant
 										</Button>
 									</Col>
 									<Col>
