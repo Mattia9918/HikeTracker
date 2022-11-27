@@ -22,10 +22,11 @@ function HikeForm(props) {
     const [estimatedtime, setEstimatedtime] = useState("");
     const [spoint, setSpoint] = useState();
     const [epoint, setEpoint] = useState();
-    const [file, setFile] = useState('');
+    const [file, setFile] = useState();
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
+
 
 
     const navigate = useNavigate();
@@ -162,6 +163,7 @@ function HikeForm(props) {
                                     value='Upload'
                                     className='btn btn-success'
                                     onClick={onFileUpload}
+                                    disabled = {(file ? false : true)}
                                 />
                         </Row>
                         <hr></hr>

@@ -56,6 +56,11 @@ function Hut(props) {
             setCity(point.data.locality); 
             setProvince(point.data.localityInfo.administrative[2].name); 
             
+            if (lat === undefined && lng === undefined) {
+                setLatitude(point.data.latitude);
+                setLongitude(point.data.longitude);
+            }
+            
         } catch (err) {
             
         }

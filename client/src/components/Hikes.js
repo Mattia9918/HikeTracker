@@ -142,17 +142,23 @@ function FilterMenu(props) {
                                     <Accordion.Header>Ascent</Accordion.Header>
                                     <Accordion.Body>
                                         <ListGroup variant = "flush">
-                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "0,300")}>
-                                                Less than 300 m
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "-10000,-101")}>
+                                                Steep descent (more than -100m)
+                                            </ListGroup.Item>
+                                           <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "-100,-1")}>
+                                                Small descent (less than -100m)
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "0,100")}>
+                                                Small ascent (Less than 100 m)
+                                            </ListGroup.Item>
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "101,300")}>
+                                                Decent ascent (between 100 m and 300 m)
                                             </ListGroup.Item>
                                             <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "301,600")}>
-                                                Between 300 m and 600 m
+                                                Steep ascent (Between 300 m and 600 m)
                                             </ListGroup.Item>
-                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "601,1000")}>
-                                                Between 600 m and 1000 m
-                                            </ListGroup.Item>
-                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "1001,100000")}>
-                                                More than 1000 m
+                                            <ListGroup.Item id = "smallgroups" action={true} onClick={() => props.loadFilter("ascent", "601,100000")}>
+                                                Climbing (more than 600 m)
                                             </ListGroup.Item>
                                         </ListGroup>
                                     </Accordion.Body>
@@ -321,13 +327,22 @@ function MapModal(props) {
             <Modal.Footer>
                 {
                  (props.areadragmap && <Button onClick={() => props.loadFilter("area", bounds)}>Search</Button>) ||
-                 (props.markermap && <Button onClick={() => { 
+                 (props.markermap && 
+                 <>
+                 <Button onClick={() => { 
                     props.setLatitude(latlng.lat); 
                     props.setLongitude(latlng.lng);
                     props.onClickButton(latlng.lat, latlng.lng);
                     props.setShowModal(false);
                 }}>
-                    Continue</Button>)
+                    Continue</Button>
+                  <Button onClick={() => {
+                    props.onClickButton(undefined, undefined);
+                    props.setShowModal(false);
+                  }}>Pick my position
+                  </Button>
+                 </>
+                 )
                 }
                 <Button variant = "secondary" onClick={() => props.setShowModal(false)}>Close</Button>
             </Modal.Footer>

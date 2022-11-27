@@ -93,7 +93,7 @@ exports.getHikeByExpectedTime = (minTime, maxTime) => {
 		db.all(sql, [minTime, maxTime], (err, rows) => {
 			if (err) reject(err);
 			else {
-				const hikes = rowJsonMapping(rows);
+				let hikes = rowJsonMapping(rows);
 				resolve(hikes);
 			}
 		});
@@ -277,13 +277,13 @@ function calculateDistanceAndAscent(coordinates) {
 function estimateDifficulty(totalDistance, totalAscent) {
 	let difficultyScore = 0;
 
-	if (totalDistance < 5) {
+	if (totalDistance < 3) {
 		difficultyScore += 1;
 	}
-	else if (totalDistance >= 5 && totalDistance < 10) {
+	else if (totalDistance >= 3 && totalDistance < 7) {
 		difficultyScore += 2;
 	}
-	else if (totalDistance >= 10 && totalDistance < 15) {
+	else if (totalDistance >= 7 && totalDistance < 12) {
 		difficultyScore += 3;
 	} 
 	else {
@@ -291,31 +291,31 @@ function estimateDifficulty(totalDistance, totalAscent) {
 	}
 
 
-	if (totalAscent < 0 && totalAscent > -200) {
+	if (totalAscent < 0 && totalAscent > -100) {
 		difficultyScore += 1;
 	}
-	else if (totalAscent <= -200 && totalAscent > -800) {
+	else if (totalAscent <= -100 && totalAscent > -300) {
 		difficultyScore += 2;
 	}
-	else if (totalAscent <= -800) {
+	else if (totalAscent <= -300) {
 		difficultyScore += 3;
 	}
-	else if (totalAscent >= 0 && totalAscent < 200) {
+	else if (totalAscent >= 0 && totalAscent < 100) {
 		difficultyScore += 1;
 	}
-	else if (totalAscent >= 200 && totalAscent < 600) {
+	else if (totalAscent >= 100 && totalAscent < 300) {
 		difficultyScore += 2;
 	}
-	else if (totalAscent >= 600 && totalAscent < 1000) {
+	else if (totalAscent >= 300 && totalAscent < 600) {
 		difficultyScore += 3;
 	}
 	else {
 		difficultyScore += 4;
 	}
 	
-	if (difficultyScore < 4) {
+	if (difficultyScore <= 2) {
 		return 'Easy'
-	} else if (difficultyScore >= 4 && difficultyScore <= 6) {
+	} else if (difficultyScore >= 3 && difficultyScore <= 5) {
 		return 'Average'
 	} else {
 		return 'Difficult'
