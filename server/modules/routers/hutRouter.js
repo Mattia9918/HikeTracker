@@ -142,7 +142,25 @@ router.get(`/api/hut*`, async (req, res) => {
     }
 });
 
+router.get("/api/citiesHut", async (req, res) => {
+    try {
+        const cities = await hike_dao.getHikeCities();
+        res.status(200).json(cities);
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
 
+router.get("/api/provincesHut", async (req, res) => {
+    try {
+        const provinces = await hike_dao.getHikeProvinces();
+        res.status(200).json(provinces);
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
 
 
 module.exports = router; 

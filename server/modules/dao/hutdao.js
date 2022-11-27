@@ -10,8 +10,6 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
 
-
-// TODO: aggiungere inserimento punto
 exports.postHut = (name, address, phone_number, email,
                     website, description,
                     altitude, languages, bike_friendly,
@@ -251,4 +249,36 @@ exports.getHutByArea = (northEastPoint, southWestPoint) => {
 			}
 		});
 	});
+};
+
+/* Gets all the cities in which there's a hut */
+exports.getHutCities = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT DISTINCT P.city FROM hut H, point P WHERE H.point_id = P.id';
+		db.all(sql, [], function (err, rows) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(rows)
+			}
+		});
+	})
+};
+
+/* Gets all the provinces in which there's a hut */
+exports.getHutProvinces = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'SELECT DISTINCT P.province FROM hut H, point P WHERE H.point_id = P.id';
+		db.all(sql, [], function (err, rows) {
+			if (err) {
+				console.log(err);
+				reject(err);
+			}
+			else {
+				resolve(rows)
+			}
+		});
+	})
 };
