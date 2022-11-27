@@ -2,7 +2,7 @@
 # Requirements
 - a machine with docker and docker-compose installed and running
 - being registered and logged-in into `https://hub.docker.com/`
-- 
+
 # How to run
 - create a `docker-compose.yaml` file
 - copy the following content inside it
