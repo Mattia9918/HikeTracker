@@ -29,7 +29,7 @@ services:
       - nodejs-server
 ```
 
-- open the terminal and run the following commands
+- open the terminal in the same directory and run the following commands
 ```
 docker-compose pull
 docker-compose up -d
