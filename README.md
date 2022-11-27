@@ -1,3 +1,9 @@
 # HikeTracker
 
-One week 'scrum sprint' example (6 hours) including 3 tasks of a react/express application.
+## Users Credentials
+
+| Email | Password | Role |
+| --- | ----------- | ----------|
+| luigi.verdi@mail.it | password | platformManager |
+| mario.rossi@mail.it | password | localGuide |
+| giulia.brambilla@mail.it | password | hiker |
