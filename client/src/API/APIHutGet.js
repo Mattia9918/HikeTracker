@@ -73,5 +73,44 @@ async function getHutFilter(filter, value) {
     }
 };
 
-const APIHuts = {getFilter, getHuts, getHutFilter};
+async function getHutCities() {
+    const url = APIURL + `citiesHut`;
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        throw (err);
+    }
+}
+
+
+async function getHutProvinces() {
+    const url = APIURL + `provincesHut`;
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        throw (err);
+    }
+};
+
+const APIHuts = {getFilter, getHuts, getHutFilter, getHutCities, getHutProvinces};
 export default APIHuts;

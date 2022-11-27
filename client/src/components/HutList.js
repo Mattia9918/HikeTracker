@@ -10,13 +10,11 @@ import {
 	Modal
 } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import APIHikes from "../API/APIHikes";
-import API from '../API/APIGpx';
-import { useMap, useMapEvents } from 'react-leaflet/hooks';
 import "leaflet-area-select";
 import { MapContainer, TileLayer, Marker, GeoJSON, Popup, Circle, Rectangle } from 'react-leaflet';
 import { BsCheckCircle } from "react-icons/bs";
 import { MapModal } from "./Hikes";
+import APIHutGet from "../API/APIHutGet";
 
 
 function HutList(props) {
@@ -205,12 +203,12 @@ function FilterMenu(props) {
 
 		switch (type) {
 			case "city":
-				citieslist = await APIHikes.getHikeCities();
+				citieslist = await APIHutGet.getHutCities()
 				setCities(citieslist);
 				break;
 
 			case "province":
-				provincelist = await APIHikes.getHikeProvinces();
+				provincelist = await APIHutGet.getHutProvinces()
 				setProvinces(provincelist);
 				break;
 		}
