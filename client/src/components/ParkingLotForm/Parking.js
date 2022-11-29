@@ -11,6 +11,8 @@ import { MapModal } from '../Hikes'
 
 function Parking(props) {
 
+    const navigate = useNavigate();
+    
     const [name, setName] = useState(""); 
     const [address, setAddress] = useState(""); 
     const [guarded, setGuarded] = useState(0); 
@@ -41,7 +43,7 @@ function Parking(props) {
         console.log(info);
         props.postParking(info);
         
-        //navigate("/");
+        navigate("/");
     }
 
     const onClickButton = async (lat, lng) => {
@@ -51,6 +53,11 @@ function Parking(props) {
             console.log(parkingPoint.data);  
             setCity(parkingPoint.data.locality); 
             setProvince(parkingPoint.data.localityInfo.administrative[2].name); 
+
+            if (lat === undefined && lng === undefined) {
+                setLatitude(parkingPoint.data.latitude);
+                setLongitude(parkingPoint.data.longitude);
+            }
             
         } catch (err) {
             
