@@ -1,24 +1,21 @@
 import { useState } from "react";
 import { Container, Form, Row , Col, Button} from "react-bootstrap";
 import 'react-phone-number-input/style.css'; 
-import CurrencyInput from 'react-currency-input-field';
-import PhoneInput from 'react-phone-number-input'; 
-import axios from 'axios';
+
 import { useNavigate } from 'react-router-dom';
-import { MapModal } from '../Hikes'
+import { MapModal } from '../Map/Maps'
 
+import APIHikeForm from '../../API/APIHikeForm';
 
+import {TitleParking,ParkingGeo,ParkingInfo,ParkingServ} from './ParkingComp'
 
-function Parking(props) {
+function ParkingForm(props) {
 
     const navigate = useNavigate();
     
     const [name, setName] = useState(""); 
-    const [address, setAddress] = useState(""); 
-    const [guarded, setGuarded] = useState(0); 
     const [parkingspaces, setParkingspaces] = useState(0); 
     const [priceperhour, setPriceperhour] = useState(0); 
-    const [disabledparkings, setDisableparkings] = useState(0); 
     const [timetablebegin, setTimetablebegin] = useState(""); 
     const [timetableend, setTimetableend] = useState("");
     const [latitude, setLatitude] = useState(""); 
@@ -27,6 +24,8 @@ function Parking(props) {
     const [province, setProvince] = useState(""); 
     const [showModal, setShowModal] = useState(false);
 
+    const [guarded, setGuarded] = useState(false); 
+    const [disabledparkings, setDisableparkings] = useState(false); 
     
 
     const submitHandler = (event) => {
@@ -46,17 +45,17 @@ function Parking(props) {
         navigate("/");
     }
 
-    const onClickButton = async (lat, lng) => {
+    const onClickButton = async (lat, long) => {
         try {
-           
-            const parkingPoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=en');
-            console.log(parkingPoint.data);  
-            setCity(parkingPoint.data.locality); 
-            setProvince(parkingPoint.data.localityInfo.administrative[2].name); 
+            
+            const point = await APIHikeForm.getInfo({lat,long}); 
+            
+            setCity(point.locality); 
+            setProvince(point.localityInfo.administrative[2].name); 
 
-            if (lat === undefined && lng === undefined) {
-                setLatitude(parkingPoint.data.latitude);
-                setLongitude(parkingPoint.data.longitude);
+            if (lat === undefined && long === undefined) {
+                setLatitude(point.latitude);
+                setLongitude(point.longitude);
             }
             
         } catch (err) {
@@ -71,88 +70,23 @@ function Parking(props) {
             <Container className="below-nav">
                 <Form onSubmit={submitHandler}>
                     <Container className="shadow-sm p-5 w-75" id="cardscontainer">
-                        <h4>New Parking Lot</h4>
-                        <h6>Fill the form to insert a new Parking Lot</h6>
-
-                        <Row className='r'>
-                            <Col className='c'>
-                                <Form.Label>Parking Lot name</Form.Label>
-                                <Form.Control value={name} onChange={ev => setName(ev.target.value)} placeholder="Enter parking lot name" required />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className='c'>
-                                <Form.Label>Price per hour </Form.Label>
-                                <Form.Control type="number" placeholder="Enter phone number" value={priceperhour} onChange={ev => setPriceperhour(ev.target.value)}/>
-                            </Col>
-                            <Col className='c'>
-                                <Form.Label>Parking Spaces available</Form.Label>
-                                <Form.Control type="number" placeholder="Enter phone number" value={parkingspaces} onChange={ev => setParkingspaces(ev.target.value)}/>
-                            </Col>
-                        </Row>
                         
-                        <Row>
-                            <Col className='c'>
-                                <Form.Label>Opening time</Form.Label>
-                                <Form.Control type="time" placeholder="Enter phone number" value={timetablebegin} onChange={ev => setTimetablebegin(ev.target.value)}/>
-                            </Col>
-                            <Col className='c'>
-                                <Form.Label>Closing time</Form.Label>
-                                <Form.Control type="time" placeholder="Enter phone number" value={timetableend} onChange={ev => setTimetableend(ev.target.value)}/>
-                            </Col>
-                        </Row>
+                        <TitleParking/>
 
-                        <br></br>
-                        <h6>Services</h6>
+                        <ParkingInfo obj={{name,setName,priceperhour,setPriceperhour,
+                                        parkingspaces,setParkingspaces,timetablebegin,setTimetablebegin,
+                                        timetableend,setTimetableend
+                                    }}
+                        /> 
                         
-                        <Row>
-                            
-                            <Col className="c">
-                                <Form.Check   label="Disabled Parkings" name="disabled_parkings" value={disabledparkings} onChange={ev => {disabledparkings == 0 ? setDisableparkings(1): setDisableparkings(0); console.log(disabledparkings)} }></Form.Check>
-                            </Col>
-                            <Col className="c">    
-                                <Form.Check   label="Guarded Parking" name="guarded" value={guarded} onChange={ev => {guarded == 0 ? setGuarded(1) : setGuarded(0); console.log(guarded)} }></Form.Check>   
-                            </Col>
-                            
-                        </Row>
+                        <ParkingServ obj={{setDisableparkings,disabledparkings,setGuarded,guarded}}/>
 
-                        <br></br>
-                        <h6>Parking GeoLocalization  </h6>
+                        <ParkingGeo obj={
+                            {latitude,setLatitude,longitude,setLongitude,
+                                setShowModal,city,province
+                            }
+                        }/>
                         
-                        <Row>
-                            
-                            <Col className="c">
-                                <Form.Label>Parking Latitude</Form.Label>
-                                <Form.Control type='number' value={latitude} onChange={ev => setLatitude(ev.target.value)} placeholder="Enter park latitude" required />
-                            </Col>
-                            <Col className="c">
-                                <Form.Label>Parking Longitude</Form.Label>
-                                <Form.Control type='number' value={longitude} onChange={ev => setLongitude(ev.target.value)} placeholder="Enter park longitude" required />
-                            </Col>
-                            
-                        </Row>
-                        
-                        <Row>
-                            <Col align = "center">
-                                <Button variant="success" size="sm" onClick={() => setShowModal(true)}>Find on map</Button>
-                            </Col>
-                        </Row>
-                        <br></br>
-
-                        <Row>
-                            <Col className="c">
-                                <Form.Label>Park City</Form.Label>
-                                <Form.Control type='text' value={city} onChange={ev => setProvince(ev.target.value)} disabled />                                
-                            </Col>
-                            <Col className="c">
-                                <Form.Label>Park Province</Form.Label>
-                                <Form.Control type='text' value={province} onChange={ev => setProvince(ev.target.value)} disabled />
-                            </Col>
-                            
-                        </Row>
-
-                        <br></br>
-                        <br></br>
                         <Row align="center">
                             <Col>
                                 <Button type="submit" variant="primary" size="lg"> Submit Form </Button>
@@ -161,7 +95,9 @@ function Parking(props) {
                     </Container>
                 </Form>
 
-                {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} markermap = {true} setLatitude = {setLatitude} setLongitude = {setLongitude} onClickButton = {onClickButton} />}
+                {showModal && <MapModal 
+                obj={{showModal,setShowModal,markermap:true,setLatitude,setLongitude,onClickButton}}
+                />}
             </Container>
            
         </Container>
@@ -173,4 +109,4 @@ function Parking(props) {
 
 }
 
-export default Parking; 
+export default ParkingForm; 

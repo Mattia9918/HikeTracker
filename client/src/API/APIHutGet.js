@@ -22,7 +22,7 @@ async function getHuts() {
 
 async function getFilter(filter, value) {
     var couple;
-    if (value != undefined) {
+    if (value !== undefined) {
         couple = value.split(',')
     } else {
         couple = [undefined, undefined]

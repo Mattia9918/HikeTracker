@@ -1,0 +1,224 @@
+import {  Row, Col, Button, Accordion, ListGroup } from 'react-bootstrap';
+import {  useState,useEffect } from 'react';
+import APIHikes from '../API/APIHikes';
+
+import {MapModal} from './Map/Maps';
+
+//Filter for length/time/difficulty/ascent
+const AccordionFilter = (props)=>{
+
+    const {eventKey,options,label,filter,loadFilter} = props.obj; 
+    return <>
+        <Accordion.Item eventKey={eventKey}>
+            <Accordion.Header>{label}</Accordion.Header>
+            
+            <Accordion.Body>
+                
+                <ListGroup variant = "flush">
+                    {options.map(o=>
+                        <ListGroup.Item  key={o.label+options.indexOf(o)} action={true} onClick={() => loadFilter(filter,o.filterOption)}>
+                        {o.label}
+                    </ListGroup.Item>
+                    )
+                    }
+                </ListGroup>
+
+            </Accordion.Body>
+
+        </Accordion.Item>
+    </>; 
+}
+
+//Filter for province/city
+const AccordionGeo = (props)=>{
+
+   
+
+    const {label,filter,eventKey,loadFilter} = props.obj; 
+    
+
+    return <>
+          <Accordion.Item eventKey={eventKey}>
+            <Accordion.Header>{label}</Accordion.Header>
+            {filter==="province" ? <Accordion.Body>
+                <ListGroup variant = "flush">
+                    {props.cities && props.cities.map(({province}) => {
+                   
+                    return <ListGroup.Item key = {label+province}  
+                                action = {true} onClick={() => loadFilter(filter, province)}>
+                                    {province}
+                        </ListGroup.Item>})}
+
+
+                </ListGroup>
+            </Accordion.Body>:false}
+
+            {filter==="city" ? <Accordion.Body>
+                <ListGroup variant = "flush">
+                    {props.cities && props.cities.map(({city}) => <ListGroup.Item key = {label+city}  
+                                action = {true} onClick={() => loadFilter(filter, city)}>
+                                    {city}
+                        </ListGroup.Item>)}
+
+
+                </ListGroup>
+            </Accordion.Body>:false}
+
+        </Accordion.Item>
+    </>; 
+}
+
+function FilterMenu(props) {
+
+    const [cities, setCities] = useState();
+    const [provinces, setProvinces] = useState();
+    const [showModal, setShowModal] = useState(false);
+
+    
+    useEffect(()=>{
+        async function loadList() {
+
+            const citieslist = await APIHikes.getHikeCities();
+            setCities(citieslist);
+            
+            const provincelist = await APIHikes.getHikeProvinces();
+            setProvinces(provincelist);
+            
+        }
+        loadList();
+    },[]); 
+
+    const length = {eventKey:"1",options:[{
+        label:"Between 0 and 10 km",
+        filterOption:"0,10"
+    },{
+        label:"Between 10 and 20 km",
+        filterOption:"11,20"
+    },{
+        label:"More than 20 km",
+        filterOption:"21,1000"
+    }
+],
+    label:"Length",filter:"length",loadFilter:props.loadFilter}; 
+
+
+    const time = {eventKey:"2",options:[{
+        label:"Less than 1 hour",
+        filterOption:"0,1"
+    },{
+        label:"Between 1 and 2 hour",
+        filterOption:"1,2"
+    },{
+        label:"Between 2 and 3 hour",
+        filterOption:"2,3"
+    },{
+        label:"More than 3 hour",
+        filterOption:"3,1000"
+    }
+],
+    label:"Estimated Time",filter:"expectedTime",loadFilter:props.loadFilter}; 
+
+    const difficulty = {eventKey:"3",options:[{
+        label:"Easy",
+        filterOption:"Easy"
+    },{
+        label:"Average",
+        filterOption:"Average"
+    },{
+        label:"Difficult",
+        filterOption:"Difficult"
+    }
+],
+    label:"Difficulty",filter:"difficulty",loadFilter:props.loadFilter}; 
+
+    const ascent = {eventKey:"4",options:[{
+        label:"Steep descent (more than -100m)",
+        filterOption:"-10000,-101"
+    },{
+        label:"Small descent (less than -100m)",
+        filterOption:"-100,-1"
+    },{
+        label:" Small ascent (Less than 100 m)",
+        filterOption:"0,100"
+    },{
+        label:"Decent ascent (between 100 m and 300 m)",
+        filterOption:"101,300"
+    },{
+        label:"Steep ascent (Between 300 m and 600 m)",
+        filterOption:"301,600"
+    },
+    {
+        label:"Climbing (more than 600 m)",
+        filterOption:"601,100000"
+    }
+],
+    label:"Ascent",filter:"ascent",loadFilter:props.loadFilter}; 
+
+    
+    const objProv = {
+        label:"Province",
+        filter:"province",
+        eventKey:"5",
+        loadFilter:props.loadFilter
+    };
+
+    const objCity = {
+        label:"City",
+        filter:"city",
+        eventKey:"6",
+        loadFilter:props.loadFilter
+    };
+
+    return (
+        <>
+        <Row className = "mt-3 mb-1 ms-1 me-1">
+                <Accordion >
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header>Filtering options</Accordion.Header>
+                        <Accordion.Body>
+                            <Accordion>
+                                <Row>
+                                    <Col lg = {4}>
+
+                                        <AccordionFilter obj={length}/>
+                                        
+                                        <AccordionFilter obj={time}/>
+
+                                        <AccordionFilter obj={difficulty}/>
+                                        
+                                    </Col>
+                                
+                                    <Col lg = {4}>
+
+                                        <AccordionFilter obj={ascent}/>
+
+                                        <AccordionGeo obj={objProv} cities={provinces}/>
+                                        
+                                        <AccordionGeo obj={objCity} cities={cities}/>
+                                        
+                                    </Col>
+
+                                    <Col lg = {4}>
+                                        <center className="mb-3">
+                                            <Button variant = "outline-primary" onClick = {() => {setShowModal(true)}}>Find in geographic area</Button>
+                                        </center>
+                                   
+                                        <center>
+                                            <Button align = "right" onClick={() => props.loadFilter("none")}>Reset filters</Button>
+                                        </center>
+                                    </Col>
+                                </Row>
+                            </Accordion>
+
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+        </Row>
+
+        {showModal && <MapModal 
+            obj={{showModal,setShowModal,areadragmap:true,loadFilter:props.loadFilter}}/>}
+        </>
+    );
+}
+
+export {FilterMenu}; 

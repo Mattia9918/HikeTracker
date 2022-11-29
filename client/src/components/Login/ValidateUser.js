@@ -7,13 +7,39 @@ import { BsCheckCircle,BsExclamationDiamondFill } from "react-icons/bs";
 import API from '../../API/APILogin';
 
 
+const AlertSuccess = (props)=>{
+    return <>
+    <Alert variant="success">
+            <Alert.Heading><BsCheckCircle variant="success"/>{" "}Utente creato con successo</Alert.Heading>
+            <p>
+                Premi il buttone qui sotto, per andare nella pagina di login
+            </p>
+    </Alert>
+    <center><Button variant="primary" size="lg" onClick={props.handleSubmit}>Login</Button></center>
+    </>; 
+}
+
+const AlertError = (props)=>{
+    const [show, setShow] = useState(true);
+    return <>
+        <>
+            <Alert variant="danger" onClose={() => setShow(false)} show={show} dismissible>
+                    <Alert.Heading><BsExclamationDiamondFill variant="danger"/>{" "}Mi dispiace, qualcosa è andato storto</Alert.Heading>
+                    <p>
+                        Premi il buttone qui sotto, per andare nella pagina di registrazione
+                    </p>
+            </Alert>
+            <center><Button variant="primary" size="lg" onClick={props.handleSubmit}>Registrati</Button></center>
+            </>
+    </>
+}
+
 function ValidatePage() {
 
     const navigate = useNavigate(); 
     const {code} = useParams(); 
 
     const [success, setSuccess] = useState(false); 
-    const [show, setShow] = useState(true);
 
     const handleSubmit = ()=>{
         if(!success)
@@ -44,26 +70,10 @@ function ValidatePage() {
     return (
         <Container>
         <Container className="shadow-sm p-5 mt-5">
-        {success ? <>
-            <Alert variant="success">
-                    <Alert.Heading><BsCheckCircle variant="success"/>{" "}Utente creato con successo</Alert.Heading>
-                    <p>
-                        Premi il buttone qui sotto, per andare nella pagina di login
-                    </p>
-            </Alert>
-            <center><Button variant="primary" size="lg" onClick={handleSubmit}>Login</Button></center>
-            </>
-
+        {success ? 
+            <AlertSuccess handleSubmit={handleSubmit}/>
         
-        :   <>
-            <Alert variant="danger" onClose={() => setShow(false)} show={show} dismissible>
-                    <Alert.Heading><BsExclamationDiamondFill variant="danger"/>{" "}Mi dispiace, qualcosa è andato storto</Alert.Heading>
-                    <p>
-                        Premi il buttone qui sotto, per andare nella pagina di registrazione
-                    </p>
-            </Alert>
-            <center><Button variant="primary" size="lg" onClick={handleSubmit}>Registrati</Button></center>
-            </>
+        :   <AlertError handleSubmit={handleSubmit}/>
             
         }
 

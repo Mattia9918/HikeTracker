@@ -3,22 +3,30 @@ import './css/App.css';
 import './css/styles.css';
 import { useState, useEffect } from 'react';
 import Layout from './components/Layout'
-import { Hikes } from './components/Hikes';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate} from 'react-router-dom';
+
 import ValidatePage from './components/Login/ValidateUser'
 import SignIn from './components/Login/RegPage'
 import LoginForm from './components/Login/Login'
+
 import HikeForm from './components/HikeForm/hikeForm';
-import Hut from './components/HutForm/Hut';
-import Parking from './components/ParkingLotForm/Parking';
+import  Hikes  from './components/Hikes/Hikes';
+
+import HutForm from './components/HutForm/Hut';
+import HutList from './components/Huts/HutList';
+
+
+import ParkingForm from './components/ParkingLotForm/Parking';
+
 import APILogin from './API/APILogin';
 import APIHikeForm from './API/APIHikeForm';
 import APIpostGpx from './API/APIGpx';
 import APIHikes from './API/APIHikes';
 import APIHutForm from './API/APIHutForm';
 import APIParkingForm from './API/APIParkingForm';
-import HutList from './components/HutList';
 import APIHuts from './API/APIHutGet'; 
+
+
 
 function App(){
   return (
@@ -197,8 +205,8 @@ function App2() {
             <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 
             <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
-            <Route path='/newHut' element={<Hut postHut={postHut}></Hut>}/>
-            <Route path='/newParking' element={<Parking postParking={postParking} user={user}></Parking>}/>
+            <Route path='/newHut' element={<HutForm postHut={postHut}></HutForm>}/>
+            <Route path='/newParking' element={<ParkingForm postParking={postParking} user={user}></ParkingForm>}/>
             <Route path='/huts' element={<HutList loadHutsFilter={loadHutFilter} huts={huts} loadByArea={loadByArea}/>}/>
           </Route>
           

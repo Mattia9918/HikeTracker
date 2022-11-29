@@ -40,7 +40,7 @@ async function getHikes() {
  async function getFilter(filter, value) {
     var couple;
 
-     if (value != undefined && typeof value !== "object") {
+     if (value !== undefined && typeof value !== "object") {
          couple = value.split(',')
      } else if (typeof value === "object") {
         var northEastLimit = value._northEast;

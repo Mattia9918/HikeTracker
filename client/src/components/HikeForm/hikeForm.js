@@ -6,14 +6,161 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from 'react-router-dom';
 
 import Message from './Message';
-import Progress from './Progress';
 import axios from 'axios';
 
 import React from 'react';
 import { useState } from 'react';
 
+import APIHikeForm from '../../API/APIHikeForm';
 
+import {Text,Number,Area} from '../Form'; 
 
+const Estimation = (props)=>{
+
+    const uploadedFile = props.uploadedFile; 
+
+    return <>
+        <h5 className="mx-3">Hike estimations</h5>
+        <Row>
+            <Col className = 'c'>
+                <b>Total distance:</b> {uploadedFile.totalDistance} (km)<br></br>
+                <b>Total ascent:</b> {uploadedFile.totalAscent} (m)<br></br>
+                <b>Difficulty:</b> {uploadedFile.difficulty}<br></br>
+            </Col>
+        </Row>
+        <hr></hr>
+    </>;
+}
+
+const Stat = (props)=>{
+
+    const {label,point,uploadedFile} = props.obj; 
+
+    return <>{
+        uploadedFile ?  
+            <div className="mb-5">
+                
+                <div className="mb-2 mx-3 mt-2">
+                    <b>{label} Longitude:</b> {point ? point.longitude : null}
+                </div>      
+
+                <div className="mb-2 mx-3 mt-2">
+                    <b>{label} Latitude:</b> {point ? point.latitude : null}
+                </div>
+                <div className="mb-2 mx-3 mt-2">
+                    <b>{label} City:</b> {point ? point.locality : null}
+                </div>
+                
+                <div className="mb-2 mx-3 mt-2">
+                    <b>{label} Province:</b> {point ? point.localityInfo.administrative[2].name : null}
+                </div>
+        
+               
+            </div>
+            :null
+        }
+        
+
+    </>;
+}
+
+const GpxInfo = (props)=>{
+
+    const {spoint,epoint,uploadedFile} = props.obj; 
+
+    return <>
+        <h5 className="mx-3">GPX location informations</h5>
+                        
+        <Row >
+            <Col>
+                <Stat obj={{label:"Starting Point",point:spoint,uploadedFile}}/>
+            </Col>
+
+            <Col >
+                <Stat obj={{label:"Ending Point",point:epoint,uploadedFile}}/>
+            </Col>
+
+        </Row>
+
+    </>;
+}
+const HikeInfo = (props)=>{
+
+    const { title,setTitle,
+            description,setDescription,
+            estimatedtime,setEstimatedtime
+    } = props.obj; 
+
+    return <>
+        <Row className='r'>
+            <Col className='c'>
+                
+                <Text obj={{label:"Hike title",text:title,setText:setTitle}}/>
+                
+            </Col>
+            <Col className='c'>
+
+                <Number obj={{label:"Hike estimated time",
+                    number:estimatedtime,
+                    setNumber:setEstimatedtime,
+                    disabled:false}}
+                />
+                
+            </Col>
+        </Row>
+
+        <Row className='r'>
+            <Col className='f'>
+                <Area obj={{
+                    label:"Hike description",
+                    rows:3,
+                    setArea:setDescription,
+                    area:description
+
+                }}/>
+            </Col>
+        </Row>
+    </>
+
+}
+const UploadSection = (props)=>{
+
+    const {
+        message,
+        onFileSelected,
+        onFileUpload,
+        file
+    } = props.obj;
+
+    return <>
+        <Row className='d-block'>
+            <Col className = 'e'>
+                {message ? <Message msg={message} /> : null}
+            </Col>
+        </Row>
+
+        <Row className='r'>
+            <Col className = 'c'>
+
+                <Form.Group controlId="formFile" className="mb-3">
+                    <Form.Control type="file"   onChange={onFileSelected}/>
+                </Form.Group>
+               
+            </Col>
+        </Row>
+            
+       
+
+        <Row className="justify-content-md-center r">
+                <Button variant="success"
+                    onClick={onFileUpload}
+                    disabled = {(file ? false : true)}>
+                        Upload
+                </Button>
+        </Row>
+        <hr></hr>
+    </>
+}
 
 function HikeForm(props) {
 
@@ -25,13 +172,10 @@ function HikeForm(props) {
     const [file, setFile] = useState();
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
-    const [uploadPercentage, setUploadPercentage] = useState(0);
-
 
 
     const navigate = useNavigate();
 
-    //When we select the gpx file to upload
     const onFileSelected = e => {
         setFile(e.target.files[0]);
     };
@@ -45,68 +189,46 @@ function HikeForm(props) {
         const info = { title, length, description, difficulty, estimatedtime, ascent, localguideID, spoint, epoint };
 
         event.preventDefault();
-        console.log(uploadedFile);
+        
         props.postHike(info, uploadedFile.filePath);
 
         navigate("/");
     }
 
-    //When we click on "Upload" on the gpx file
     const onFileUpload = async e => {
 
         e.preventDefault();
         const formData = new FormData();
         formData.append('file', file);
-        console.log(file);
-
+        
         try {
             const res = await axios.post('/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
                 credentials: 'include',
-                onUploadProgress: progressEvent => {
-                    setUploadPercentage(
-                        parseInt(
-                            Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                        )
-                    );
-                }
+                
             });
 
-            // Clear percentage
-            setTimeout(() => setUploadPercentage(0), 10000);
             const { fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat, totalDistance, totalAscent, difficulty } = res.data;
             setUploadedFile({fileName, filePath, startPointLong, startPointLat, endingPointLong, endingPointLat, totalDistance, totalAscent, difficulty});
 
-            console.log(uploadedFile);
 
-            const startPointInfo = { long: startPointLong, lat: startPointLat };
-            const endingPointInfo = { long: endingPointLong, lat: endingPointLat };
+            const startpoint = await APIHikeForm.getInfo({ long: startPointLong, lat: startPointLat })
+            const endpoint = await APIHikeForm.getInfo({ long: endingPointLong, lat: endingPointLat })
 
-            const startpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + startPointInfo.lat + '&longitude=' + startPointInfo.long + '&localityLanguage=en');
-            const endpoint = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + endingPointInfo.lat + '&longitude=' + endingPointInfo.long + '&localityLanguage=en');
-
-
-            setSpoint(startpoint.data);
-            setEpoint(endpoint.data);
+            setSpoint(startpoint);
+            setEpoint(endpoint);
 
             setMessage('File uploaded');
         } catch (err) {
-            console.log(err);
             if (err.response.status === 500) {
                 setMessage('There was a problem with the server');
             } else {
                 setMessage(err.response.data.msg);
             }
-            setUploadPercentage(0)
         }
-
-
     };
-
-    //Installare questi moduli
-    // npm install @mapbox/togeojson xmldom
 
     return (
         <Container>
@@ -115,115 +237,29 @@ function HikeForm(props) {
 
                 <Form onSubmit={submitHandler}>
                     <Container className="shadow-sm p-5 w-75" id="cardscontainer">
-                        <Row className='r'>
-                            <Col className='c'>
-                                <Form.Label>Hike title</Form.Label>
-                                <Form.Control value={title} onChange={ev => setTitle(ev.target.value)} type = "text" placeholder="Enter hike title" required />
-                            </Col>
-                            <Col className='c'>
-                                <Form.Label>Hike estimated time</Form.Label>
-                                <Form.Control type="number" value={estimatedtime} onChange={ev => setEstimatedtime(ev.target.value)} placeholder="Enter hike estimated time" required />
-                                <Form.Text className="text-muted">
-                                    Estimation of time in <i>hours</i> required to complete the hike.
-                                </Form.Text>
-                            </Col>
-                        </Row>
-                        <Row className='r'>
-                            <Col className='f'>
-                                <Form.Label>Hike description</Form.Label>
-                                <Form.Control as="textarea" rows="3" value={description} onChange={ev => setDescription(ev.target.value)} type = "text" placeholder="Enter hike description" required />
-                            </Col>
-                        </Row>
 
-                        <Row className='d-block'>
-                            <Col className = 'e'>
-                                {message ? <Message msg={message} /> : null}
-                            </Col>
-                        </Row>
-
-                        <Row className='r'>
-                            <Col className = 'c'>
-                                <input
-                                    type='file'
-                                    className='custom-file-input'
-                                    id='customFile'
-                                    onChange={onFileSelected}
-                                />
-                            </Col>
-                        </Row>
-                        <Row className='r'>
-                            <Col className = 'c'>
-                                <Progress percentage={uploadPercentage} />
-                            </Col>
-                        </Row>
+                        <HikeInfo obj={{title,
+                            setTitle,estimatedtime,
+                            setEstimatedtime,description,
+                            setDescription}}
+                        />
                         
-                        <Row className="justify-content-md-center r">
-                                <input
-                                    type='button'
-                                    value='Upload'
-                                    className='btn btn-success'
-                                    onClick={onFileUpload}
-                                    disabled = {(file ? false : true)}
-                                />
-                        </Row>
-                        <hr></hr>
+                        <UploadSection obj={{
+                            message,
+                            onFileSelected,
+                            
+                            onFileUpload,
+                            file
+                        }}/>
+                        
+                        <GpxInfo obj={{spoint,epoint,uploadedFile}}/>
+                        
+                        <Estimation uploadedFile={uploadedFile}/>
 
-                        <Row>
-                            <Col className='e'>
-                                <h5>GPX location informations</h5>
-                            </Col>
-                        </Row>
-                        <Row className='r'>
-                            <Col className='c'>
-                                {uploadedFile ? (
-
-                                    <div>
-                                        <b>Starting Point Longitude:</b> {spoint ? spoint.longitude : null} <br></br>
-                                        <b>Starting Point Latitude:</b> {spoint ? spoint.latitude : null}<br></br>
-                                        <b>Starting Point City:</b> {spoint ? spoint.locality : null}<br></br>
-                                        <b>Starting Point Province:</b> {spoint ? spoint.localityInfo.administrative[2].name : null}<br></br>
-                                    </div>
-
-                                ) : null}
-
-                            </Col>
-
-                            <Col className='d'>
-                                {uploadedFile ? (
-                                    <div>
-                                        <b>Ending Point Longitude:</b> {epoint ? epoint.longitude : null}<br></br>
-                                        <b>Ending Point Latitude:</b> {epoint ? epoint.latitude : null} <br></br>
-                                        <b>Ending Point City:</b> {epoint ? epoint.locality : null}<br></br>
-                                        <b>Ending Point Province:</b> {epoint ? epoint.localityInfo.administrative[2].name : null}<br></br>
-                                    </div>
-
-                                ) : null}
-                            </Col>
-
-
-                        </Row>
-
-                        <Row>
-                            <Col className='e'>
-                                <h5>Hike estimations</h5>
-                            </Col>
-                        </Row>
-
-                        <Row>
-                            <Col className = 'c'>
-                                <b>Total distance:</b> {uploadedFile.totalDistance} (km)<br></br>
-                                <b>Total ascent:</b> {uploadedFile.totalAscent} (m)<br></br>
-                                <b>Difficulty:</b> {uploadedFile.difficulty}<br></br>
-                            </Col>
-                        </Row>
-
-
-
-
-                        <hr></hr>
                         <Row className="justify-content-md-center r">
                             <Button className="d-flex" type="submit" variant="primary">Submit Form</Button>
                         </Row>
+
                     </Container>
 
                 </Form>
