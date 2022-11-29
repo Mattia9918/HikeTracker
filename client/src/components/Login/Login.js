@@ -44,7 +44,7 @@ function LoginForm(props) {
    
     <AlertLogin user={props.user} msg={props.msg}/> 
 
-    <Container className="shadow-sm p-5 w-75 mt-5" id = "cardscontainer">
+    <Container className="shadow-sm p-5 w-50 mt-5" id = "cardscontainer">
       <center className="mb-3 fs-2"><BsPersonCircle/>{' '}</center>
     <Form onSubmit={signInHandler}>
     

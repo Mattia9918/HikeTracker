@@ -20,12 +20,11 @@ import ParkingForm from './components/ParkingLotForm/Parking';
 
 import APILogin from './API/APILogin';
 import APIHikeForm from './API/APIHikeForm';
-import APIpostGpx from './API/APIGpx';
+import APIGpx from './API/APIGpx';
 import APIHikes from './API/APIHikes';
 import APIHutForm from './API/APIHutForm';
 import APIParkingForm from './API/APIParkingForm';
 import APIHuts from './API/APIHutGet'; 
-
 
 
 function App(){
@@ -90,7 +89,7 @@ function App2() {
 
   async function postHike(Hike, filePath) {
       await APIHikeForm.postHike(Hike);
-      await APIpostGpx.postGpx(filePath);
+      await APIGpx.postGpx(filePath);
       setPosting(true);
   }
 
@@ -144,43 +143,10 @@ function App2() {
     }
   };
 
-  async function loadHuts() {
-    try {
-      const hutList = await APIHuts.getHuts();
-      setHuts(hutList);
-      setHutPosting(false);
-      //setErrMessage('');
-    } catch (err) {
-      //setErrMessage(String(err));
-    }
-  };
-
   async function loadFilter(filter, value) {
     try {
       const filteredHikeList = await APIHikes.getFilter(filter, value);
       setHikes(filteredHikeList);
-      //setErrMessage('');
-    } catch (err) {
-      //setErrMessage(String(err));
-    }
-  };
-
-  async function loadByArea(filter, value) {
-    try {
-      const filteredHutList = await APIHuts.getHutFilter(filter, value);
-      setHuts(filteredHutList);
-      //setErrMessage('');
-    } catch (err) {
-      //setErrMessage(String(err));
-    }
-  };
-
-  async function loadHutFilter(filter, value) {
-    try {
-      console.log(filter+" "+value);
-      const filteredHutList = await APIHuts.getFilter(filter, value);
-      console.log(filteredHutList);
-      setHuts(filteredHutList);
       //setErrMessage('');
     } catch (err) {
       //setErrMessage(String(err));
@@ -192,24 +158,25 @@ function App2() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posting]);
 
-    useEffect(() => {
-      loadHuts();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [hutPosting]);
-
+   
     
   return (
       <Routes>
       
           <Route element = {<Layout user = {user} logout = {logout}/>}>
             <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter} msg = {msg} user = {user} setMsg = {setMsg} />}/>
+            
+            <Route path='/huts' element={<HutList/>}/>
+            
+            <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 
-            <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
+            
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
             <Route path='/newHut' element={<HutForm postHut={postHut}></HutForm>}/>
             <Route path='/newParking' element={<ParkingForm postParking={postParking} user={user}></ParkingForm>}/>
-            <Route path='/huts' element={<HutList loadHutsFilter={loadHutFilter} huts={huts} loadByArea={loadByArea}/>}/>
+            
+            
           </Route>
           
           
@@ -219,3 +186,23 @@ function App2() {
 }
 
 export default App;
+
+
+
+  /*
+
+ useEffect(() => {
+      loadHuts();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [hutPosting]);
+
+
+  async function loadHuts() {
+    try {
+      const hutList = await APIHuts.getHuts();
+      setHuts(hutList);
+      setHutPosting(false);
+    } catch (err) {
+
+    }
+  };*/

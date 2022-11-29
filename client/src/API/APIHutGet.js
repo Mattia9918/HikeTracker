@@ -34,6 +34,7 @@ async function getFilter(filter, value) {
         });
         if (response.ok) {
             const list = await response.json();
+      
             return list;
         } else {
             /* Application error */

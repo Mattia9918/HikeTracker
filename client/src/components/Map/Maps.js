@@ -113,7 +113,7 @@ function AreaSelect(props) {
   
       map.on("areaselected", (e) => {
         props.setBounds(e.bounds)
-        console.log(e.bounds);
+        //console.log(e.bounds);
       });
   
       // You can restrict selection area like this:
@@ -134,8 +134,6 @@ function AreaSelect(props) {
 }
 
 
-
-
 function MapModal(props) {
   const [latlng,setLatlng] = useState([]); 
   const [bounds,setBounds] = useState([]);
@@ -144,9 +142,10 @@ function MapModal(props) {
   setLatitude,setLongitude,onClickButton,hikeid,loadFilter
   } = props.obj;
 
+
   const handleContinue = (flag) => {
       if(flag==="continue"){ 
-          console.log(latlng); 
+          //console.log(latlng); 
           setLatitude(latlng.lat); 
           setLongitude(latlng.lng);
           onClickButton(latlng.lat, latlng.lng);
