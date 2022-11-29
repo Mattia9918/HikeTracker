@@ -2,6 +2,7 @@ import {  Row, Col, Button, Accordion, ListGroup } from 'react-bootstrap';
 import {  useState,useEffect } from 'react';
 import APIHikes from '../API/APIHikes';
 
+
 import {MapModal} from './Map/Maps';
 
 //Filter for length/time/difficulty/ascent
@@ -35,15 +36,15 @@ const AccordionGeo = (props)=>{
    
 
     const {label,filter,eventKey,loadFilter} = props.obj; 
-    
-
+    console.log(props.cities);
+   
     return <>
           <Accordion.Item eventKey={eventKey}>
             <Accordion.Header>{label}</Accordion.Header>
             {filter==="province" ? <Accordion.Body>
                 <ListGroup variant = "flush">
                     {props.cities && props.cities.map(({province}) => {
-                   
+                    console.log(province);
                     return <ListGroup.Item key = {label+province}  
                                 action = {true} onClick={() => loadFilter(filter, province)}>
                                     {province}
@@ -55,10 +56,12 @@ const AccordionGeo = (props)=>{
 
             {filter==="city" ? <Accordion.Body>
                 <ListGroup variant = "flush">
-                    {props.cities && props.cities.map(({city}) => <ListGroup.Item key = {label+city}  
+                    {props.cities && props.cities.map(({city}) => {
+                        console.log(city);
+                        return <ListGroup.Item key = {label+city}  
                                 action = {true} onClick={() => loadFilter(filter, city)}>
                                     {city}
-                        </ListGroup.Item>)}
+                        </ListGroup.Item>})}
 
 
                 </ListGroup>
@@ -221,4 +224,4 @@ function FilterMenu(props) {
     );
 }
 
-export {FilterMenu}; 
+export {FilterMenu,AccordionFilter,AccordionGeo}; 

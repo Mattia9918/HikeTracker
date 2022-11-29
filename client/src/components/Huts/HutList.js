@@ -1,16 +1,22 @@
-import {Container,Card,Row,Col,Button,Badge,Accordion,ListGroup,} from "react-bootstrap";
-import { useState } from "react";
+import {Container,Card,Row,Col,Button,Accordion} from "react-bootstrap";
+import {  useState,useEffect } from 'react';
+import APIHikes from '../../API/APIHikes';
 import "leaflet-area-select";
-import { BsCheckCircle } from "react-icons/bs";
+import {CardImg,CardHeader,VisibleInfo,Details} from './HutComp';
+
+import {AccordionFilter,AccordionGeo} from '../Filter'; 
+
 import { MapModal } from "../Map/Maps";
-import APIHutGet from "../../API/APIHutGet";
 
 
 function HutList(props) {
-	const halfArray = Math.ceil(props.huts.length / 2);
-	const leftArray = props.huts.slice(0, halfArray);
-	const rightArray = props.huts.slice(halfArray);
 
+	
+    const leftArray = props.huts.filter(v=>props.huts.indexOf(v)<props.huts.length/2); 
+    const rightArray = props.huts.filter(v=>props.huts.indexOf(v)>=props.huts.length/2); 
+
+	
+	
 	return (
 		<>
 			<Row>
@@ -39,141 +45,60 @@ function HutList(props) {
 }
 
 function HutCard(props) {
-	const [open, setOpen] = useState(false);
+	
+	const {name,province,city,address,phone_number,email,web_site,reachability} = props.Hut; 
+	const {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.Hut
+
+	const objDetails = {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service};
+	 
+
+	const header = name+","+province+","+city; 
+
 	return (
 		<Container className="mt-3 mb-3">
 			<Card className="shadow-sm p-2">
 				{/* -- CARD HEADER -- */}
-				<Card.Header>
-					<Row>
-						<Col xxl={9} xl={8} lg={8} md={6} sm={8} xs={6}>
-							<b>
-								{props.Hut.name}, {props.Hut.province} , {props.Hut.city}
-							</b>
-						</Col>
-
-						<Col align="right">
-							<Badge bg={"success"}>Available</Badge>
-						</Col>
-					</Row>
-				</Card.Header>
-				<Card.Img
-					className="mt-2"
-					variant="top"
-					src={
-						(props.Hut.reachability === "normal" &&
-							"http://localhost:3000/nicehut.jpg") ||
-						(props.Hut.reachability === "offroad" &&
-							"http://localhost:3000/huttra.jpg") ||
-						(props.Hut.reachability === "foot" &&
-							"http://localhost:3000/rifugetto.jpg") ||
-						(props.Hut.reachability === "cable" &&
-							"http://localhost:3000/rifugiobello.jpg") ||
-						"http://localhost:3000/hutbike.jpg"
-					}
-				/>
+				
+				<CardHeader header={header}/>
+				
+				<CardImg reachability={reachability}/>
 
 				{/* -- CARD BODY -- */}
 				<Card.Body>
-					<Card.Title>{props.Hut.address}</Card.Title>
+					<Card.Title>{address}</Card.Title>
+					
 					<Card.Text>
-						<ul>
-							<li>
-								<b>Phone number:</b> {props.Hut.phone_number}
-							</li>
-							<li>
-								<b>Email:</b> {props.Hut.email}
-							</li>
-							<li>
-								<b>Web Site:</b> {props.Hut.web_site}
-							</li>
-						</ul>
-						<br></br>
-						{!open && (
-							<Button variant="link" onClick={() => setOpen(true)}>
-								Show more{" "}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									fill="currentColor"
-									class="bi bi-chevron-down"
-									viewBox="0 0 16 16"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-									/>
-								</svg>
-							</Button>
-						)}
-						{open && (
-							<>
-								<b>Details:</b>
-								<br></br>
-								<ul className="mt-2">
-									<li>
-										<b>Description:</b> {props.Hut.description}
-									</li>
-									<li>
-										<b>Altitude:</b> {props.Hut.altitude}
-									</li>
-									<li>
-										<b>Languages:</b> {capitalizeFirstLetter(props.Hut.languages)}
-									</li>
-									<li>
-										<b>Bathrooms:</b> {props.Hut.bathrooms}
-									</li>
-									<li>
-										<b>Bedrooms:</b> {props.Hut.beds}
-									</li>
-									{props.Hut.bike_friendly !== 0 && (
-										<li>
-											<b>Bike friendly <BsCheckCircle style={{ "color": "green" }} /></b>
-										</li>
-									)}
-									{props.Hut.restaurant_service !== 0 && (
-										<li>
-											<b>Restaurant service <BsCheckCircle style={{ "color": "green" }} /></b>
-										</li>
-									)}
-									{props.Hut.disabled_services !== 0 && (
-										<li>
-											<b>Disabled services <BsCheckCircle style={{ "color": "green" }} /></b>
-										</li>
-									)}
-								</ul>
-								<Button variant="link" onClick={() => setOpen(false)}>
-									Show less{" "}
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										fill="currentColor"
-										class="bi bi-chevron-up"
-										viewBox="0 0 16 16"
-									>
-										<path
-											fill-rule="evenodd"
-											d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"
-										/>
-									</svg>
-								</Button>
-							</>
-						)}
+						<VisibleInfo obj={{phone_number,email,web_site}}/>
 					</Card.Text>
+
 				</Card.Body>
+
+				<Details obj={objDetails}/>
 			</Card>
 		</Container>
 	);
 }
 
-function FilterMenu(props) {
-	const [cities, setCities] = useState();
-	const [provinces, setProvinces] = useState();
-	const [selected, setSelected] = useState("");
-	const [showModal, setShowModal] = useState(false);
+const BtnFilter = (props)=>{
 
+	const {size,style,variant,btnFn,label} = props.obj; 
+
+	
+
+	return <>
+		<Button size={size} style={style} variant={variant} onClick={btnFn}>
+			{label}
+		</Button>
+	</>
+}
+
+const FilterMenuBtn = (props)=>{
+
+	const {loadFilter,setShowModal} = props.obj; 
+
+
+	const [selected, setSelected] = useState("");
+	
 	const buttonValues = [];
 	buttonValues["restaurant"] = "outline-primary";
 	buttonValues["disability"] = "outline-primary";
@@ -183,22 +108,153 @@ function FilterMenu(props) {
 
 	buttonValues[selected] = "primary";
 
-	async function loadList(type) {
-		let citieslist;
-		let provincelist;
 
-		if(type==="city")
-		{
-			citieslist = await APIHutGet.getHutCities()
-			setCities(citieslist);
-		}
-		if(type==="province"){
-			provincelist = await APIHutGet.getHutProvinces()
-			setProvinces(provincelist);
-		}
-		
-
+	const btnFn = (select,filter)=>{
+		setSelected(select);
+		loadFilter(filter);
 	}
+	const btnArea = (filter)=>{
+		setSelected(filter)
+		setShowModal(true); 
+	}
+	const resetFn = ()=>{
+		loadFilter("none");
+		setSelected("");
+	}
+
+	//variant={buttonValues["restaurant"]}
+	//size="sm"
+	//style={ width: "10" }
+
+
+	const restObj = {
+		size:"sm",
+		variant:buttonValues["restaurant"],
+		style:{width:"10"},
+		label:"Have Restaurant",
+		btnFn: ()=>btnFn("restaurant","restaurant_service")
+	}
+	const disObj = {
+		size:"sm",
+		label:"Disability Service",
+		variant:buttonValues["disability"],
+		style:{width:"10"},
+		btnFn: ()=>btnFn("disability","disabled_services")
+	}
+
+	const sleepObj = {
+		size:"sm",
+		label:"Can Sleep",
+		variant:buttonValues["sleep"],
+		style:{width:"10"},
+		btnFn: ()=>btnFn("sleep","beds")
+	}
+	const bikeObj = {
+		size:"sm",
+		label:"Is bike Friendly",
+		variant:buttonValues["bike"],
+		style:{width:"10"},
+		btnFn: ()=>btnFn("bike","bike_friendly")
+	}
+
+	const areaObj = {
+		size:"sm",
+		label:"Area",
+		variant:buttonValues["area"],
+		style:{width:"10"},
+		btnFn: ()=>btnArea("area")
+	}
+	
+
+	return <>
+	<Row className="mt-5 mb-2" >
+		<Col>
+			<BtnFilter obj={restObj}/>
+		</Col>
+		
+		<Col>
+			<BtnFilter obj={disObj}/>
+		</Col>
+	</Row>
+	<Row>
+		<Col>
+			<BtnFilter obj={sleepObj}/>
+		</Col>
+		
+		<Col>
+			<BtnFilter obj={bikeObj}/>
+		</Col>
+	</Row>
+
+		<Col>
+			<BtnFilter obj={areaObj}/>
+		</Col>
+
+		<Col>
+			<Button variant="danger" onClick={resetFn}>
+				Reset
+			</Button>
+		</Col>
+	</>
+}
+
+
+function FilterMenu(props) {
+	const [cities, setCities] = useState();
+	const [provinces, setProvinces] = useState();
+	const [showModal, setShowModal] = useState(false);
+
+	//console.log(props);
+	const optionsReach = {
+		label:"Reachability",
+		eventKey:"1",
+		loadFilter:props.loadFilter,
+		options:[{label:"normal",filterOption:"normal"},
+		{label:"offroad",filterOption:"offroad"},
+		{label:"foot",filterOption:"foot"},
+		{label:"cable",filterOption:"cable"}],
+		filter:"reach"
+	}
+	const optionsAlt = {
+		label:"Altitude",
+		eventKey:"2",
+		loadFilter:props.loadFilter,
+		options:[{label:"Less than 1000 m",filterOption:"0,1000"},
+		{label:"Between 1000 m and 1300 m",filterOption:"1001,1300"},
+		{label:"Between 1300 m and 1800 m",filterOption:"1301,1800"},
+		{label:"More than 1800 m",filterOption:"1801,100000"}
+	],
+		filter:"altitude"
+	}
+
+
+	const objProv = {
+        label:"Province",
+        filter:"province",
+        eventKey:"3",
+        loadFilter:props.loadFilter
+    };
+
+	const objCity = {
+        label:"City",
+        filter:"city",
+        eventKey:"4",
+        loadFilter:props.loadFilter
+    };
+
+
+	useEffect(()=>{
+        async function loadList() {
+
+            const citieslist = await APIHikes.getHikeCities();
+            setCities(citieslist);
+            
+            const provincelist = await APIHikes.getHikeProvinces();
+            setProvinces(provincelist);
+            
+        }
+        loadList();
+    },[]); 
 
 	return (
 		<>
@@ -208,141 +264,72 @@ function FilterMenu(props) {
 						<Accordion.Header>Filtering options</Accordion.Header>
 						<Accordion.Body>
 							<Accordion>
+								
 								<Row>
 									<Col>
-										<Accordion.Item eventKey="2" className="w-100">
-											<Accordion.Header>Reachability</Accordion.Header>
-											<Accordion.Body>
-												<ListGroup variant="flush">
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() =>
-															props.loadFilter("reach", "normal")
-														}
-													>
-														normal
-													</ListGroup.Item>
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() =>
-															props.loadFilter("reach", "offroad")
-														}
-													>
-														offroad
-													</ListGroup.Item>
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() => props.loadFilter("reach", "foot")}
-													>
-														foot
-													</ListGroup.Item>
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() => props.loadFilter("reach", "cable")}
-													>
-														cable
-													</ListGroup.Item>
-												</ListGroup>
-											</Accordion.Body>
-										</Accordion.Item>
-
-										<Accordion.Item eventKey="4" className="w-100">
-											<Accordion.Header>Altitude</Accordion.Header>
-											<Accordion.Body>
-												<ListGroup variant="flush">
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() => props.loadFilter("altitude", "0,1000")}
-													>
-														Less than 1000 m
-													</ListGroup.Item>
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() =>
-															props.loadFilter("altitude", "1001,1300")
-														}
-													>
-														Between 1000 m and 1300 m
-													</ListGroup.Item>
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() =>
-															props.loadFilter("altitude", "1301,1800")
-														}
-													>
-														Between 1300 m and 1800 m
-													</ListGroup.Item>
-													<ListGroup.Item
-														id="smallgroups"
-														action={true}
-														onClick={() =>
-															props.loadFilter("altitude", "1801,100000")
-														}
-													>
-														More than 1800 m
-													</ListGroup.Item>
-												</ListGroup>
-											</Accordion.Body>
-										</Accordion.Item>
+										<AccordionFilter obj={optionsReach}/>
+										<AccordionFilter obj={optionsAlt}/>
 									</Col>
+
 									<Col>
-										<Accordion.Item
-											eventKey="5"
-											onClick={() => loadList("province")}
-											className="w-100"
-										>
-											<Accordion.Header>Province</Accordion.Header>
-											<Accordion.Body>
-												<ListGroup variant="flush">
-													{provinces &&
-														provinces.map(({ province }) => (
-															<ListGroup.Item
-																key={province}
-																id="smallgroups"
-																action={true}
-																onClick={() =>
-																	props.loadFilter("province", province)
-																}
-															>
-																{province}
-															</ListGroup.Item>
-														))}
-												</ListGroup>
-											</Accordion.Body>
-										</Accordion.Item>
-					
-										<Accordion.Item
-											eventKey="6"
-											onClick={() => loadList("city")}
-											className="w-100"
-										>
-											<Accordion.Header>City</Accordion.Header>
-											<Accordion.Body>
-												<ListGroup variant="flush">
-													{cities &&
-														cities.map(({ city }) => (
-															<ListGroup.Item
-																key={city}
-																id="smallgroups"
-																action={true}
-																onClick={() => props.loadFilter("city", city)}
-															>
-																{city}
-															</ListGroup.Item>
-														))}
-												</ListGroup>
-											</Accordion.Body>
-										</Accordion.Item>
+
+										<AccordionGeo obj={objProv} cities={provinces}/>
+											
+										<AccordionGeo obj={objCity} cities={cities}/>
+											
 									</Col>
 								</Row>
-								<Row className="mt-5 mb-2" >
+								
+								<FilterMenuBtn obj={{loadFilter:props.loadFilter,setShowModal}}/>
+
+							</Accordion>
+						</Accordion.Body>
+					</Accordion.Item>
+				</Accordion>
+			</Row>
+
+			{showModal && <MapModal 
+			obj={{showModal,setShowModal,areadragmap:true,loadFilter:props.loadByArea}} />}
+
+		</>
+	);
+}
+
+
+
+
+export default HutList;
+
+
+
+/*
+<Row>
+									<Col>
+										<Button
+											size="sm"
+											variant={buttonValues["area"]}
+											onClick={() => {
+												setSelected("area");
+												setShowModal(true);
+											}}
+										>
+											Area
+										</Button>
+									</Col>
+									<Col>
+										<Button
+											variant="danger"
+											onClick={() => {
+												props.loadFilter("none");
+												setSelected("");
+											}}
+										>
+											Reset
+										</Button>
+									</Col>
+								</Row>
+
+<Row className="mt-5 mb-2" >
 									<Col>
 										<Button
 											size="sm"
@@ -395,47 +382,140 @@ function FilterMenu(props) {
 										</Button>
 									</Col>
 								</Row>
-								<Row>
-									<Col>
-										<Button
-											size="sm"
-											variant={buttonValues["area"]}
-											onClick={() => {
-												setSelected("area");
-												setShowModal(true);
-											}}
+*/
+
+
+/*
+
+<Accordion.Item eventKey="2" className="w-100">
+											<Accordion.Header>Reachability</Accordion.Header>
+											<Accordion.Body>
+												<ListGroup variant="flush">
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() =>
+															props.loadFilter("reach", "normal")
+														}
+													>
+														normal
+													</ListGroup.Item>
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() =>
+															props.loadFilter("reach", "offroad")
+														}
+													>
+														offroad
+													</ListGroup.Item>
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() => props.loadFilter("reach", "foot")}
+													>
+														foot
+													</ListGroup.Item>
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() => props.loadFilter("reach", "cable")}
+													>
+														cable
+													</ListGroup.Item>
+												</ListGroup>
+											</Accordion.Body>
+										</Accordion.Item>
+
+
+
+										<Accordion.Item eventKey="4" className="w-100">
+											<Accordion.Header>Altitude</Accordion.Header>
+											<Accordion.Body>
+												<ListGroup variant="flush">
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() => props.loadFilter("altitude", "0,1000")}
+													>
+														Less than 1000 m
+													</ListGroup.Item>
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() =>
+															props.loadFilter("altitude", "1001,1300")
+														}
+													>
+														Between 1000 m and 1300 m
+													</ListGroup.Item>
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() =>
+															props.loadFilter("altitude", "1301,1800")
+														}
+													>
+														Between 1300 m and 1800 m
+													</ListGroup.Item>
+													<ListGroup.Item
+														id="smallgroups"
+														action={true}
+														onClick={() =>
+															props.loadFilter("altitude", "1801,100000")
+														}
+													>
+														More than 1800 m
+													</ListGroup.Item>
+												</ListGroup>
+											</Accordion.Body>
+										</Accordion.Item>
+
+<Accordion.Item
+											eventKey="5"
+											onClick={() => loadList("province")}
+											className="w-100"
 										>
-											Area
-										</Button>
-									</Col>
-									<Col>
-										<Button
-											variant="danger"
-											onClick={() => {
-												props.loadFilter("none");
-												setSelected("");
-											}}
+											<Accordion.Header>Province</Accordion.Header>
+											<Accordion.Body>
+												<ListGroup variant="flush">
+													{provinces &&
+														provinces.map(({ province }) => (
+															<ListGroup.Item
+																key={province}
+																id="smallgroups"
+																action={true}
+																onClick={() =>
+																	props.loadFilter("province", province)
+																}
+															>
+																{province}
+															</ListGroup.Item>
+														))}
+												</ListGroup>
+											</Accordion.Body>
+										</Accordion.Item>
+					
+										<Accordion.Item
+											eventKey="6"
+											onClick={() => loadList("city")}
+											className="w-100"
 										>
-											Reset
-										</Button>
-									</Col>
-								</Row>
-							</Accordion>
-						</Accordion.Body>
-					</Accordion.Item>
-				</Accordion>
-			</Row>
-
-			{showModal && <MapModal 
-			obj={{showModal,setShowModal,areadragmap:true,loadFilter:props.loadByArea}} />}
-
-		</>
-	);
-}
-
-function capitalizeFirstLetter(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-
-export default HutList;
+											<Accordion.Header>City</Accordion.Header>
+											<Accordion.Body>
+												<ListGroup variant="flush">
+													{cities &&
+														cities.map(({ city }) => (
+															<ListGroup.Item
+																key={city}
+																id="smallgroups"
+																action={true}
+																onClick={() => props.loadFilter("city", city)}
+															>
+																{city}
+															</ListGroup.Item>
+														))}
+												</ListGroup>
+											</Accordion.Body>
+										</Accordion.Item>
+*/

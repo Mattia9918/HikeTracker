@@ -177,7 +177,9 @@ function App2() {
 
   async function loadHutFilter(filter, value) {
     try {
+      console.log(filter+" "+value);
       const filteredHutList = await APIHuts.getFilter(filter, value);
+      console.log(filteredHutList);
       setHuts(filteredHutList);
       //setErrMessage('');
     } catch (err) {
