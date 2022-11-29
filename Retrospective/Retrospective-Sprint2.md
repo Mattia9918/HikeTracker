@@ -69,14 +69,38 @@ RETROSPECTIVE (Team 7)
 
 - What caused your errors in estimation (if any)?
 
+  -  *Some tasks required a much lower effort than expected (ex. GUI mock-up wasn't required at all, since 3/4 of the tasks just required the development of forms on the client-side and it cold have been deducted by previous realized pages)* 
+  - *Code adjustment task started requiring much more effort than expected, since it was necessary to repay part of the technical debt (bug fixing, code refactoring, project structure adjustments and features improvements) accumulated in the first sprint in order to faster proceed with the next stories.*
+
 - What lessons did you learn (both positive and negative) in this sprint?
 
+  - *Repaying the accumulated technical debt is a very important investment for future sprints, but it requires a lot of effort.*
+
 - Which improvement goals set in the previous retrospective were you able to achieve? 
-  
+
+  - ***Initial Planning**:*
+    - *time related to estimation and assignment of tasks has not been included as a task in the sprint*
+    - *initial planning has been performed immediately after the retrospective of the previous sprint* 
+
+  - ***Cross-cutting tasks**: cross-cutting tasks assignment has been done after the user stories' assignment, according to the tasks that the team members had to work on.*
+
+  - ***Git branch management**: the wrong branching management with which we collided in the previous sprint has been partially solved in this sprint*
+
 - Which ones you were not able to achieve? Why?
+
+  - *Initial planning took again too long (more than 2 hours)*
+
+  - *Git branching management was better managed, but no specific cross-cutting task was explicitly added at the beginning of the sprint.* 
+
+  - *Some cross-cutting tasks were still badly estimated due to:*
+    - *lack of knowledge of the effects of technical debt on stories development*
+    - *lack of an in-depth analysis of how the stories would be implemented*
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
 
-> Propose one or two
+  - *Try to shorten initial planning to a maximum of 2h 30m*
+
+  - *Technical debt management: we need to be able to do a better management of technical debt, also thanks to the tools we will have at our disposition (sonarcloud)*
 
 - One thing you are proud of as a Team!!
+  - *We were able to overcome project difficulties through communication! (☞ﾟヮﾟ)☞☜(ﾟヮﾟ☜)*
