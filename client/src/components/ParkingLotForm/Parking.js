@@ -34,7 +34,6 @@ function ParkingForm(props) {
         const description = "descrizione parcheggio";
         const user= props.user;
         const timetable = timetablebegin + "-" + timetableend; 
-        console.log(user); 
         const parkingPoint = {latitude, longitude, type, description, city, province}
         const info = { name , guarded, parkingspaces, priceperhour, disabledparkings, timetable, user, parkingPoint};
         
@@ -42,6 +41,8 @@ function ParkingForm(props) {
         console.log(info);
         props.postParking(info);
         
+        //console.log(user); 
+       
         navigate("/");
     }
 

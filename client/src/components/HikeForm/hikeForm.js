@@ -15,6 +15,7 @@ import APIHikeForm from '../../API/APIHikeForm';
 
 import {Text,Number,Area} from '../Form'; 
 
+/*Total ascent/distance + difficulty*/
 const Estimation = (props)=>{
 
     const uploadedFile = props.uploadedFile; 
@@ -64,6 +65,7 @@ const Stat = (props)=>{
     </>;
 }
 
+/*Start/Ending longitude,latitude,city,province*/
 const GpxInfo = (props)=>{
 
     const {spoint,epoint,uploadedFile} = props.obj; 
@@ -84,6 +86,8 @@ const GpxInfo = (props)=>{
 
     </>;
 }
+
+/*Titolo + Time + Description*/
 const HikeInfo = (props)=>{
 
     const { title,setTitle,
@@ -123,6 +127,8 @@ const HikeInfo = (props)=>{
     </>
 
 }
+
+/*File Part = Alert + BtnFile + BtnUpload*/
 const UploadSection = (props)=>{
 
     const {
@@ -231,43 +237,56 @@ function HikeForm(props) {
     };
 
     return (
-        <Container>
 
-            <Container className='below-nav'>
+    <Container >
+        <Container className='below-nav'>
+        
+            <Form onSubmit={submitHandler}>
+                <Container className="shadow-sm p-5 w-75" id="cardscontainer">
 
-                <Form onSubmit={submitHandler}>
-                    <Container className="shadow-sm p-5 w-75" id="cardscontainer">
+                    <h4>New Hike</h4>
+                    <h6>Fill the form to insert a new Hike</h6>
+                
+                    {/*Titolo + Time + Description*/}
 
-                        <HikeInfo obj={{title,
-                            setTitle,estimatedtime,
-                            setEstimatedtime,description,
-                            setDescription}}
-                        />
+                    <HikeInfo obj={{title,
+                        setTitle,estimatedtime,
+                        setEstimatedtime,description,
+                        setDescription}}
+                    />
+                    
+
+                    {/*File Part = Alert + BtnFile + BtnUpload*/}
+
+                    <UploadSection obj={{
+                        message,
+                        onFileSelected,
                         
-                        <UploadSection obj={{
-                            message,
-                            onFileSelected,
-                            
-                            onFileUpload,
-                            file
-                        }}/>
-                        
-                        <GpxInfo obj={{spoint,epoint,uploadedFile}}/>
-                        
-                        <Estimation uploadedFile={uploadedFile}/>
+                        onFileUpload,
+                        file
+                    }}/>
+                    
 
-                        <Row className="justify-content-md-center r">
-                            <Button className="d-flex" type="submit" variant="primary">Submit Form</Button>
-                        </Row>
+                    {/*Start/Ending longitude,latitude,city,province*/}
 
-                    </Container>
+                    <GpxInfo obj={{spoint,epoint,uploadedFile}}/>
+                    
 
-                </Form>
+                    {/*Total ascent/distance + difficulty*/}
+
+                    <Estimation uploadedFile={uploadedFile}/>
+
+                    <Row className="justify-content-md-center r">
+                        <Button className="d-flex" type="submit" variant="primary">Submit Form</Button>
+                    </Row>
+
+                </Container>
+
+            </Form>
 
 
-            </Container>
         </Container>
-
+    </Container>
     );
 }
 

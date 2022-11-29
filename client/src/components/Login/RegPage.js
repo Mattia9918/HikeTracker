@@ -1,8 +1,10 @@
-import { Col, Form, Button, Row, Alert, Container } from 'react-bootstrap';
+import {  Form, Button,  Alert, Container } from 'react-bootstrap';
 import '../../css/App.css';
 import { useState,useEffect } from 'react';
 
+import {Text,Email,Pwd} from '../Form';
 
+import {FaRegIdCard} from 'react-icons/fa'; 
 
 const AlertSignIn = (props)=>{
 
@@ -55,8 +57,34 @@ function SignIn(props) {
      
       <AlertSignIn msg={props.msg} status={props.status}/>
 
+      <center><FaRegIdCard fontSize="3rem"/></center> 
+
       <Form onSubmit={signInHandler}>
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
+        
+        <Text obj={{label:"Username",text:username,setText:setUsername}}/>
+        <Text obj={{label:"Name",text:name,setText:setName}}/>
+        <Text obj={{label:"Surname",text:surname,setText:setSurname}}/>
+
+        <Email obj={{icon:false,email,setEmail}}/>
+        
+        <Pwd obj={{icon:false,password,setPassword}}/>
+        
+        <center><Button variant="primary" size="lg" type="submit">Register</Button></center>
+
+      </Form>
+    </Container></>
+  );
+}
+
+
+
+
+
+export default SignIn;
+
+/*
+
+  <Form.Group as={Row} className="mb-3" controlId="formPlaintext">
           <Form.Label column sm="3">
             Username
           </Form.Label>
@@ -67,7 +95,7 @@ function SignIn(props) {
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+<Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
           <Form.Label column sm="3">
             Nome
           </Form.Label>
@@ -90,7 +118,7 @@ function SignIn(props) {
           </Col>
         </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+         <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
           <Form.Label column sm="3">
             Email
           </Form.Label>
@@ -115,15 +143,4 @@ function SignIn(props) {
           </Col>
         </Form.Group>
 
-        <center><Button variant="primary" size="lg" type="submit">Register</Button></center>
-
-      </Form>
-    </Container></>
-  );
-}
-
-
-
-
-
-export default SignIn;
+*/

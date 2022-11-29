@@ -165,7 +165,7 @@ function HutList(props) {
 		const citieslist = await APIHuts.getHutCities();
 		setCities(citieslist);
 	
-		
+		 
 		const provincelist = await APIHuts.getHutProvinces();
 		setProvinces(provincelist);
 
@@ -199,12 +199,12 @@ function HutList(props) {
 	return (
 		<>
 			<Row>
-				<Col> 
+				<Col lg={3}> 
 					<BtnFilterHut loadByArea={loadByArea} loadFilter={loadHutFilter}/>
 					<AccordionFilterHut obj={{cities,provinces,loadFilter:loadHutFilter}}/>
 				</Col>
 				
-				<Col lg={8} xs={12}>
+				<Col lg={9} xs={12}>
 					<Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
 						<Row>
 							<Col lg={6} xs={12}>
@@ -227,72 +227,4 @@ function HutList(props) {
 	);
 }
 
-
-
-
-
-
-
-
-
 export default HutList;
-
-
-//import {AccordionFilter,AccordionGeo} from '../Filter'; 
-//import APIHikes from '../../API/APIHikes';
-//import {Button,Accordion} from 'react-bootstrap'; 
-//import { MapModal } from "../Map/Maps";
-
-
-
-//<FilterMenu loadFilter={props.loadHutsFilter} loadByArea={props.loadByArea} />
-	
-/*
-const BtnFilter = (props)=>{
-
-	const {size,style,variant,btnFn,label} = props.obj; 
-
-	
-
-	return <>
-		<Button size={size} style={style} variant={variant} onClick={btnFn}>
-			{label}
-		</Button>
-	</>
-}
-
-
-
-const FilterMenuBtn = (props)=>{
-
-	const {loadFilter,setShowModal} = props.obj; 
-
-
-	const [selected, setSelected] = useState("");
-	
-	const buttonValues = [];
-	buttonValues["restaurant"] = "outline-primary";
-	buttonValues["disability"] = "outline-primary";
-	buttonValues["sleep"] = "outline-primary";
-	buttonValues["bike"] = "outline-primary";
-	buttonValues["area"] = "outline-primary";
-
-	buttonValues[selected] = "primary";
-
-
-	const btnFn = (select,filter)=>{
-	
-		loadFilter(filter);
-	}
-	const btnArea = (filter)=>{
-
-		setShowModal(true); 
-	}
-	const resetFn = ()=>{
-		loadFilter("none");
-		setSelected("");
-	}
-
-
-
-*/

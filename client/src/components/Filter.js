@@ -1,5 +1,5 @@
 import {  Row, Col, Button, Accordion, ListGroup } from 'react-bootstrap';
-import {  useState,useEffect } from 'react';
+import { useState,useEffect } from 'react';
 import APIHikes from '../API/APIHikes';
 
 
@@ -11,7 +11,8 @@ const AccordionFilter = (props)=>{
     //onClick={() => loadFilter(filter,o.filterOption)}
     const {eventKey,options,label,filter} = props.obj; 
     
-
+    console.log("AccordionFilter"); 
+    console.log(props);
     return <>
         <Accordion.Item eventKey={eventKey}>
             <Accordion.Header>{label}</Accordion.Header>
@@ -78,26 +79,13 @@ const AccordionGeo = (props)=>{
     </>; 
 }
 
-function FilterMenu(props) {
 
-    const [cities, setCities] = useState();
-    const [provinces, setProvinces] = useState();
-    const [showModal, setShowModal] = useState(false);
 
-    
-    useEffect(()=>{
-        async function loadList() {
+export {AccordionFilter,AccordionGeo}; 
 
-            const citieslist = await APIHikes.getHikeCities();
-            setCities(citieslist);
-            
-            const provincelist = await APIHikes.getHikeProvinces();
-            setProvinces(provincelist);
-            
-        }
-        loadList();
-    },[]); 
 
+
+/*
     const length = {eventKey:"1",options:[{
         label:"Between 0 and 10 km",
         filterOption:"0,10"
@@ -178,57 +166,4 @@ function FilterMenu(props) {
         eventKey:"6",
         loadFilter:props.loadFilter
     };
-
-    return (
-        <>
-        <Row className = "mt-3 mb-1 ms-1 me-1">
-                <Accordion >
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header>Filtering options</Accordion.Header>
-                        <Accordion.Body>
-                            <Accordion>
-                                <Row>
-                                    <Col lg = {4}>
-
-                                        <AccordionFilter obj={length}/>
-                                        
-                                        <AccordionFilter obj={time}/>
-
-                                        <AccordionFilter obj={difficulty}/>
-                                        
-                                    </Col>
-                                
-                                    <Col lg = {4}>
-
-                                        <AccordionFilter obj={ascent}/>
-
-                                        <AccordionGeo obj={objProv} cities={provinces}/>
-                                        
-                                        <AccordionGeo obj={objCity} cities={cities}/>
-                                        
-                                    </Col>
-
-                                    <Col lg = {4}>
-                                        <center className="mb-3">
-                                            <Button variant = "outline-primary" onClick = {() => {setShowModal(true)}}>Find in geographic area</Button>
-                                        </center>
-                                   
-                                        <center>
-                                            <Button align = "right" onClick={() => props.loadFilter("none")}>Reset filters</Button>
-                                        </center>
-                                    </Col>
-                                </Row>
-                            </Accordion>
-
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
-        </Row>
-
-        {showModal && <MapModal 
-            obj={{showModal,setShowModal,areadragmap:true,loadFilter:props.loadFilter}}/>}
-        </>
-    );
-}
-
-export {FilterMenu,AccordionFilter,AccordionGeo}; 
+    */

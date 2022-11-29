@@ -25,7 +25,7 @@ router.post('/api/hut',
             return res.status(422).json({ errors: errors.array() });
         }
         try {
-            console.log(req.body)
+            //console.log(req.body)
 
             const pointId = await hike_dao.postPointHut(
                 req.body.latitude,
@@ -33,7 +33,6 @@ router.post('/api/hut',
                 req.body.city,
                 req.body.province);
             
-            //console.log(pointId);
 
             const hutID = await hut_dao.postHut(req.body.name, req.body.address, req.body.phone_number, req.body.email,
                 req.body.website, req.body.description, req.body.altitude, req.body.languages,

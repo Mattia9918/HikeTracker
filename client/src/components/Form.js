@@ -123,6 +123,7 @@ const Time = (props) =>{
 
 }
 
+
 //props = label,number,setNumber,
 const Number = (props)=>{
 

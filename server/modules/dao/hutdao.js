@@ -260,7 +260,7 @@ exports.getHutCities = () => {
 				reject(err);
 			}
 			else {
-				console.log(rows);
+				//console.log(rows);
 				resolve(rows)
 			}
 		});

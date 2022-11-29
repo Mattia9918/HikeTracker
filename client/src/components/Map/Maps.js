@@ -58,9 +58,11 @@ const MapItem = (props)=>{
                     <Marker position={firstPoint}  >
                       <Popup>Starting Point</Popup>
                     </Marker>
+
                     <Marker position={lastPoint} >
                       <Popup>Ending Point</Popup>
                     </Marker>
+                    
                 </MapContainer>
             </center>
         }
