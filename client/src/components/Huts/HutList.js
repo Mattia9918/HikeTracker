@@ -32,7 +32,7 @@ const BtnFilterHut = (props)=>{
 
 
 	{/*Reset | Map */}
-	<ButtonGroup className="w-100 mt-5">
+	<ButtonGroup className="w-100">
 		<Button size="sm" variant="danger"  onClick={()=>loadFilter("none")}>
 			<GrPowerReset/>{" "}Reset
 		</Button>
@@ -72,32 +72,44 @@ const AccordionFilterHut = (props)=>{
 
 	const {cities,provinces,loadFilter} = props.obj;
 
-	
 	return <>
 	
 	{/*Filter for ALTITUDE & REACHABILITY*/}
 	<Accordion className="mb-2 mt-2">
-		{filters.map(f=>{
-					return <AccordionFilter 
-					key={"filterHut"+filters.indexOf(f)} 
-					obj={f.option}
-					loadFilter={loadFilter}
-					/>
-						
-				})
-		}	
+		<Row>
+				{filters.map(f=>{
+							return <>
+								<Col >
+									<AccordionFilter 
+										key={"filterHut"+filters.indexOf(f)} 
+										obj={f.option}
+										loadFilter={loadFilter}
+										/>
+								</Col>
+							</>
+	
+						})
+				}
+
+		</Row>
 	</Accordion>
 
 	{/*Filter for PROVINCE & CITIES*/}
 	<Accordion>
-		{filtersGeo.map(f=>{
-			return <AccordionGeo 
-				key={"filterGeo"+filtersGeo.indexOf(f)}
-				obj={f.option} 
-				cities={f.option.label==="Province"?provinces:cities}
-				loadFilter={loadFilter}
-			/>
-		})}
+		<Row>
+			{filtersGeo.map(f=>{
+				return <>
+					<Col >
+						<AccordionGeo 
+							key={"filterGeo"+filtersGeo.indexOf(f)}
+							obj={f.option} 
+							cities={f.option.label==="Province"?provinces:cities}
+							loadFilter={loadFilter}
+						/>
+					</Col>
+				</>
+			})}
+		</Row>
 	</Accordion>
 	</>;
 
@@ -199,13 +211,26 @@ function HutList(props) {
 	return (
 		<>
 			<Row>
-				<Col lg={3}> 
-					<BtnFilterHut loadByArea={loadByArea} loadFilter={loadHutFilter}/>
-					<AccordionFilterHut obj={{cities,provinces,loadFilter:loadHutFilter}}/>
-				</Col>
-				
-				<Col lg={9} xs={12}>
+
+				<center>
+				<Col lg={8} xs={12}>
 					<Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
+						
+						<Row className="mt-3 mb-1 ms-1 me-1">
+							<Accordion >
+								<Accordion.Item eventKey={1}>
+								
+									<Accordion.Header>Filtering options</Accordion.Header>
+						
+									<Accordion.Body>
+										<BtnFilterHut loadByArea={loadByArea} loadFilter={loadHutFilter}/>
+										<AccordionFilterHut obj={{cities,provinces,loadFilter:loadHutFilter}}/>
+									</Accordion.Body>
+							
+								</Accordion.Item>
+							</Accordion>
+						</Row>
+
 						<Row>
 							<Col lg={6} xs={12}>
 								{leftArray.map((Hut) => (
@@ -220,7 +245,7 @@ function HutList(props) {
 						</Row>
 					</Container>
 				</Col>
-				
+				</center>
 			</Row>
 
 		</>

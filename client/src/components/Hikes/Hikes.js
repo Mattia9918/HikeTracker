@@ -1,25 +1,20 @@
-import { Container, Card, Row, Col, Button,Accordion } from 'react-bootstrap';
+import { Container, Card, Row, Col, Button,Accordion, ButtonGroup } from 'react-bootstrap';
 import {  useState,useEffect } from 'react';
 
 import {MapModal} from '../Map/Maps';
 
 import {AccordionFilter,AccordionGeo} from '../Filter'; 
-import {length,time,difficulty,ascent,objProv,objCity} from './HikesFilterOption'; 
+import {length,time,difficulty,ascent,objProv,objCity} from './HikesObjInfo'; 
+import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
 
 import APIHikes from '../../API/APIHikes';
 
-
+import {TbMapSearch} from 'react-icons/tb';
 import {BsMap} from 'react-icons/bs';
-import {SlArrowDown,SlArrowUp} from 'react-icons/sl'
+import {SlArrowDown,SlArrowUp} from 'react-icons/sl';
+import {GrPowerReset} from 'react-icons/gr'; 
 
-
-import  {Level,Details,AlertUser,PostedBy} from './HikeCardComp'; 
-
-
-const url = "http://localhost:3000/images/"; 
-const easyHikeImg = url+"easyhike.jpg"; 
-const avgHikeImg = url+"averagehike.jpg"; 
-const diffHikeImg = url+"difficulthike.jpg"; 
+import  {Level,Details,AlertUser,PostedBy,IconDetails} from './HikeCardComp'; 
 
 
 function FilterMenu(props) {
@@ -74,13 +69,17 @@ function FilterMenu(props) {
                                     </Col>
 
                                     <Col lg = {4}>
-                                        <center className="mb-3">
-                                            <Button variant = "outline-primary" onClick = {() => {setShowModal(true)}}>Find in geographic area</Button>
-                                        </center>
-                                   
-                                        <center>
-                                            <Button align = "right" onClick={() => props.loadFilter("none")}>Reset filters</Button>
-                                        </center>
+                                        <ButtonGroup>
+                                            
+                                                <Button variant = "outline-primary" onClick = {() => {setShowModal(true)}}>
+                                                    <TbMapSearch style={{fontSize:"1.2rem"}}/>{" "}Find
+                                                </Button>
+                                                
+                                                <Button variant="outline-primary" onClick={() => props.loadFilter("none")}>
+                                                    <GrPowerReset/>{" "}Reset
+                                                </Button>
+                                           
+                                        </ButtonGroup>
                                     </Col>
                                 </Row>
                             </Accordion>
@@ -121,13 +120,16 @@ function HikeCard(props) {
                     (difficulty === "Difficult" && diffHikeImg)
                 } />
 
-                <Card.Text >
+                <Card.Text className="mb-0">
                     {props.hike.description}
                 </Card.Text>
                 
                 {/* -- CARD BODY -- */}
                 <Card.Body>
-                    
+                    <Col align="left" className="mt-0">
+                        <IconDetails hike={props.hike}/>
+                    </Col>
+
                     <Col align="right">
                         {(open === 0 &&
                             <>
@@ -136,9 +138,11 @@ function HikeCard(props) {
                                         <BsMap/>
                                     </Button>
                                 }
+
                                 <Button variant="link" onClick={() => setOpen(1)}>
                                     <SlArrowDown/>
                                 </Button>
+                                
                             </>) 
                             
                         }
@@ -165,10 +169,33 @@ function HikeCard(props) {
 
 function Hikes(props) {
 
-    const vett = props.hikes; 
+    const [hikes, setHikes] = useState([]);    
+  
+    async function loadFilter(filter, value) {
+        try {
+          const filteredHikeList = await APIHikes.getFilter(filter, value);
+          setHikes(filteredHikeList);
+          //setErrMessage('');
+        } catch (err) {
+          //setErrMessage(String(err));
+        }
+    };
+    
+    async function loadHikes() {
+        try {
+          const hikeList = await APIHikes.getHikes();
+          setHikes(hikeList);
+        } 
+        catch (err) {}
+    };
+    
+    useEffect(() => {
+        loadHikes();
+    }, []);
 
-    const leftHikes = vett.filter(v=>vett.indexOf(v)<vett.length/2); 
-    const rightHikes = vett.filter(v=>vett.indexOf(v)>=vett.length/2); 
+
+    const leftHikes = hikes.filter(v=>hikes.indexOf(v)<hikes.length/2); 
+    const rightHikes = hikes.filter(v=>hikes.indexOf(v)>=hikes.length/2); 
     
     return (
         <>
@@ -179,10 +206,10 @@ function Hikes(props) {
                    <AlertUser obj={{msg:props.msg,user:props.user,setMsg:props.setMsg}}/>
 
                     <Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
-                        <FilterMenu loadFilter = {props.loadFilter} />
+                        <FilterMenu loadFilter = {loadFilter} />
                         
                         <Row>
-                            {(props.hikes.length === 1 && props.hikes[0].id === undefined) ||
+                            {(hikes.length === 1 && hikes[0].id === undefined) ||
                                 <>
                                     <Col lg = {6} xs = {12}>
                                         {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}/>)}

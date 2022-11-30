@@ -8,6 +8,7 @@ import { MapModal } from '../Map/Maps';
 import {HutInfo,HutGeo,Services,Accomodation} from "./HutComp"; 
 
 import APIHikeForm from '../../API/APIHikeForm';
+import APIHutForm from '../../API/APIHutForm';
 
 function HutForm(props) {
 
@@ -34,14 +35,14 @@ function HutForm(props) {
 
     const navigate = useNavigate();
 
-    const submitHandler = (event) => {
+    const submitHandler = async(event) => {
         
-        const info = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
+        const hut = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
         
-        props.postHut(info);
-
+        await APIHutForm.postHut(hut); 
+          
         navigate("/huts");
     }
 
@@ -64,7 +65,6 @@ function HutForm(props) {
         }
     };
     
-
     const objInfo = {hutname,setHutname,address,setAddress,phonenumber,setPhonenumber,
         email,setEmail,website,setWebsite,description,setDescription,setLanguage,setReachability
     };
@@ -80,7 +80,6 @@ function HutForm(props) {
     const objAcc = {rooms,setRooms,
         beds,setBeds,
         bathrooms,setBathrooms}; 
-
 
     return (
         <Container >

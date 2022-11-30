@@ -1,7 +1,5 @@
 
 
-//funzione loadFilter
-
 const length = {eventKey:"1",options:[{
     label:"Between 0 and 10 km",
     filterOption:"0,10"
@@ -81,4 +79,12 @@ const objCity = {
     eventKey:"6"
 };
 
-export {length,time,difficulty,ascent,objProv,objCity}; 
+const url = "http://localhost:3000/images/"; 
+const easyHikeImg = url+"easyhike.jpg"; 
+const avgHikeImg = url+"averagehike.jpg"; 
+const diffHikeImg = url+"difficulthike.jpg"; 
+
+
+export {length,time,difficulty,ascent,objProv,objCity,
+        easyHikeImg,avgHikeImg,diffHikeImg
+}; 

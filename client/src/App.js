@@ -21,10 +21,6 @@ import ParkingForm from './components/ParkingLotForm/Parking';
 import APILogin from './API/APILogin';
 import APIHikeForm from './API/APIHikeForm';
 import APIGpx from './API/APIGpx';
-import APIHikes from './API/APIHikes';
-import APIHutForm from './API/APIHutForm';
-import APIParkingForm from './API/APIParkingForm';
-import APIHuts from './API/APIHutGet'; 
 
 
 function App(){
@@ -38,14 +34,11 @@ function App2() {
 
   /* --- STATES --- */                   
 
-  const [huts, setHuts] = useState([]); 
-  const [hikes, setHikes] = useState([]);    
+  //const [hikes, setHikes] = useState([]);    
   const [status,setStatus] = useState("undefined");
   const [msg, setMsg] = useState("");
   const [loggedIn, setLoggedIn] = useState(false); 
   const [user, setUser] = useState(undefined);
-  const [posting, setPosting] = useState();
-  const [hutPosting, setHutPosting] = useState();
   
 
   const navigate = useNavigate(); 
@@ -90,18 +83,7 @@ function App2() {
   async function postHike(Hike, filePath) {
       await APIHikeForm.postHike(Hike);
       await APIGpx.postGpx(filePath);
-      setPosting(true);
-  }
-
-  async function postHut(hut) {
-    await APIHutForm.postHut(hut); 
-    
-    setHutPosting(true);
-
-  }
-
-  async function postParking(parking) {
-    await APIParkingForm.postParking(parking); 
+      
   }
 
   const login = async (credentials) => {
@@ -132,39 +114,12 @@ function App2() {
       navigate("/"); 
     }
 
-  async function loadHikes() {
-    try {
-      const hikeList = await APIHikes.getHikes();
-      setHikes(hikeList);
-      setPosting(false);
-      //setErrMessage('');
-    } catch (err) {
-      //setErrMessage(String(err));
-    }
-  };
-
-  async function loadFilter(filter, value) {
-    try {
-      const filteredHikeList = await APIHikes.getFilter(filter, value);
-      setHikes(filteredHikeList);
-      //setErrMessage('');
-    } catch (err) {
-      //setErrMessage(String(err));
-    }
-  };
-
-  useEffect(() => {
-    loadHikes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [posting]);
-
-   
     
   return (
       <Routes>
       
           <Route element = {<Layout user = {user} logout = {logout}/>}>
-            <Route path='/' element = {<Hikes hikes = {hikes} loadFilter = {loadFilter} msg = {msg} user = {user} setMsg = {setMsg} />}/>
+            <Route path='/' element = {<Hikes msg = {msg} user = {user} setMsg = {setMsg} />}/>
             
             <Route path='/huts' element={<HutList/>}/>
             
@@ -173,8 +128,8 @@ function App2() {
             <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 
             
             <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
-            <Route path='/newHut' element={<HutForm postHut={postHut}></HutForm>}/>
-            <Route path='/newParking' element={<ParkingForm postParking={postParking} user={user}></ParkingForm>}/>
+            <Route path='/newHut' element={<HutForm ></HutForm>}/>
+            <Route path='/newParking' element={<ParkingForm user={user}></ParkingForm>}/>
             
             
           </Route>

@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { MapModal } from '../Map/Maps'
 
 import APIHikeForm from '../../API/APIHikeForm';
+import APIParkingForm from '../../API/APIParkingForm';
+
 
 import {TitleParking,ParkingGeo,ParkingInfo,ParkingServ} from './ParkingComp'
 
@@ -28,21 +30,21 @@ function ParkingForm(props) {
     const [disabledparkings, setDisableparkings] = useState(false); 
     
 
-    const submitHandler = (event) => {
+    const submitHandler = async(event) => {
         
         const type = "parking";
         const description = "descrizione parcheggio";
         const user= props.user;
         const timetable = timetablebegin + "-" + timetableend; 
         const parkingPoint = {latitude, longitude, type, description, city, province}
+        
         const info = { name , guarded, parkingspaces, priceperhour, disabledparkings, timetable, user, parkingPoint};
         
         event.preventDefault();
         console.log(info);
-        props.postParking(info);
         
-        //console.log(user); 
-       
+        await APIParkingForm.postParking(info); 
+        
         navigate("/");
     }
 
