@@ -57,7 +57,7 @@ const CardHeader = (props)=>{
 	</>
 }
 
-const VisibleInfo = (props)=>{
+const VisibleItem = (props)=>{
 
 
 	const {phone_number,email,web_site} = props.obj; 
@@ -80,18 +80,22 @@ const VisibleInfo = (props)=>{
 	</>
 }
 
-const Details = (props)=>{
+const HiddenItem = (props)=>{
 	const [open, setOpen] = useState(false);
 
 	const {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.obj; 
 
 	return <>
-	{	!open && (
-			<Button variant="link" onClick={() => setOpen(true)}>
-				Show more{" "} <SlArrowDown/>
-			</Button>
-	)}
 
+	<div align="right">
+		<Button variant="link" onClick={() => setOpen(old=>!old)}>
+			{!open ? 
+				<> <SlArrowDown/></>
+				:
+				<><SlArrowUp/></>
+			}
+		</Button>
+	</div>
 					
 	{open && 
 		<>
@@ -133,10 +137,6 @@ const Details = (props)=>{
 				</Col>
 			
 			</Row>
-
-			<Button variant="link" onClick={() => setOpen(false)}>
-				Show less{" "}<SlArrowUp/>
-			</Button>
 	
 		</>	
 	}
@@ -144,6 +144,6 @@ const Details = (props)=>{
 	</>
 }
 
-export {CardImg,CardHeader,VisibleInfo,Details}; 
+export {CardImg,CardHeader,VisibleItem,HiddenItem}; 
 
 

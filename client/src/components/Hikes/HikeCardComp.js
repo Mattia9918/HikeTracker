@@ -1,6 +1,7 @@
-import {  Col, Badge, Alert,ListGroup,ListGroupItem } from 'react-bootstrap';
+import {  Card,Col,Row, Badge, Alert,ListGroup,ListGroupItem } from 'react-bootstrap';
 import {  useState } from 'react';
 
+import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
 
 import {GiPathDistance} from 'react-icons/gi';
 import {MdTimer} from 'react-icons/md';
@@ -30,7 +31,7 @@ const AlertUser = (props)=>{
     </>; 
 }
 
-const IconDetails = (props)=>{
+const VisibleItem = (props)=>{
 
     const {ascent,length,estimatedTime} = props.hike; 
 
@@ -51,7 +52,7 @@ const IconDetails = (props)=>{
     </>;
 }
 
-const Details = (props)=>{
+const HiddenItem = (props)=>{
 
     
     const start = props.hike.startingPoint; 
@@ -99,29 +100,46 @@ const Details = (props)=>{
     
 }
 
-const PostedBy = (props)=>{
-    
+
+const CardImg = (props)=>{
+	
+	const difficulty = props.difficulty; 
+
+	return <>
+        <Card.Img
+            className="mt-2"
+            variant="top"
+            src={
+                (difficulty === "Easy" && easyHikeImg) ||
+                (difficulty === "Average" && avgHikeImg) ||
+                (difficulty === "Difficult" && diffHikeImg) 	
+            }
+        />
+	</>
+}
+
+
+const CardHeader = (props)=>{
+
+    const {user,level} = props.obj; 
     return <>
-    {/* Localguide's username */}
-    <Col xxl={9} xl={8} lg={8} md={6} sm={8} xs={6}>
-        <b>Posted by: </b> {props.user}
-    </Col>
+        <Card.Header>
+            <Row>
+                <Col xxl={9} xl={8} lg={8} md={6} sm={8} xs={6}>
+                    <b>Posted by: </b> {user}
+                </Col>
+                        
+                <Col align="right">
+                    <Badge bg={
+                        (level === "Easy" && "success") ||
+                        (level === "Average" && "warning") ||
+                        (level === "Difficult" && "danger")}>
+                        {level}
+                    </Badge>
+                </Col>
+            </Row>
+        </Card.Header>
     </>
-
 }
 
-const Level = (props)=>{
-
-    return <>
-        <Col align="right">
-            <Badge bg={
-                (props.level === "Easy" && "success") ||
-                (props.level === "Average" && "warning") ||
-                (props.level === "Difficult" && "danger")}>
-                {props.level}
-            </Badge>
-        </Col>
-    </>;
-}
-
-export {Level,Details,AlertUser,PostedBy,IconDetails}; 
+export {HiddenItem,AlertUser,CardHeader,VisibleItem,CardImg}; 

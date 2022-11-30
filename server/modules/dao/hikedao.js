@@ -98,7 +98,7 @@ exports.getHikeByExpectedTime = (minTime, maxTime) => {
 
 					if (hikeTime>=start && hikeTime<=end)
 					{
-						console.log(hikeTime);
+						//console.log(hikeTime);
 						return h; 
 						
 					}

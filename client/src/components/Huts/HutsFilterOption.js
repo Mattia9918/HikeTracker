@@ -1,3 +1,5 @@
+//Image Link for Hut card 
+
 const url = "http://localhost:3000/images/"; 
 const normal = url+"nicehut.jpg"; 
 const offroad = url+"huttra.jpg"; 
@@ -6,6 +8,7 @@ const cable = url+"rifugiobello.jpg";
 const hutbike = url+"hutbike.jpg"; 
 
 
+//Object for filter dropdown 
 const optionsReach = {
 	label:"Reachability",
 	eventKey:"1",
@@ -18,7 +21,6 @@ const optionsReach = {
         {label:"cable",filterOption:"cable"}
     ]
 }
-
 
 const optionsAltitude = {
     label:"Altitude",
@@ -34,7 +36,6 @@ const optionsAltitude = {
    
 }
 
-
 const optionsProvince = {
     label:"Province",
     filter:"province",
@@ -47,9 +48,6 @@ const optionsCity = {
     eventKey:"4",
 };
 
-
-
-
 const filters = [
     {"option":optionsReach},
     {"option":optionsAltitude},
@@ -60,6 +58,28 @@ const filtersGeo = [
     
 ]
 
+const cardImg = {
+    options:[
+        {link:"link1",label:"normal"},
+        {link:"link2",label:"offroad"},
+        {link:"link3",label:"foot"},
+        {link:"link4",label:"cable"},
+    ]
+}
+
+//Insert props with bold_label (boldLabel:Name, name:props.Name)
+
+//Insert props with badge for choose the proper color
+const cardHead = {
+    boldLabel:"Blabel",
+    badge:[
+        {label:"easy",value:"success"},
+        {label:"average",value:"warning"},
+        {label:"difficult",value:"danger"},
+    ]
+}
+
+
 export  {filters,filtersGeo,
-    normal,offroad,foot,cable,hutbike
+    normal,offroad,foot,cable,hutbike,cardImg,cardHead
 }; 

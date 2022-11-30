@@ -1,9 +1,11 @@
 import {Container,Card,Row,Col, Button, Accordion,ButtonGroup} from "react-bootstrap";
 import {  useState,useEffect } from 'react';
 import "leaflet-area-select";
-import {CardImg,CardHeader,VisibleInfo,Details} from './HutComp';
 
 import APIHuts from '../../API/APIHutGet';
+
+import {CardImg,CardHeader,VisibleItem,HiddenItem} from './HutComp';
+
 import { AccordionFilter, AccordionGeo } from "../Filter";
 
 import {GrPowerReset} from 'react-icons/gr';
@@ -137,19 +139,20 @@ function HutCard(props) {
 				
 				<CardHeader header={header}/>
 				
+				<Card.Title>{address}</Card.Title>
+					
 				<CardImg reachability={reachability}/>
 
 				{/* -- CARD BODY -- */}
 				<Card.Body>
-					<Card.Title>{address}</Card.Title>
 					
 					<Card.Text>
-						<VisibleInfo obj={{phone_number,email,web_site}}/>
+						<VisibleItem obj={{phone_number,email,web_site}}/>
 					</Card.Text>
 
 				</Card.Body>
 
-				<Details obj={objDetails}/>
+				<HiddenItem obj={objDetails}/>
 			</Card>
 		</Container>
 	);

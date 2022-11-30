@@ -5,7 +5,6 @@ import {MapModal} from '../Map/Maps';
 
 import {AccordionFilter,AccordionGeo} from '../Filter'; 
 import {length,time,difficulty,ascent,objProv,objCity} from './HikesObjInfo'; 
-import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
 
 import APIHikes from '../../API/APIHikes';
 
@@ -14,7 +13,7 @@ import {BsMap} from 'react-icons/bs';
 import {SlArrowDown,SlArrowUp} from 'react-icons/sl';
 import {GrPowerReset} from 'react-icons/gr'; 
 
-import  {Level,Details,AlertUser,PostedBy,IconDetails} from './HikeCardComp'; 
+import  {CardImg,AlertUser,CardHeader, VisibleItem, HiddenItem} from './HikeCardComp'; 
 
 
 function FilterMenu(props) {
@@ -97,28 +96,21 @@ function FilterMenu(props) {
 
 function HikeCard(props) {
 
-    const [open, setOpen] = useState(0);
+    const [open, setOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const difficulty = props.hike.difficulty
+    
 
     return (
         <Container className="mt-3 mb-3">
             <Card className="shadow-sm p-2">
                 {/* -- CARD HEADER -- */}
-                <Card.Header>
-                    <Row>
-                        <PostedBy user={props.hike.localguideUsername}/>
-                        <Level level={props.hike.difficulty}/>
-                    </Row>
-                </Card.Header>
+                
+                <CardHeader obj={{user:props.hike.localguideUsername,
+                                level:props.hike.difficulty}}/>
 
                 <Card.Title className="mt-2">{props.hike.title}</Card.Title>
 
-                <Card.Img className="mt-2" variant="top" src={
-                    (difficulty === "Easy" && easyHikeImg) ||
-                    (difficulty === "Average" && avgHikeImg) ||
-                    (difficulty === "Difficult" && diffHikeImg)
-                } />
+                <CardImg difficulty={props.hike.difficulty}/>
 
                 <Card.Text className="mb-0">
                     {props.hike.description}
@@ -127,35 +119,29 @@ function HikeCard(props) {
                 {/* -- CARD BODY -- */}
                 <Card.Body>
                     <Col align="left" className="mt-0">
-                        <IconDetails hike={props.hike}/>
+                        <VisibleItem hike={props.hike}/>
                     </Col>
 
                     <Col align="right">
-                        {(open === 0 &&
-                            <>
-                                {props.user && 
-                                    <Button variant="link" style={{padding:"0",margin:"0"}} onClick={() => setShowModal(true)}>
-                                        <BsMap/>
-                                    </Button>
-                                }
+                        
+                        { (props.user) && 
 
-                                <Button variant="link" onClick={() => setOpen(1)}>
-                                    <SlArrowDown/>
-                                </Button>
-                                
-                            </>) 
-                            
+                            <Button variant="link" style={{padding:"0",margin:"0"}} 
+                                            onClick={() => setShowModal(true)}>
+                                <BsMap/>
+                            </Button>           
                         }
+
+                        <Button variant="link" onClick={() => setOpen(old=>!old)}>
+                            {!open? 
+                                <SlArrowDown/>:<SlArrowUp/>
+                            }
+                        </Button>
+
                     </Col>
                 </Card.Body>
 
-                {open!==0 && <>
-                                <Details hike={props.hike}/>
-                                <Button variant="link"  onClick={() => setOpen(0)}>
-                                    <SlArrowUp/>
-                                </Button>
-                            </>
-                }
+                {open && <HiddenItem hike={props.hike}/>}
                 
             </Card>
 
