@@ -1,7 +1,7 @@
 //import "./src/App.css";
 import '../../css/hikeFormCss.css';
 
-import { Col, Form, Button, Row, Container } from 'react-bootstrap';
+import { Col, Form, Button, Row, Container, ListGroup,ListGroupItem } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,9 +26,20 @@ const Estimation = (props)=>{
         <h5 className="mx-3">Hike estimations</h5>
         <Row>
             <Col className = 'c'>
-                <b>Total distance:</b> {uploadedFile.totalDistance} (km)<br></br>
-                <b>Total ascent:</b> {uploadedFile.totalAscent} (m)<br></br>
-                <b>Difficulty:</b> {uploadedFile.difficulty}<br></br>
+                <ListGroup variant="flush">
+                    <ListGroupItem>
+                            <b>Total distance:</b> {uploadedFile.totalDistance} (km)
+                    </ListGroupItem>
+                    
+                    <ListGroupItem>
+                            <b>Total ascent:</b> {uploadedFile.totalAscent} (m)
+                    </ListGroupItem>
+                    
+                    <ListGroupItem>
+                        <b>Difficulty:</b> {uploadedFile.difficulty}
+                    </ListGroupItem>
+                    
+                </ListGroup>
             </Col>
         </Row>
         <hr></hr>
@@ -41,25 +52,26 @@ const Stat = (props)=>{
 
     return <>{
         uploadedFile ?  
-            <div className="mb-5">
+            <ListGroup  className="mt-4 mb-4">
                 
-                <div className="mb-2 mx-3 mt-2">
+                <ListGroupItem >
                     <b>{label} Longitude:</b> {point ? point.longitude : null}
-                </div>      
+                </ListGroupItem>      
 
-                <div className="mb-2 mx-3 mt-2">
+                <ListGroupItem >
                     <b>{label} Latitude:</b> {point ? point.latitude : null}
-                </div>
-                <div className="mb-2 mx-3 mt-2">
+                </ListGroupItem>
+
+                <ListGroupItem >
                     <b>{label} City:</b> {point ? point.locality : null}
-                </div>
+                </ListGroupItem>
                 
-                <div className="mb-2 mx-3 mt-2">
+                <ListGroupItem >
                     <b>{label} Province:</b> {point ? point.localityInfo.administrative[2].name : null}
-                </div>
+                </ListGroupItem>
         
                
-            </div>
+            </ListGroup>
             :null
         }
         

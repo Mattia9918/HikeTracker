@@ -31,3 +31,13 @@
 #smallgroups {
     font-size: small;
 }
+
+
+#cardbody:hover{
+    background-color:#F7F7F7;
+}
+
+#infocontainer {
+    background-color:#F7F7F7;
+    border-radius: 30px;
+}

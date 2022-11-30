@@ -3,12 +3,9 @@ import {  useState } from 'react';
 
 import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
 
-import {GiPathDistance} from 'react-icons/gi';
-import {MdTimer} from 'react-icons/md';
-//import {BiTime} from 'react-icons/bi'; //MdTimer HiArrowUpRight
 import {FiMapPin} from 'react-icons/fi';
 import {FaFlagCheckered} from 'react-icons/fa';
-import {BsArrowUpRight,BsArrowDownRight} from 'react-icons/bs';
+import {BiChevronDown,BiChevronUp} from 'react-icons/bi';
 
 
 
@@ -33,28 +30,51 @@ const AlertUser = (props)=>{
 
 const VisibleItem = (props)=>{
 
-    const {ascent,length,estimatedTime} = props.hike; 
+    //const {ascent,length,estimatedTime} = props.hike; 
+    const size="1.1rem";
+
+
 
     return <>
-        <div>
-            <span className='mx-2'>
-                <GiPathDistance/>{" "+length} km
-            </span>
+        
+        <Row id = "infocontainer" className = "mt-4"  align = "center">
 
-            <span className='mx-2'>
-                {ascent>=0 ? <BsArrowUpRight/>:<BsArrowDownRight/>}{" "+ascent} m
-            </span>
+            <Col>
+                <div><i class="bi bi-geo-alt"   style={{"font-size":size}}/></div>
+                {props.hike.startingPoint.city}
+            </Col>
+
+            <Col>
+                {props.hike.ascent > 0 ? 
+                    <div><i class="bi bi-arrow-up-right-square"  style={{"font-size":size}}/></div> : 
+                    
+                    <div><i class="bi bi-arrow-down-right-square"  style={{"font-size":size}} />
+                    </div>
+                }
+                {props.hike.ascent} m
+            </Col>
+
+            <Col>
+                <div><i class="bi bi-stopwatch" style={{"font-size":size}} /></div>
+                {props.hike.estimatedTime} h 
+            </Col>
             
-            <span className='mx-2'>
-                <MdTimer/> {" "+estimatedTime} h
-            </span>
-        </div>
+            <Col>
+                <div><i class="bi bi-cursor"  style={{"font-size":size}}/></div>
+                {props.hike.length} km
+            </Col>
+        </Row>
+        
+        <Row className = "mt-4">
+            {!props.open ? <BiChevronDown fontSize="2.2rem"/>:<BiChevronUp fontSize="2.2rem"/>}
+        </Row>
     </>;
 }
 
+
 const HiddenItem = (props)=>{
 
-    
+    const description = props.hike.description; 
     const start = props.hike.startingPoint; 
     const end = props.hike.endingPoint; 
     
@@ -62,6 +82,10 @@ const HiddenItem = (props)=>{
     
     return <>
    
+        <Card.Text className="mb-0">
+            {description}
+        </Card.Text>
+
        <b className="d-block mt-0 mb-2 mx-1" align={"left"}>Details:</b>
         <ListGroup >
             
@@ -125,7 +149,7 @@ const CardHeader = (props)=>{
     return <>
         <Card.Header>
             <Row>
-                <Col xxl={9} xl={8} lg={8} md={6} sm={8} xs={6}>
+                <Col xxl={9} xl={8} lg={8} md={6} sm={8} xs={6} align="left">
                     <b>Posted by: </b> {user}
                 </Col>
                         
@@ -143,3 +167,20 @@ const CardHeader = (props)=>{
 }
 
 export {HiddenItem,AlertUser,CardHeader,VisibleItem,CardImg}; 
+
+/*
+<div>
+            <span className='mx-2'>
+                <GiPathDistance/>{" "+length} km
+            </span>
+
+            <span className='mx-2'>
+                {ascent>=0 ? <BsArrowUpRight/>:<BsArrowDownRight/>}{" "+ascent} m
+            </span>
+            
+            <span className='mx-2'>
+                <MdTimer/> {" "+estimatedTime} h
+            </span>
+        </div>
+        
+*/

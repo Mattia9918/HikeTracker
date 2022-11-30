@@ -10,7 +10,6 @@ import APIHikes from '../../API/APIHikes';
 
 import {TbMapSearch} from 'react-icons/tb';
 import {BsMap} from 'react-icons/bs';
-import {SlArrowDown,SlArrowUp} from 'react-icons/sl';
 import {GrPowerReset} from 'react-icons/gr'; 
 
 import  {CardImg,AlertUser,CardHeader, VisibleItem, HiddenItem} from './HikeCardComp'; 
@@ -108,40 +107,33 @@ function HikeCard(props) {
                 <CardHeader obj={{user:props.hike.localguideUsername,
                                 level:props.hike.difficulty}}/>
 
-                <Card.Title className="mt-2">{props.hike.title}</Card.Title>
 
                 <CardImg difficulty={props.hike.difficulty}/>
 
-                <Card.Text className="mb-0">
-                    {props.hike.description}
-                </Card.Text>
                 
                 {/* -- CARD BODY -- */}
-                <Card.Body>
-                    <Col align="left" className="mt-0">
-                        <VisibleItem hike={props.hike}/>
-                    </Col>
+                <Card.Body id = "cardbody" style = {{'cursor': 'pointer'}} onClick = {() => setOpen((prev) => !prev)}>
 
-                    <Col align="right">
-                        
-                        { (props.user) && 
+                    <Card.Title align="left">{props.hike.title}</Card.Title>
 
-                            <Button variant="link" style={{padding:"0",margin:"0"}} 
-                                            onClick={() => setShowModal(true)}>
-                                <BsMap/>
-                            </Button>           
-                        }
-
-                        <Button variant="link" onClick={() => setOpen(old=>!old)}>
-                            {!open? 
-                                <SlArrowDown/>:<SlArrowUp/>
-                            }
-                        </Button>
-
-                    </Col>
+                   
+                        <VisibleItem hike={props.hike} open={open}/>
+                   
+                        {open && <HiddenItem hike={props.hike}/>}
+                
                 </Card.Body>
+                
+                <Col align="right" className="mb-3 mx-3">
+                { (props.user) && 
 
-                {open && <HiddenItem hike={props.hike}/>}
+                        <Button variant="link" style={{padding:"0",margin:"0"}} 
+                                        onClick={() => setShowModal(true)}>
+                            <BsMap/>
+                        </Button>           
+                }
+
+                </Col>
+
                 
             </Card>
 
@@ -218,6 +210,51 @@ function Hikes(props) {
 };
 
 
+
+/*
+
+    const [open, setOpen] = useState(0);
+    const [seeDetails, setSeeDetails] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const difficulty = props.hike.difficulty
+
+    return (
+        <Container className="mt-3 mb-3">
+         
+            <Card className="shadow-sm p-2" onClick = {() => setSeeDetails((prev) => !prev)}>
+         
+
+                <Card.Body id = "cardbody" style = {{'cursor': 'pointer'}} >
+
+                    
+                    <Card.Text>
+                        <Row id = "infocontainer" className = "mt-4"  align = "center">
+                            <Col>
+                                <h6 class="bi bi-geo-alt" />
+                                {props.hike.startingPoint.city}
+                            </Col>
+                            <Col>
+                                {props.hike.ascent > 0 ? <h6 class="bi bi-arrow-up-right-square" /> : <h6 class="bi bi-arrow-down-right-square" />}
+                                {props.hike.ascent} m
+                            </Col>
+                            <Col>
+                                <h6 class="bi bi-stopwatch" />
+                                {props.hike.estimatedTime} h
+                            </Col>
+                            <Col>
+                                <h6 class="bi bi-cursor" />
+                                {props.hike.length} km
+                            </Col>
+                        </Row>
+                        <Row className = "mt-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+							</svg>
+                        </Row>
+                        
+                        {seeDetails &&
+                      
+*/
 
 
 export default Hikes;
