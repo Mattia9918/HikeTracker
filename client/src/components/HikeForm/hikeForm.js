@@ -12,6 +12,8 @@ import React from 'react';
 import { useState } from 'react';
 
 import APIHikeForm from '../../API/APIHikeForm';
+import APIGpx from '../../API/APIGpx';
+
 
 import {Text,Number,Area} from '../Form'; 
 
@@ -186,8 +188,9 @@ function HikeForm(props) {
         setFile(e.target.files[0]);
     };
 
+    
 
-    const submitHandler = (event) => {
+    const submitHandler = async(event) => {
         const localguideID = props.user.id;
         const length = uploadedFile.totalDistance;
         const ascent = uploadedFile.totalAscent;
@@ -196,7 +199,9 @@ function HikeForm(props) {
 
         event.preventDefault();
         
-        props.postHike(info, uploadedFile.filePath);
+        await APIHikeForm.postHike(info);
+        await APIGpx.postGpx(uploadedFile.filePath);
+ 
 
         navigate("/");
     }

@@ -19,8 +19,6 @@ import HutList from './components/Huts/HutList';
 import ParkingForm from './components/ParkingLotForm/Parking';
 
 import APILogin from './API/APILogin';
-import APIHikeForm from './API/APIHikeForm';
-import APIGpx from './API/APIGpx';
 
 
 function App(){
@@ -80,11 +78,7 @@ function App2() {
       }
   }
 
-  async function postHike(Hike, filePath) {
-      await APIHikeForm.postHike(Hike);
-      await APIGpx.postGpx(filePath);
-      
-  }
+  
 
   const login = async (credentials) => {
   
@@ -127,7 +121,11 @@ function App2() {
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 
             
-            <Route path='/newhike' element={((user && user.role === 'localGuide') && <HikeForm postHike={postHike} user = {user}/>) || <Navigate replace to='/' />}/>
+            <Route path='/newhike' element={ ((user && user.role === 'localGuide') && 
+              <HikeForm user = {user}/>) 
+              || <Navigate replace to='/' />
+              }
+            />
             <Route path='/newHut' element={<HutForm ></HutForm>}/>
             <Route path='/newParking' element={<ParkingForm user={user}></ParkingForm>}/>
             

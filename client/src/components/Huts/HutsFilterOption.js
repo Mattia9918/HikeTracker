@@ -1,3 +1,9 @@
+const url = "http://localhost:3000/images/"; 
+const normal = url+"nicehut.jpg"; 
+const offroad = url+"huttra.jpg"; 
+const foot = url+"rifugetto.jpg"; 
+const cable = url+"rifugiobello.jpg"; 
+const hutbike = url+"hutbike.jpg"; 
 
 
 const optionsReach = {
@@ -54,4 +60,6 @@ const filtersGeo = [
     
 ]
 
-export  {filters,filtersGeo}; 
+export  {filters,filtersGeo,
+    normal,offroad,foot,cable,hutbike
+}; 

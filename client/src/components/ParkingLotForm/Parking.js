@@ -41,7 +41,8 @@ function ParkingForm(props) {
         const info = { name , guarded, parkingspaces, priceperhour, disabledparkings, timetable, user, parkingPoint};
         
         event.preventDefault();
-        console.log(info);
+        
+        //console.log(info);
         
         await APIParkingForm.postParking(info); 
         
