@@ -1,12 +1,12 @@
-import {Navbar, Container, Col, Nav, Form, Row, Button, NavDropdown} from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
-import {useState} from 'react';
+import {Navbar, Container, Col, Nav,  NavDropdown} from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+//import {useState} from 'react';
 
 
 
 function Navigation(props) {
 
-    const url = window.location.href;
+    //const url = window.location.href;
     const navigate = useNavigate();
     const localGuideActions = [
         {
@@ -67,8 +67,8 @@ function Navigation(props) {
                             {props.user === undefined && <Nav.Link id = "navlink" onClick = {() => navigate('/login')}>Login</Nav.Link>}
                         </Nav.Item>
                         <Nav.Item>
-                            {props.user === undefined && 
-                                    <Nav.Link id = "navlink" onClick = {() => navigate('/register')}>Register</Nav.Link> ||
+                            {(props.user === undefined && 
+                                    <Nav.Link id = "navlink" onClick = {() => navigate('/register')}>Register</Nav.Link>) ||
                                     <Nav.Link id = "navlink" onClick = {() => props.logout()}>Logout</Nav.Link>
                             }
                         </Nav.Item>
@@ -87,7 +87,7 @@ function MyNavDropdown(props) {
 
     return (
       <NavDropdown title={props.label}>
-        {props.array.map(a => <NavDropdown.Item onClick = {() => navigate(a.link)}>{a.name}</NavDropdown.Item>)}
+        {props.array.map(a => <NavDropdown.Item key={props.label+props.array.indexOf(a)} onClick = {() => navigate(a.link)}>{a.name}</NavDropdown.Item>)}
       </NavDropdown>
     );
   }

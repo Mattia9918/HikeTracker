@@ -7,8 +7,7 @@ async function postParking(Parking) {
     const url = APIURL + `parking`;
 
     try {
-        console.log("API");
-        console.log(Parking); 
+        
         const response = await fetch(url, {
             method: 'POST',
             headers: {

@@ -1,11 +1,13 @@
-//import { Container, Card, Row, Col, Form, Button, Badge, Alert, Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import {MapContainer,TileLayer,Marker,GeoJSON, Rectangle} from 'react-leaflet'; 
+import {MapContainer,TileLayer,Marker,GeoJSON, Rectangle,Popup} from 'react-leaflet'; 
 import {useMap,useMapEvents} from 'react-leaflet/hooks';
+import {Modal,Button} from 'react-bootstrap'; 
 import APIGpx from '../../API/APIGpx';
 import "leaflet-area-select";
 
-//props = hikeid | stati = coordinates,(first/last)Point,center
+
+
+
 const MapItem = (props)=>{
 
     const [coordinates, setCoordinates] = useState({});
@@ -40,6 +42,8 @@ const MapItem = (props)=>{
         getJson();
     }, [props.hikeid]);
 
+    
+   
 
     return <>
         {coordinates.length &&
@@ -48,10 +52,17 @@ const MapItem = (props)=>{
                     <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <GeoJSON data={coordinates} />
                     {(props.dynamicmarker &&
-                        <CreateMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />)
+                        <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />)
                     }
-                    <Marker position={firstPoint}></Marker>
-                    <Marker position={lastPoint}></Marker>
+  
+                    <Marker position={firstPoint}  >
+                      <Popup>Starting Point</Popup>
+                    </Marker>
+
+                    <Marker position={lastPoint} >
+                      <Popup>Ending Point</Popup>
+                    </Marker>
+                    
                 </MapContainer>
             </center>
         }
@@ -63,27 +74,27 @@ const MarkerMap = (props)=>{
           <center>
             <MapContainer style={{ height: "500px", width: "770px"}} center = {{lat: 44.763765, lng: 10.929165}} zoom={5} scrollWheelZoom={true}>
                   <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                  <CreateMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />
+                  <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} pos={props.pos} />
             </MapContainer>
           </center>
   </>;
 }
 
-function CreateMarker(props) {
-    const map = useMapEvents({
-      click:(ev)=>{
-        const coord = ev.latlng;
-        props.setLatlng(coord); 
-        console.log(coord); 
-      }
-    }); 
+function CustomMarker(props) {
+  
+  const markerMap = useMapEvents({
+    click:(ev)=>{
+      const coord = ev.latlng;
+      props.setLatlng(coord); 
+    }
+  }); 
   
     return <>
     {props.latlng.length!==0 ? <Marker position={props.latlng}></Marker>:false}
     </>
   }
 
-  const AreaDragMap = (props)=>{
+const AreaDragMap = (props)=>{
     return <>
             <center>
                 <MapContainer style={{ height: "500px", width: "770px"}} center = {{lat: 44.763765, lng: 10.929165}} zoom={5} scrollWheelZoom={true}>
@@ -94,9 +105,7 @@ function CreateMarker(props) {
     </>;
 }
 
-
-
-  function AreaSelect(props) {
+function AreaSelect(props) {
     const map = useMap();
   
     useEffect(() => {
@@ -106,7 +115,7 @@ function CreateMarker(props) {
   
       map.on("areaselected", (e) => {
         props.setBounds(e.bounds)
-        console.log(e.bounds);
+        //console.log(e.bounds);
       });
   
       // You can restrict selection area like this:
@@ -124,7 +133,86 @@ function CreateMarker(props) {
     return <Rectangle bounds={props.bounds} />
   
     return null;
+}
+
+
+function MapModal(props) {
+  const [latlng,setLatlng] = useState([]); 
+  const [bounds,setBounds] = useState([]);
+  
+  const {showModal,setShowModal,areadragmap,markermap,title,
+  setLatitude,setLongitude,onClickButton,hikeid,loadFilter
+  } = props.obj;
+
+
+  const handleContinue = (flag) => {
+      if(flag==="continue"){ 
+          //console.log(latlng); 
+          setLatitude(latlng.lat); 
+          setLongitude(latlng.lng);
+          onClickButton(latlng.lat, latlng.lng);
+          setShowModal(false); 
+      }
+      else { 
+        onClickButton(undefined, undefined);
+        setShowModal(false);
+        
+      }
   }
 
-export {MapItem, AreaDragMap, MarkerMap}; 
+  /* -- RENDERING -- */
+  return (
+      <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}>
+
+          {/* Modal header */}
+          <Modal.Header closeButton>
+              
+              <Modal.Title>{
+                  (areadragmap && "Filter by geographic area") || 
+                  (markermap && "Click to add a pointer on a location") ||
+                                title
+                  }
+              </Modal.Title>
+          
+          </Modal.Header>
+
+          {/* Modal body */}
+          <Modal.Body >
+              {areadragmap && <>Press ctrl + mouse drag to define a geographic area where you want to find hikes<br></br><hr></hr></>}
+              {(areadragmap &&
+                  <AreaDragMap mode = {2} bounds = {bounds} setBounds = {setBounds} />) ||
+                (markermap && 
+                  <MarkerMap latlng = {latlng} setLatlng = {setLatlng} iconmode = {props.iconmode}/>) ||
+              <MapItem hikeid={hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
+              }
+          </Modal.Body>
+
+
+          
+
+          <Modal.Footer>
+              {
+               (areadragmap && <Button onClick={() => loadFilter("area", bounds)}>Search</Button>) ||
+               (markermap && 
+               <>
+                  <Button onClick={()=>handleContinue("continue")}>
+                      Continue
+                  </Button>
+                
+                  <Button onClick={()=>handleContinue("position")}>
+                    Pick my position
+                  </Button>
+               </>
+               )
+              }
+              <Button variant = "secondary" onClick={() => setShowModal(false)}>Close</Button>
+          </Modal.Footer>
+
+      </Modal>
+  );
+};
+
+
+
+export {MapItem, AreaDragMap, MarkerMap,MapModal}; 
 

@@ -30,19 +30,7 @@ exports.getHikes = () => {
 	});
 };
 
-//exports.getHikeById = (id) => {
-//	return new Promise((resolve, reject) => {
-//		const sql =
-//			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND P.id = HP.pointID AND H.id = ?";
-//		db.all(sql, [id], (err, rows) => {
-//			if (err) reject(err);
-//			else {
-//				const hikes = rowJsonMapping(rows);
-//				resolve(hikes);
-//			}
-//		});
-//	});
-//};
+
 
 exports.getHikeByAscent = (ascent1, ascent2) => {
 	return new Promise((resolve, reject) => {
@@ -73,6 +61,8 @@ exports.getHikeByDiffculty = (diff) => {
 };
 
 exports.getHikeByLength = (minLen, maxLen) => {
+ 
+
 	return new Promise((resolve, reject) => {
 		const sql =
 			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND H.length >= ? AND H.length <= ?";
@@ -87,13 +77,34 @@ exports.getHikeByLength = (minLen, maxLen) => {
 };
 
 exports.getHikeByExpectedTime = (minTime, maxTime) => {
+
+	const start = parseFloat(minTime);
+	const end = parseFloat(maxTime);
+	
+	// AND H.estimatedTime >= ? AND H.estimatedTime <= ? 
+	
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND H.estimatedTime >= ? AND H.estimatedTime <= ?";
-		db.all(sql, [minTime, maxTime], (err, rows) => {
+			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id ";
+		
+		db.all(sql, [], (err, rows) => {
 			if (err) reject(err);
 			else {
+
 				let hikes = rowJsonMapping(rows);
+				hikes = hikes.filter(h=>
+				{
+					const hikeTime = parseFloat(h.estimatedTime); 
+
+					if (hikeTime>=start && hikeTime<=end)
+					{
+						//console.log(hikeTime);
+						return h; 
+						
+					}
+						
+				}
+				); 
 				resolve(hikes);
 			}
 		});
@@ -600,3 +611,20 @@ exports.deleteGpx = () => {
 
 
 
+
+
+
+
+//exports.getHikeById = (id) => {
+//	return new Promise((resolve, reject) => {
+//		const sql =
+//			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND P.id = HP.pointID AND H.id = ?";
+//		db.all(sql, [id], (err, rows) => {
+//			if (err) reject(err);
+//			else {
+//				const hikes = rowJsonMapping(rows);
+//				resolve(hikes);
+//			}
+//		});
+//	});
+//};

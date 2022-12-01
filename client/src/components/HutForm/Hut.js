@@ -1,30 +1,29 @@
 import { useState } from "react";
 import { Container, Form, Row , Col, Button} from "react-bootstrap";
 import 'react-phone-number-input/style.css'; 
-import PhoneInput from 'react-phone-number-input'; 
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { MapModal } from '../Hikes';
+import { MapModal } from '../Map/Maps';
 
 
+import {HutInfo,HutGeo,Services,Accomodation} from "./HutComp"; 
 
-//import '../../css/hutFormCss.css';
+import APIHikeForm from '../../API/APIHikeForm';
+import APIHutForm from '../../API/APIHutForm';
 
+function HutForm(props) {
 
-function Hut(props) {
-
-    const [hutname, setHikename] = useState(""); 
-    const [address, setAddress] = useState(""); 
-    const [phonenumber, setPhonenumber] = useState(""); 
-    const [email, setEmail] = useState(""); 
-    const [website, setWebsite] = useState(""); 
-    const [description, setDescription] = useState(""); 
+    const [hutname, setHutname] = useState("hut1"); 
+    const [address, setAddress] = useState("Corso Luigi Einaudi"); 
+    const [phonenumber, setPhonenumber] = useState("393333333333"); 
+    const [email, setEmail] = useState("email@email.it"); 
+    const [website, setWebsite] = useState("http://www.test.it"); 
+    const [description, setDescription] = useState("description"); 
     const [latitude, setLatitude] = useState(""); 
     const [longitude, setLongitude] = useState("");
-    const [altitude, setAltitude] = useState(""); 
-    const [rooms, setRooms] = useState("");
-    const [bathrooms, setBathrooms] = useState(""); 
-    const [beds, setBeds] = useState("");     
+    const [altitude, setAltitude] = useState("120"); 
+    const [rooms, setRooms] = useState("12");
+    const [bathrooms, setBathrooms] = useState("4"); 
+    const [beds, setBeds] = useState("20");     
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
     const [language, setLanguage] = useState(""); 
@@ -36,29 +35,29 @@ function Hut(props) {
 
     const navigate = useNavigate();
 
-    const submitHandler = (event) => {
+    const submitHandler = async(event) => {
         
-        const info = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
+        const hut = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
-        console.log(info);
-        props.postHut(info);
-
+        
+        await APIHutForm.postHut(hut); 
+          
         navigate("/huts");
     }
 
-
-
-    const onClickButton = async (lat, lng) => {
+    const onClickButton = async (lat, long) => {
         try {
-            const point = await axios.get('http://api.bigdatacloud.net/data/reverse-geocode-client?latitude=' + lat + '&longitude=' + lng + '&localityLanguage=en');
-            //console.log(point.data);  
-            setCity(point.data.locality); 
-            setProvince(point.data.localityInfo.administrative[2].name); 
+          
+            const point = await APIHikeForm.getInfo({lat,long}); 
+            //console.log(point); 
             
-            if (lat === undefined && lng === undefined) {
-                setLatitude(point.data.latitude);
-                setLongitude(point.data.longitude);
+            setCity(point.locality); 
+            setProvince(point.localityInfo.administrative[2].name); 
+         
+            if (lat === undefined && long === undefined) {
+                setLatitude(point.latitude);
+                setLongitude(point.longitude);
             }
             
         } catch (err) {
@@ -66,160 +65,40 @@ function Hut(props) {
         }
     };
     
+    const objInfo = {hutname,setHutname,address,setAddress,phonenumber,setPhonenumber,
+        email,setEmail,website,setWebsite,description,setDescription,setLanguage,setReachability
+    };
 
+    const objGeo = {altitude,setAltitude,latitude,setLatitude,longitude,
+        setLongitude,setShowModal,city,setCity,province,setProvince
+    }; 
+
+    const objServ = {bikefriendly,setBikefriendly,
+        restservice,setRestservice,disable,setDisable
+    }; 
+
+    const objAcc = {rooms,setRooms,
+        beds,setBeds,
+        bathrooms,setBathrooms}; 
 
     return (
         <Container >
             <Container className='below-nav' >
                 <Form onSubmit={submitHandler}>
+                    
                     <Container className="shadow-sm p-5 w-75" id="cardscontainer">
                         <h4>New Hut</h4>
                         <h6>Fill the form to insert a new Hut</h6>
-                        <Row className='r'>
-                            <Col className='c'>
-                                <Form.Label>Hut name</Form.Label>
-                                <Form.Control value={hutname} onChange={ev => setHikename(ev.target.value)} placeholder="Enter hut name" required />
-                            </Col>
-                            
-                        </Row>
-                        <Row>
-                            <Col className='c'>
-                                <Form.Label>Hut address</Form.Label>
-                                <Form.Control value={address} onChange={ev => setAddress(ev.target.value)} placeholder="Enter hut address" required />
-                            </Col>
-                            <Col className='c'>
-                                <Form.Label>Phone Number</Form.Label>
-                                <PhoneInput placeholder="Enter phone number" value={phonenumber} onChange={setPhonenumber}/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className='c'>
-                                <Form.Label>Hut e-mail</Form.Label>
-                                <Form.Control type='email' value={email} onChange={ev => setEmail(ev.target.value)} placeholder="Enter hut e-mail" required />
-                            </Col>
-                            <Col className='c'>
-                                <Form.Label>Web Site</Form.Label>
-                                <Form.Control type='url' value={website} onChange={ev => setWebsite(ev.target.value)} placeholder="Enter hut web site"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className='c'>
-                                <Form.Label>Hut description</Form.Label>
-                                <Form.Control type='text' value={description} onChange={ev => setDescription(ev.target.value)} placeholder="Enter hut description" required />
-                            </Col>    
-                        </Row>
-                        <br></br>
-                        <Row>
-                            <Col className="c">
-                                <Form.Label>Additional language spoken</Form.Label>
-                                <Form.Select aria-label="Default select example" onChange={ev => setLanguage(ev.target.value)}>
-                                    <option ></option>
-                                    <option value="english">English</option>
-                                    <option value="french">French</option>
-                                    <option value="german">German</option>
-                                </Form.Select>
-                            </Col>
-                            <Col className='c'>
-                                <Form.Label>Reachability Option</Form.Label>
-                                <Form.Select aria-label="Default select example" onChange={ev => setReachability(ev.target.value)}>
-                                    <option ></option>
-                                    <option value="normal">With normal car</option>
-                                    <option value="offroad">With off-road car</option>
-                                    <option value="foot">On foot</option>
-                                    <option value="cable">Cableway</option>
-                                </Form.Select>
-                            </Col>
-                        </Row>
-                        <br></br>
-                        <h6>Hut GeoLocalization  </h6>
-                        <Row>
-                            <Col className="c">
-                                <Form.Label>Hut altitude</Form.Label>
-                                <Form.Control type='number' value={altitude} onChange={ev => setAltitude(ev.target.value)} placeholder="Enter hut altitude" required />
-                            </Col>
-                            <Col className="c">
-                            </Col>
-                         
-                        </Row>
-                        <Row>
-                            
-                            <Col className="c">
-                                <Form.Label>Hut Latitude</Form.Label>
-                                <Form.Control type='number' value={latitude} onChange={ev => setLatitude(ev.target.value)} placeholder="Enter hut latitude" disabled />
-                            </Col>
-                            <Col className="c">
-                                <Form.Label>Hut Longitude</Form.Label>
-                                <Form.Control type='number' value={longitude} onChange={ev => setLongitude(ev.target.value)} placeholder="Enter hut longitude" disabled />
-                            </Col>
-                            
-                        </Row>
-                        
-                        <Row>
-                            <Col align = "center">
-                                <Button variant="success" size="sm" onClick={() => setShowModal(true)}>Find on map</Button>
-                            </Col>
-                        </Row>
-                        <br></br>
 
-                        <Row>
-                            <Col className="c">
-                                <Form.Label>Hut City</Form.Label>
-                                <Form.Control type='text' value={city} onChange={ev => setCity(ev.target.value)} disabled />                                
-                            </Col>
-                            <Col className="c">
-                                <Form.Label>Hut Province</Form.Label>
-                                <Form.Control type='text' value={province} onChange={ev => setProvince(ev.target.value)} disabled />
-                            </Col>
-                            
-                        </Row>
-                        <br></br>
-                        <h6>Services</h6>
-                        
-                        <Row>
-                            
-                            <Col className="c">
-                                <Form.Check   label="Bike Friendly" name="bike_friendly" value={bikefriendly} onChange={()=>setBikefriendly(old=>!old)} ></Form.Check>
-                            </Col>
-                            <Col className="c">    
-                                <Form.Check   label="Restaurant" name="restaurant" value={restservice} onChange={()=>setRestservice(old=>!old) }></Form.Check>
-                                
-                            </Col>
-                            
-                        </Row>
+                        <HutInfo obj={objInfo}/>
 
-                        <Row>
-                            <Col className="c">
-                                <Form.Check  label="Services for disable" name="disable" value={disable} onChange={()=>setDisable(old=>!old) }></Form.Check>
-                            </Col>
-                        </Row>
-
-                        <br></br>
-                        <h6>Accomodation Information</h6>
+                        <HutGeo obj={objGeo}/>
                         
-                        <Row>
-                            
-                            <Col className="c">
-                                <Form.Label>Number of rooms</Form.Label>
-                                <Form.Control type='number' value={rooms} onChange={ev => setRooms(ev.target.value)} placeholder="Enter the number of rooms" required />
-                            </Col>
-                            <Col className="c">
-                                <Form.Label>Number of Beds</Form.Label>
-                                <Form.Control type='number' value={beds} onChange={ev => setBeds(ev.target.value)} placeholder="Enter the number of beds" required />
-                            </Col>
-                            
-                            
-                            
-                        </Row>
-                        <Row>
-                            
-                            <Col className="c">
-                                <Form.Label>Bathrooms</Form.Label>
-                                <Form.Control type='number' value={bathrooms} onChange={ev => setBathrooms(ev.target.value)} placeholder="Enter the number of bathrooms" required />
-                            </Col>
-                            <Col className="c"></Col>
-                        </Row>
-                        <br></br>
-                        <Row align="center">
+                        <Services obj={objServ}/>
+
+                        <Accomodation obj={objAcc}/>
+
+                        <Row align="center" className="mt-3">
                             <Col>
                                 <Button type="submit" variant="primary" size="lg"> Submit Form </Button>
                             </Col>
@@ -229,7 +108,12 @@ function Hut(props) {
 
                 </Form>
 
-                {showModal && <MapModal showModal={showModal} setShowModal={setShowModal} markermap = {true} setLatitude = {setLatitude} setLongitude = {setLongitude} onClickButton = {onClickButton} />}
+                {showModal && <MapModal  obj={{setLongitude,
+                                                onClickButton,setLatitude,
+                                                markermap:true,showModal,
+                                                setShowModal}}
+                />}
+
             </Container>
 
         </Container>
@@ -238,4 +122,4 @@ function Hut(props) {
 
 
 
-export default Hut;
+export default HutForm;

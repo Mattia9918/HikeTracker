@@ -49,11 +49,11 @@ router.get(`/api/hike*`, async (req, res) => {
                 break;
             case "city":
                 hikes = await hike_dao.getHikeByCity(req.query.value1);
-                console.log(hikes);
+             
                 break;
             case "province":
                 hikes = await hike_dao.getHikeByProvince(req.query.value1);
-                console.log(hikes);
+               
                 break;
             case "area":
                 hikes = await hike_dao.getHikesByArea(req.query.value1, req.query.value2);
