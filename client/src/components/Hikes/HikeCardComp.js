@@ -78,44 +78,27 @@ const HiddenItem = (props)=>{
     const start = props.hike.startingPoint; 
     const end = props.hike.endingPoint; 
     
-    //const {ascent,length,estimatedTime} = props.hike; 
-    
     return <>
    
-        <Card.Text className="mb-0">
+        <Card.Text className="mb-3">
             {description}
         </Card.Text>
 
-       <b className="d-block mt-0 mb-2 mx-1" align={"left"}>Details:</b>
-        <ListGroup >
+        <ListGroup className = "mb-3">
             
             <ListGroupItem>
                 <FiMapPin/>
-                ({start.city},{start.province})<br/>
+                {"  "}{start.city}, {start.province}<br/>
                 <i>(lat: {start.latitude} - long: {start.longitude})
                 </i>
             </ListGroupItem>
             
             <ListGroupItem>
                 <FaFlagCheckered/>
-                ({end.city},{end.province})<br/>
-                <i>(lat: {end.latitude} ,long: {end.longitude}) - </i>
+                {" "}{end.city}, {end.province}<br/>
+                <i>(lat: {end.latitude}, long: {end.longitude}) - </i>
                 
             </ListGroupItem>
-            
-            {/*
-            <ListGroupItem>
-               <GiPathDistance/> <b>Length: </b>{length} km
-            </ListGroupItem>
-            
-            <ListGroupItem>
-                <MdEscalator/> <b>Ascent: </b>{ascent} m
-            </ListGroupItem>
-            
-            <ListGroupItem>
-               <BiTime/> <b>Estimated Time: </b>{estimatedTime} h
-            </ListGroupItem>
-            */}   
         </ListGroup>
         
         </>
@@ -168,19 +151,3 @@ const CardHeader = (props)=>{
 
 export {HiddenItem,AlertUser,CardHeader,VisibleItem,CardImg}; 
 
-/*
-<div>
-            <span className='mx-2'>
-                <GiPathDistance/>{" "+length} km
-            </span>
-
-            <span className='mx-2'>
-                {ascent>=0 ? <BsArrowUpRight/>:<BsArrowDownRight/>}{" "+ascent} m
-            </span>
-            
-            <span className='mx-2'>
-                <MdTimer/> {" "+estimatedTime} h
-            </span>
-        </div>
-        
-*/

@@ -14,7 +14,6 @@ import {IoMdRestaurant} from 'react-icons/io';
 import {FaBed} from 'react-icons/fa';
 import {TbDisabled} from 'react-icons/tb'
 import {MdDirectionsBike} from 'react-icons/md'
-
 import {filters,filtersGeo} from './HutsFilterOption'; 
 
 import {MapModal} from '../Map/Maps'; 
@@ -123,6 +122,8 @@ const AccordionFilterHut = (props)=>{
 }
 
 function HutCard(props) {
+
+	const [open, setOpen] = useState(false);
 	
 	const {name,province,city,address,phone_number,email,web_site,reachability} = props.Hut; 
 	const {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.Hut
@@ -130,7 +131,7 @@ function HutCard(props) {
 	const objDetails = {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service};
 	 
 
-	const header = name+","+province+","+city; 
+	const header =  `${city}, ${province}` ; 
 
 	return (
 		<Container className="mt-3 mb-3">
@@ -138,21 +139,21 @@ function HutCard(props) {
 				{/* -- CARD HEADER -- */}
 				
 				<CardHeader header={header}/>
-				
-				<Card.Title>{address}</Card.Title>
 					
 				<CardImg reachability={reachability}/>
 
 				{/* -- CARD BODY -- */}
-				<Card.Body>
-					
+				<Card.Body className = "pb-0" id = "cardbody" style = {{'cursor': 'pointer'}} onClick = {() => setOpen((prev) => !prev)}>
+
+					<Card.Title>{name}</Card.Title>
+
 					<Card.Text>
-						<VisibleItem obj={{phone_number,email,web_site}}/>
+						<VisibleItem obj={{phone_number,email,web_site}} open = {open}/>
 					</Card.Text>
 
-				</Card.Body>
+					<HiddenItem obj={objDetails} open = {open}/>
 
-				<HiddenItem obj={objDetails}/>
+				</Card.Body>
 			</Card>
 		</Container>
 	);

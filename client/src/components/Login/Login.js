@@ -37,6 +37,7 @@ function LoginForm(props) {
 
     useEffect(() =>{
       props.setMsg({message:"",type:""});
+      // eslint-disable-next-line
     },[]); 
 
 
