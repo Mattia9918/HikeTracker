@@ -11,8 +11,10 @@ import APIHikes from '../../API/APIHikes';
 import {TbMapSearch} from 'react-icons/tb';
 import {BsMap} from 'react-icons/bs';
 import {GrPowerReset} from 'react-icons/gr'; 
+import { RiMindMap } from 'react-icons/ri'
 
 import  {CardImg,AlertUser,CardHeader, VisibleItem, HiddenItem} from './HikeCardComp'; 
+import { LinkingModal } from '../Linking/Linking';
 
 
 function FilterMenu(props) {
@@ -20,7 +22,6 @@ function FilterMenu(props) {
     const [cities, setCities] = useState();
     const [provinces, setProvinces] = useState();
     const [showModal, setShowModal] = useState(false);
-
    
     
     useEffect(()=>{
@@ -93,61 +94,10 @@ function FilterMenu(props) {
     );
 }
 
-function HikeCard(props) {
-
-    const [open, setOpen] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    
-
-    return (
-        <Container className="mt-3 mb-3">
-            <Card className="shadow-sm p-2">
-                {/* -- CARD HEADER -- */}
-                
-                <CardHeader obj={{user:props.hike.localguideUsername,
-                                level:props.hike.difficulty}}/>
-
-
-                <CardImg difficulty={props.hike.difficulty}/>
-
-                
-                {/* -- CARD BODY -- */}
-                <Card.Body className = "pb-0" id = "cardbody" style = {{'cursor': 'pointer'}} onClick = {() => setOpen((prev) => !prev)}>
-
-                    <Card.Title align="center">{props.hike.title}</Card.Title>
-
-                   
-                        <VisibleItem hike={props.hike} open={open}/>
-                   
-                        {open && <HiddenItem hike={props.hike}/>}
-                
-                </Card.Body>
-                
-                <Col align="right" className="mb-1 mx-2">
-                { (props.user) && 
-
-                        <Button variant="link" style={{padding:"0",margin:"0"}} 
-                                        onClick={() => setShowModal(true)}>
-                            <BsMap/>
-                        </Button>           
-                }
-                </Col>
-
-                
-            </Card>
-
-            {showModal && <MapModal 
-                    obj={{showModal,setShowModal,title:props.hike.title,hikeid:props.hike.id}}
-             />}
-
-        </Container>
-    );
-};
-
 function Hikes(props) {
 
     const [hikes, setHikes] = useState([]);    
-  
+
     async function loadFilter(filter, value) {
         try {
           const filteredHikeList = await APIHikes.getFilter(filter, value);
@@ -190,11 +140,11 @@ function Hikes(props) {
                             {(hikes.length === 1 && hikes[0].id === undefined) ||
                                 <>
                                     <Col lg = {6} xs = {12}>
-                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}/>)}
+                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  />)}
                                     </Col>
                                     
                                     <Col>
-                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}/>)}
+                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} />)}
                                     </Col>
                                 </>
                             }
@@ -208,5 +158,69 @@ function Hikes(props) {
         </>
     )
 };
+
+
+function HikeCard(props) {
+
+    const [open, setOpen] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [showLinkingModal, setShowLinkingModal] = useState(false);
+
+    return (
+        <Container className="mt-3 mb-3">
+            <Card className="shadow-sm p-2">
+                {/* -- CARD HEADER -- */}
+                
+                <CardHeader obj={{user:props.hike.localguideUsername,
+                                level:props.hike.difficulty}}/>
+
+
+                <CardImg difficulty={props.hike.difficulty}/>
+
+                
+                {/* -- CARD BODY -- */}
+                <Card.Body className = "pb-0" id = "cardbody" style = {{'cursor': 'pointer'}} onClick = {() => setOpen((prev) => !prev)}>
+
+                    <Card.Title align="center">{props.hike.title}</Card.Title>
+                   
+                        <VisibleItem hike={props.hike} open={open}/>
+                   
+                        {open && <HiddenItem hike={props.hike}/>}
+                
+                </Card.Body>
+                <Row align = "right">
+                    <Col className="mb-1 mx-2">
+                            { props.user &&
+
+                                    <Button variant="link" style={{padding:"0",margin:"0", "marginRight":"10px"}} 
+                                                    onClick={() => setShowModal(true)}>
+                                        <BsMap/>
+                                    </Button>    
+
+                            }
+
+                            { props.user && props.user.role === "localGuide" && props.user.username === props.hike.localguideUsername &&
+
+                            <Button variant="link" style={{padding:"0",margin:"0"}} 
+                                            onClick={() => setShowLinkingModal(true)}>
+                                <RiMindMap/>
+                            </Button>    
+
+                            }
+                    </Col>
+                </Row>
+                
+            </Card>
+
+            {showModal && <MapModal 
+                    obj={{showModal,setShowModal,title:props.hike.title,hikeid:props.hike.id}}
+             />}
+
+            {showLinkingModal && <LinkingModal hike = {props.hike} showLinkingModal = {showLinkingModal} setShowLinkingModal = {setShowLinkingModal}/>}
+
+        </Container>
+    );
+};
+
 
 export default Hikes;
