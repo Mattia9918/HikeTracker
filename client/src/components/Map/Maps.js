@@ -4,7 +4,7 @@ import {useMap,useMapEvents} from 'react-leaflet/hooks';
 import {Modal,Button} from 'react-bootstrap'; 
 import APIGpx from '../../API/APIGpx';
 import "leaflet-area-select";
-
+import L from 'leaflet';
 
 
 
@@ -55,11 +55,11 @@ const MapItem = (props)=>{
                         <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />)
                     }
   
-                    <Marker position={firstPoint}  >
+                    <Marker position={firstPoint} icon={GetCustomIcon("starting")} >
                       <Popup>Starting Point</Popup>
                     </Marker>
 
-                    <Marker position={lastPoint} >
+                    <Marker position={lastPoint} icon={GetCustomIcon("ending")}>
                       <Popup>Ending Point</Popup>
                     </Marker>
                     
@@ -209,6 +209,44 @@ function MapModal(props) {
       </Modal>
   );
 };
+
+function GetCustomIcon (type) {
+
+  switch(type){
+    case "starting":
+      return L.icon({
+        iconUrl: require('./markericons/start.png'),
+        iconSize: 50,
+      })
+    
+    case "ending":
+      return L.icon({
+        iconUrl: require('./markericons/finish.png'),
+        iconSize: 50,
+      })
+    
+    case "intermediate":
+      return L.icon({
+        iconUrl: require('./markericons/flag.png'),
+        iconSize: 50,
+      })
+    
+    case "hut":
+      return L.icon({
+        iconUrl: require('./markericons/hut.png'),
+        iconSize: 30,
+      })
+
+    case "parking":
+      return L.icon({
+        iconUrl: require('./markericons/park.png'),
+        iconSize: 40,
+      })
+
+    default:
+      break;
+  }
+}
 
 
 
