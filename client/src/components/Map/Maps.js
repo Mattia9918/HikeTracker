@@ -115,7 +115,6 @@ function AreaSelect(props) {
   
       map.on("areaselected", (e) => {
         props.setBounds(e.bounds)
-        //console.log(e.bounds);
       });
   
       // You can restrict selection area like this:
@@ -147,7 +146,6 @@ function MapModal(props) {
 
   const handleContinue = (flag) => {
       if(flag==="continue"){ 
-          //console.log(latlng); 
           setLatitude(latlng.lat); 
           setLongitude(latlng.lng);
           onClickButton(latlng.lat, latlng.lng);

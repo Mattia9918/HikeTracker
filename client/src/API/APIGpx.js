@@ -17,6 +17,7 @@ async function getFileById(id) {
          }
      } catch (err) {
          /* Network error */
+         console.log(err);
          throw (err);
      }
  };

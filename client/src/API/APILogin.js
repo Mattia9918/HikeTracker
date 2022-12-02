@@ -34,6 +34,7 @@ async function addUser(user) {
 
         }
     } catch (error) {
+        console.log(error);
         throw error; 
     }
 }
@@ -56,7 +57,7 @@ async function validateUser(code) {
         }
     } catch (error) {
         /* Network error */
-
+        console.log(error);
         throw (error);
     }
 }
@@ -84,7 +85,10 @@ async function logIn(credentials) {
           throw errDetail;
       }
     }
-    catch(error){ throw error;}
+    catch(error){ 
+        console.log(error);
+        throw error;
+    }
 }
   
 // /api/sessions/current

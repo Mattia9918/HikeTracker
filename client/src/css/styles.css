@@ -1,18 +1,6 @@
 #cardscontainer {
     border-radius: 10px;
 }
-#title1{
-    font-size: 35px;
-    font-family:Brush Script MT;
-    color:#0d6efdd0;
-}
-#title2{
-    font-size: 27px;
-    font-family:Arial;
-    font-stretch: semi-condensed;
-    font-weight: 600;
-    color:#6b6b6bd0;
-}
 
 #navlink:focus{
     color:#0d6efdd0;
@@ -40,4 +28,9 @@
 #infocontainer {
     background-color:#F7F7F7;
     border-radius: 30px;
+}
+
+#smallfont {
+    font-size: small;
+    font-style: normal;
 }

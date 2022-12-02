@@ -1,5 +1,4 @@
-import {Card,Row,Col,Button,Badge,ListGroup,ListGroupItem} from "react-bootstrap";
-import { useState } from "react";
+import {Card,Row,Col,Badge,ListGroup,ListGroupItem} from "react-bootstrap";
 import "leaflet-area-select";
 
 
@@ -8,6 +7,7 @@ import { BsCheckCircle,BsPhone } from "react-icons/bs";
 import { FiMail} from "react-icons/fi";
 import { TfiWorld} from "react-icons/tfi";
 import {FaMountain,FaBed} from 'react-icons/fa';
+import { BiCurrentLocation } from "react-icons/bi";
 import {GrLanguage,GrWheelchair} from 'react-icons/gr'; 
 import {IoMdRestaurant} from 'react-icons/io'; 
 import {MdOutlineBathtub,MdDirectionsBike} from 'react-icons/md';
@@ -65,17 +65,17 @@ const VisibleItem = (props)=>{
 
 		<Col>
 			<div><BsPhone/></div>
-			{phone_number}
+			<i id = "smallfont">{phone_number}</i>
 		</Col>
 
 		<Col>
 			<div><FiMail/></div>
-			{email}
+			<i id = "smallfont">{email}</i>
 		</Col>
 
 		<Col>
 			<div><TfiWorld/></div>
-			{web_site}
+			<i id = "smallfont">{web_site}</i>
 		</Col>
 	</Row>
 
@@ -87,7 +87,7 @@ const VisibleItem = (props)=>{
 
 const HiddenItem = (props)=>{
 
-	const {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.obj; 
+	const {description,address,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.obj; 
 
 	return <>
 					
@@ -98,7 +98,11 @@ const HiddenItem = (props)=>{
         </Card.Text>
 
         <ListGroup className = "mb-3">
-            
+			<ListGroupItem>
+				<BiCurrentLocation/>
+                <b> Address: </b>{address}
+            </ListGroupItem>
+
             <ListGroupItem>
 				<FaMountain/>
                 <b> Altitude: </b>{altitude} m
@@ -143,40 +147,6 @@ const HiddenItem = (props)=>{
 				</Row>
             </ListGroupItem>
         </ListGroup>
-			{/*<div align="center" className="mb-4 mt-2"> <b>Description:</b> {description} </div>*/}
-			{/*<Row>*/}
-			{/*	<Col> <><FaMountain/>{altitude} m </> </Col>*/}
-			{/*	*/}
-			{/*	<Col> <><GrLanguage/> {capitalizeFirstLetter(languages)}</> </Col>*/}
-			{/*	*/}
-			{/*	<Col> <><MdOutlineBathtub/> {bathrooms}</> </Col>*/}
-			{/*</Row>*/}
-			{/*<Row>*/}
-			{/*	<Col> <FaBed/> {beds} </Col>*/}
-			{/*	*/}
-			{/*	<Col>*/}
-			{/*	{bike_friendly !== 0 && (*/}
-			{/*			<><MdDirectionsBike/> <BsCheckCircle style={{ "color": "green" }} />*/}
-			{/*			</>*/}
-			{/*	)}*/}
-			{/*	</Col>*/}
-			{/*	<Col>*/}
-			{/*		{restaurant_service !== 0 && (*/}
-			{/*	*/}
-			{/*				<><IoMdRestaurant/> <BsCheckCircle style={{ "color": "green" }} />*/}
-			{/*				</>*/}
-			{/*		)}*/}
-			{/*	</Col>*/}
-			{/*	<Col>*/}
-			{/*		{disabled_service !== 0 && (*/}
-			{/*				*/}
-			{/*				<><GrWheelchair/> <BsCheckCircle style={{ "color": "green" }} />*/}
-			{/*				</>*/}
-			{/*		)}*/}
-			{/*	</Col>*/}
-			{/**/}
-			{/*</Row>*/}
-	
 		</>	
 	}
 	

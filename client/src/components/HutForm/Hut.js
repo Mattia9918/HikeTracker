@@ -50,7 +50,6 @@ function HutForm(props) {
         try {
           
             const point = await APIHikeForm.getInfo({lat,long}); 
-            //console.log(point); 
             
             setCity(point.locality); 
             setProvince(point.localityInfo.administrative[2].name); 

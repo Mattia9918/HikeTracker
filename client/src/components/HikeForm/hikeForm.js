@@ -1,4 +1,3 @@
-//import "./src/App.css";
 import '../../css/hikeFormCss.css';
 
 import { Col, Form, Button, Row, Container, ListGroup,ListGroupItem } from 'react-bootstrap';
@@ -8,8 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Message from './Message';
 import axios from 'axios';
 
-import React from 'react';
-import { useState } from 'react';
+import { React, useState } from 'react';
 
 import APIHikeForm from '../../API/APIHikeForm';
 import APIGpx from '../../API/APIGpx';

@@ -42,8 +42,6 @@ function ParkingForm(props) {
         
         event.preventDefault();
         
-        //console.log(info);
-        
         await APIParkingForm.postParking(info); 
         
         navigate("/");

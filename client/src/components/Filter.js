@@ -57,7 +57,6 @@ const AccordionGeo = (props)=>{
             {filter==="city" ? <Accordion.Body>
                 <ListGroup variant = "flush">
                     {props.cities && props.cities.map(({city}) => {
-                        //console.log(city);
                         return <ListGroup.Item key = {label+city}  
                                 action = {true} 
                                 onClick={()=>loadFilter(filter,city)}

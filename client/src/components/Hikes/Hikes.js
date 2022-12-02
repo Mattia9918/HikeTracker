@@ -152,9 +152,8 @@ function Hikes(props) {
         try {
           const filteredHikeList = await APIHikes.getFilter(filter, value);
           setHikes(filteredHikeList);
-          //setErrMessage('');
         } catch (err) {
-          //setErrMessage(String(err));
+            console.log(err);
         }
     };
     
@@ -163,7 +162,9 @@ function Hikes(props) {
           const hikeList = await APIHikes.getHikes();
           setHikes(hikeList);
         } 
-        catch (err) {}
+        catch (err) {
+            console.log(err);
+        }
     };
     
     useEffect(() => {

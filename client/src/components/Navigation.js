@@ -1,12 +1,9 @@
 import {Navbar, Container, Col, Nav,  NavDropdown} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-//import {useState} from 'react';
 
 
 
 function Navigation(props) {
-
-    //const url = window.location.href;
     const navigate = useNavigate();
     const localGuideActions = [
         {
@@ -45,11 +42,9 @@ function Navigation(props) {
                         {/* Logo and brand */}
                         <Container>
                         <Navbar.Brand>
-                            <img src = "http://localhost:3000/navicon.svg" style = {{'height': '40px', 'marginLeft': '20px', 'marginTop': '-10px', 'cursor': 'pointer' }}
+                            <img src = "http://localhost:3000/brand.svg" style = {{'height': '50px', 'marginLeft': '20px', 'marginTop': '-10px', 'cursor': 'pointer' }}
                                 onClick = {() => navigate('/')}
                                 alt = "navicon"/>
-                            <b id = "title1" style = {{'cursor': 'pointer'}} onClick = {() => navigate('/')}>Hike</b>
-                            <b id = "title2" style = {{'cursor': 'pointer'}} onClick = {() => navigate('/')}>Tracker</b>
                         </Navbar.Brand>
                         </Container>
                     </Col>
@@ -95,23 +90,3 @@ function MyNavDropdown(props) {
   
 
 export default Navigation;
-
-//<Nav.Item>
-                        //    {
-                        //        ||
-                        //        props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhike" && <Nav.Link onClick = {() => navigate('/newhike')}>New hike</Nav.Link>
-                        //    }
-                        //</Nav.Item>
-                        //<Nav.Item>
-                        //    {
-                        //        props.user === undefined && <></> ||
-                        //        props.user.role === "localGuide" &&  url !== "http://localhost:3000/newhut" && <Nav.Link onClick = {() => navigate('/newhut')}>New Hut</Nav.Link>
-                        //    }
-                        //</Nav.Item>
-                        //<Nav.Item>
-                        //    {
-                        //        props.user === undefined && <></> ||
-                        //        props.user.role === "localGuide" &&  url !== "http://localhost:3000/newparking" && <Nav.Link onClick = {() => navigate('/newparking')}>New Parking Lot</Nav.Link>
-                        //    }
-                        //</Nav.Item>
-                       

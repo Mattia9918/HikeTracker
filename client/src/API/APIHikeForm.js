@@ -51,6 +51,7 @@ async function getInfo(info) {
         }
     } catch (err) {
         /* Network error */
+        console.log(err);
         throw (err);
     }
 

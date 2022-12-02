@@ -43,18 +43,19 @@ async function getFilter(filter, value) {
         }
     } catch (err) {
         /* Network error */
+        console.log(err);
         throw (err);
     }
 };
 
 async function getHutFilter(filter, value) {
-    var northEastLimit = value._northEast;
-    var southWestLimit = value._southWest;
-    var neLat = northEastLimit.lat;
-    var neLng = northEastLimit.lng;
-    var swLat = southWestLimit.lat;
-    var swLng = southWestLimit.lng;
-    var couple = [[neLat, neLng], [swLat, swLng]]
+    let northEastLimit = value._northEast;
+    let southWestLimit = value._southWest;
+    let neLat = northEastLimit.lat;
+    let neLng = northEastLimit.lng;
+    let swLat = southWestLimit.lat;
+    let swLng = southWestLimit.lng;
+    let couple = [[neLat, neLng], [swLat, swLng]]
     const url = APIURL + `hut?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}`;
     try {
         const response = await fetch(url, {
@@ -70,6 +71,7 @@ async function getHutFilter(filter, value) {
         }
     } catch (err) {
         /* Network error */
+        console.log(err);
         throw (err);
     }
 };
@@ -89,6 +91,7 @@ async function getHutCities() {
         }
     } catch (err) {
         /* Network error */
+        console.log(err);
         throw (err);
     }
 }
@@ -109,6 +112,7 @@ async function getHutProvinces() {
         }
     } catch (err) {
         /* Network error */
+        console.log(err);
         throw (err);
     }
 };

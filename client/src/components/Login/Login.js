@@ -46,7 +46,10 @@ function LoginForm(props) {
     <AlertLogin user={props.user} msg={props.msg}/> 
 
     <Container className="shadow-sm p-5 w-50 mt-5" id = "cardscontainer">
-      <center className="mb-3 fs-2"><BsPersonCircle/>{' '}</center>
+      <center className="mb-3 fs-2">
+        <img src = "http://localhost:3000/brand.svg" style = {{'height': '70px', 'marginLeft': '20px', 'marginTop': '-10px'}}
+          alt = "navicon"/>
+      </center>
     <Form onSubmit={signInHandler}>
     
       <Email obj={{email,setEmail,icon:true}}/>

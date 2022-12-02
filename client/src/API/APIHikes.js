@@ -33,22 +33,23 @@ async function getHikes() {
          }
      } catch (err) {
          /* Network error */
+         console.log(err);
          throw (err);
      }
  };
  
  async function getFilter(filter, value) {
-    var couple;
+    let couple;
 
      if (value !== undefined && typeof value !== "object") {
          couple = value.split(',')
      } else if (typeof value === "object") {
-        var northEastLimit = value._northEast;
-        var southWestLimit = value._southWest;
-        var neLat = northEastLimit.lat;
-        var neLng = northEastLimit.lng;
-        var swLat = southWestLimit.lat;
-        var swLng = southWestLimit.lng;
+        let northEastLimit = value._northEast;
+        let southWestLimit = value._southWest;
+        let neLat = northEastLimit.lat;
+        let neLng = northEastLimit.lng;
+        let swLat = southWestLimit.lat;
+        let swLng = southWestLimit.lng;
         couple = [[neLat, neLng], [swLat, swLng]]
      } else {
          couple = [undefined, undefined]
@@ -83,6 +84,7 @@ async function getHikes() {
           }
       } catch (err) {
           /* Network error */
+          console.log(err);
           throw (err);
       }
   };
@@ -103,6 +105,7 @@ async function getHikes() {
          }
      } catch (err) {
          /* Network error */
+         console.log(err);
          throw (err);
      }
  };
@@ -124,6 +127,7 @@ async function getHikes() {
          }
      } catch (err) {
          /* Network error */
+         console.log(err);
          throw (err);
      }
  };

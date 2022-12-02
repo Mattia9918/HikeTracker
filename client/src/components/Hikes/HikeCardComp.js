@@ -30,7 +30,6 @@ const AlertUser = (props)=>{
 
 const VisibleItem = (props)=>{
 
-    //const {ascent,length,estimatedTime} = props.hike; 
     const size="1.1rem";
 
 
@@ -41,7 +40,7 @@ const VisibleItem = (props)=>{
 
             <Col>
                 <div><i class="bi bi-geo-alt"   style={{"font-size":size}}/></div>
-                {props.hike.startingPoint.city}
+                <i id = "smallfont">{props.hike.startingPoint.city}</i>
             </Col>
 
             <Col>
@@ -51,17 +50,17 @@ const VisibleItem = (props)=>{
                     <div><i class="bi bi-arrow-down-right-square"  style={{"font-size":size}} />
                     </div>
                 }
-                {props.hike.ascent} m
+                 <i id = "smallfont">{props.hike.ascent} m</i>
             </Col>
 
             <Col>
                 <div><i class="bi bi-stopwatch" style={{"font-size":size}} /></div>
-                {props.hike.estimatedTime} h 
+                <i id = "smallfont">{props.hike.estimatedTime} h </i>
             </Col>
             
             <Col>
                 <div><i class="bi bi-cursor"  style={{"font-size":size}}/></div>
-                {props.hike.length} km
+                <i id = "smallfont">{props.hike.length} km</i>
             </Col>
         </Row>
         

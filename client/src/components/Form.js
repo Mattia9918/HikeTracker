@@ -1,6 +1,5 @@
 import {Form} from 'react-bootstrap';
 import {BsFillEnvelopeFill,BsLockFill} from "react-icons/bs";
-//import {useState} from 'react';
 
 
 //Tutti i componenti voglio props.obj = {email,setEmail,label};
