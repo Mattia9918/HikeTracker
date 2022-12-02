@@ -2,7 +2,7 @@
 import '../../css/App.css'; 
 
 import {Form,Button,Alert,Container} from 'react-bootstrap';
-import {BsPersonCircle,BsBoxArrowInRight } from "react-icons/bs";
+import {BsBoxArrowInRight } from "react-icons/bs";
 import {useState,useEffect} from 'react';
 
 import {Email,Pwd} from '../Form'; 

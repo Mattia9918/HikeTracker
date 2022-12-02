@@ -16,12 +16,13 @@ async function getHuts() {
         }
     } catch (err) {
         /* Network error */
+        console.log(err);
         throw (err);
     }
 };
 
 async function getFilter(filter, value) {
-    var couple;
+    let couple;
     if (value !== undefined) {
         couple = value.split(',')
     } else {

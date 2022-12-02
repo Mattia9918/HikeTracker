@@ -7,11 +7,10 @@ import { BsCheckCircle,BsPhone } from "react-icons/bs";
 import { FiMail} from "react-icons/fi";
 import { TfiWorld} from "react-icons/tfi";
 import {FaMountain,FaBed} from 'react-icons/fa';
-import { BiCurrentLocation } from "react-icons/bi";
 import {GrLanguage,GrWheelchair} from 'react-icons/gr'; 
 import {IoMdRestaurant} from 'react-icons/io'; 
 import {MdOutlineBathtub,MdDirectionsBike} from 'react-icons/md';
-import {BiChevronDown,BiChevronUp} from 'react-icons/bi';
+import {BiChevronDown,BiChevronUp, BiCurrentLocation} from 'react-icons/bi';
 import { normal,offroad,foot,cable,hutbike} from './HutsFilterOption'; 
 
 function capitalizeFirstLetter(string) {

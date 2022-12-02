@@ -32,10 +32,8 @@ function App2() {
 
   /* --- STATES --- */                   
 
-  //const [hikes, setHikes] = useState([]);    
   const [status,setStatus] = useState("undefined");
   const [msg, setMsg] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false); 
   const [user, setUser] = useState(undefined);
   
 
@@ -47,7 +45,6 @@ function App2() {
       try {
         const utente = await APILogin.getUserInfo();
         setMsg({message:"",type:""});
-        setLoggedIn(true);
         setUser(utente);
 
       } catch(err) {}
@@ -89,8 +86,6 @@ function App2() {
         setMsg({message: user.message, type: "danger"}); 
       } else {
         setUser(user);
-        //console.log(user);
-        setLoggedIn(true);
         navigate(`/`);
         setMsg({message: `Welcome ${user.username}!`, type: "success"})
       }
@@ -103,7 +98,6 @@ function App2() {
   const logout = async () => {
       await APILogin.logOut()
       setUser(undefined);
-      setLoggedIn(false);
       setMsg({message: "You have been logged out!", type: "warning"})
       navigate("/"); 
     }
@@ -139,23 +133,3 @@ function App2() {
 }
 
 export default App;
-
-
-
-  /*
-
- useEffect(() => {
-      loadHuts();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [hutPosting]);
-
-
-  async function loadHuts() {
-    try {
-      const hutList = await APIHuts.getHuts();
-      setHuts(hutList);
-      setHutPosting(false);
-    } catch (err) {
-
-    }
-  };*/
