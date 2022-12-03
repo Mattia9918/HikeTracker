@@ -217,20 +217,26 @@ function GetCustomIcon (type) {
   switch(type){
     case "starting":
       return L.icon({
-        iconUrl: require('./markericons/start.png'),
-        iconSize: 50,
+        iconUrl: require('./markericons/start1.png'),
+        iconSize: [45, 45],
+        iconAnchor: [25, 45],
+        popupAnchor: [-2, -45]
       })
     
     case "ending":
       return L.icon({
-        iconUrl: require('./markericons/finish.png'),
-        iconSize: 50,
+        iconUrl: require('./markericons/finish1.png'),
+        iconSize: [45, 45],
+        iconAnchor: [25, 45],
+        popupAnchor: [-2, -45]
       })
     
     case "intermediate":
       return L.icon({
-        iconUrl: require('./markericons/flag.png'),
-        iconSize: 50,
+        iconUrl: require('./markericons/flag1.png'),
+        iconSize: [35, 35],
+        iconAnchor: [15, 35],
+        popupAnchor: [-2, -45]
       })
     
     case "hut":
@@ -242,7 +248,9 @@ function GetCustomIcon (type) {
     case "parking":
       return L.icon({
         iconUrl: require('./markericons/park.png'),
-        iconSize: 40,
+        iconSize: [35, 35],
+        iconAnchor: [15, 35],
+        popupAnchor: [-2, -45]
       })
 
     default:
