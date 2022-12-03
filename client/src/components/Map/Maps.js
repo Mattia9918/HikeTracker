@@ -74,7 +74,7 @@ const MarkerMap = (props)=>{
           <center>
             <MapContainer style={{ height: "500px", width: "770px"}} center = {{lat: 44.763765, lng: 10.929165}} zoom={5} scrollWheelZoom={true}>
                   <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                  <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} pos={props.pos} />
+                  <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} pos={props.pos} type = {props.type} />
             </MapContainer>
           </center>
   </>;
@@ -88,9 +88,11 @@ function CustomMarker(props) {
       props.setLatlng(coord); 
     }
   }); 
+
+  const type = props.type;
   
     return <>
-    {props.latlng.length!==0 ? <Marker position={props.latlng}></Marker>:false}
+    {props.latlng.length!==0 ? <Marker position={props.latlng} icon={GetCustomIcon(type)}></Marker>:false}
     </>
   }
 
@@ -180,7 +182,7 @@ function MapModal(props) {
               {(areadragmap &&
                   <AreaDragMap mode = {2} bounds = {bounds} setBounds = {setBounds} />) ||
                 (markermap && 
-                  <MarkerMap latlng = {latlng} setLatlng = {setLatlng} iconmode = {props.iconmode}/>) ||
+                  <MarkerMap latlng = {latlng} setLatlng = {setLatlng} iconmode = {props.iconmode} type = {props.type}/>) ||
               <MapItem hikeid={hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
               }
           </Modal.Body>

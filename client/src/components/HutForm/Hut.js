@@ -107,11 +107,7 @@ function HutForm(props) {
 
                 </Form>
 
-                {showModal && <MapModal  obj={{setLongitude,
-                                                onClickButton,setLatitude,
-                                                markermap:true,showModal,
-                                                setShowModal}}
-                />}
+                {showModal && <MapModal  obj={{setLongitude, onClickButton,setLatitude, markermap:true,showModal, setShowModal}} type = {"hut"} />}
 
             </Container>
 

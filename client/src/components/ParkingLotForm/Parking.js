@@ -97,9 +97,7 @@ function ParkingForm(props) {
                     </Container>
                 </Form>
 
-                {showModal && <MapModal 
-                obj={{showModal,setShowModal,markermap:true,setLatitude,setLongitude,onClickButton}}
-                />}
+                {showModal && <MapModal  obj={{showModal,setShowModal,markermap:true,setLatitude,setLongitude,onClickButton}} type = {"parking"}/>}
             </Container>
            
         </Container>
