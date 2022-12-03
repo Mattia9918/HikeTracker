@@ -6,6 +6,14 @@ const {check, validationResult} = require("express-validator");
 
 const router = express.Router();
 
+const isLoggedIn = (req, res, next) => {
+	if(req.isAuthenticated()) {
+	    return next();
+	}
+	return res.status(401).json({error: 'Not authorized'});
+}
+
+
 /* -- API -- */
 
 router.get("/api/hikes", async (req, res) => {
@@ -74,7 +82,7 @@ router.get(`/api/hike*`, async (req, res) => {
 router.post('/api/hiking',
     [check('length').isNumeric(),
         check('estimatedTime').isNumeric()
-        ],
+        ], isLoggedIn, 
         async (req, res) => {
 
         /*if (req.user === undefined)

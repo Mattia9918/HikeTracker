@@ -11,7 +11,6 @@ async function getFileById(id) {
              return ris;
          } else {
              /* Application error */
-             console.log(response); 
              const appErrText = await response.text();
              throw new TypeError(appErrText);
          }
@@ -31,6 +30,7 @@ async function postGpx(filePath) {
 
         const response = await fetch(url, {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },

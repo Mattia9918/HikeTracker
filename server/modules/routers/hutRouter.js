@@ -7,8 +7,25 @@ const hike_dao = require("../dao/hikedao");
 
 const router = express.Router();
 
+const isLocalGuide = (req, res, next) => {
+	if(req.isAuthenticated()) {
+        if(req.user.role === 'localGuide')
+            return next();
+	}
+	return res.status(401).json({error: 'Not authorized'});
+}
+
+const isLoggedIn = (req, res, next) => {
+	if(req.isAuthenticated()) {
+	    return next();
+	}
+	return res.status(401).json({error: 'Not authorized'});
+}
+
+
+
 // TODO: aggiungere inserimento punto
-router.post('/api/hut',
+router.post('/api/hut', isLocalGuide,
     []
     , async (req, res) => {
 
@@ -50,7 +67,7 @@ router.post('/api/hut',
     })
 
 /** Get all huts **/
-router.get("/api/huts", async (req, res) => {
+router.get("/api/huts", isLoggedIn, async (req, res) => {
 
     /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
@@ -67,7 +84,7 @@ router.get("/api/huts", async (req, res) => {
 });
 
 /** Get hut by id **/
-router.get("/api/hut/:id", async (req, res) => {
+router.get("/api/hut/:id", isLoggedIn, async (req, res) => {
 
     /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
@@ -87,7 +104,7 @@ router.get("/api/hut/:id", async (req, res) => {
 });
 
 /** Get huts with filters **/
-router.get(`/api/hut*`, async (req, res) => {
+router.get(`/api/hut*`, isLoggedIn, async (req, res) => {
 
     /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });

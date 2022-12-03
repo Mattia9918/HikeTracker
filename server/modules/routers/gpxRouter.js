@@ -9,7 +9,15 @@ const fileUpload = require('express-fileupload');
 const router = express.Router();
 router.use(fileUpload());
 
-router.post('/upload', async (req, res) => {
+const isLoggedIn = (req, res, next) => {
+	if(req.isAuthenticated()) {
+	    return next();
+	}
+	return res.status(401).json({error: 'Not authorized'});
+}
+
+
+router.post('/upload', isLoggedIn, async (req, res) => {
     /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });
 
@@ -47,7 +55,7 @@ router.post('/upload', async (req, res) => {
 });
 
 //POST GPX AS BLOB
-router.post('/api/gpx', async (req, res) => {
+router.post('/api/gpx', isLoggedIn, async (req, res) => {
 
     /*if (req.user === undefined)
         return res.status(401).json({ error: 'not authenticated!' });

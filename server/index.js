@@ -18,11 +18,11 @@ const sessionRouter = require('./modules/routers/sessionRouter.js');
 const bodyParser = require('body-parser'); // parser middleware
 const session = require('express-session');  // session middleware
 const passport = require('passport');  // authentication
-const passportLocal = require('passport-local');
+const PassportLocal = require('passport-local');
 
 
 // initialize and configure passport
-passport.use(new passportLocal.Strategy(
+passport.use(new PassportLocal (
 	// function of username, password, done(callback)
 	(username, password, done) => {
 		// look for the user data
@@ -39,17 +39,12 @@ passport.use(new passportLocal.Strategy(
 // serialize and de-serialize the user (user object <-> session)
 // we serialize the user id and we store it in the session: the session is very small in this way
 passport.serializeUser((user, done) => {
-	done(null, user.id);
+	done(null, user);
 });
 
 // starting from the data in the session, we extract the current (logged-in) user
-passport.deserializeUser((id, done) => {
-	user_dao.getUserById(id)
-		.then(user => {
-			done(null, user); // this will be available in req.user
-		}).catch(err => {
-			done(err, null);
-		});
+passport.deserializeUser((user, done) => {
+	return done(null, user);
 });
 
 /* -- SERVER AND MIDDLEWARE CONFIGURATION */
@@ -80,6 +75,7 @@ app.use(session({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.authenticate('session'));
 
 /* Routers */
 app.use('/api', userRouter);
@@ -95,7 +91,17 @@ app.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`);
 });
 
+const isLoggedIn = (req, res, next) => {
+	if(req.isAuthenticated()) {
+	    return next();
+	}
+	return res.status(401).json({error: 'Not authorized'});
+}
+
+
 /* Objects to export */
 module.exports = {
-	app: app,
+	app: app
 };
+
+exports.isLoggedIn = isLoggedIn
