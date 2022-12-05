@@ -1,5 +1,6 @@
 import { Row, Col, Button, Modal, ListGroup, ButtonGroup, Nav, Form } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import APIHikes from '../../API/APIHikes';
 import APIHuts from '../../API/APIHutGet';
 import APIParkingGet from '../../API/APIParkingGet';
 import { AiOutlineHome } from 'react-icons/ai';
@@ -13,8 +14,22 @@ function LinkingModal(props) {
     const [selectedHut, setSelectedHut] = useState();
     const [selectedParkingLot, setSelectedParkingLot] = useState();
 
+    async function putHikePoint(point, type) {
+        try {
+            const obj = {
+                hikeid: props.hike.id,
+                pointid: point.id,
+                latitude: point.latitude,
+                longitude: point.longitude,
+            }
+            await APIHikes.putHikePoint(obj, type);
+        }
+        catch(err) {
+            console.log(err);
+        }
+    };
+
     async function loadParkingLots() {
-        //const parkingLotList = [{ name: "Paradise Parking" }, { name: "FreePark" }, { name: "Parcheggio Conad" }, { name: "Baby Parking" }, { name: "Carrefour Parking" }, { name: "Parcheggio via Ivrea" }];
         try {
             const parkingLotList = await APIParkingGet.getParkingLots();
             setParkingLotList(parkingLotList);
@@ -107,9 +122,9 @@ function LinkingModal(props) {
                     </Col>
                     <Col align = "right">
                         <ButtonGroup className = "me-2">
-                            <Button variant="primary">Start</Button>
-                            <Button variant="primary">Intermediate</Button>
-                            <Button variant="primary">End</Button>
+                            <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "start")}>Start</Button>
+                            <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "intermediate")}>Intermediate</Button>
+                            <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "end")}>End</Button>
                         </ButtonGroup>
                         <Button variant="secondary" onClick={() => props.setShowLinkingModal(false)}>Close</Button>
                     </Col>

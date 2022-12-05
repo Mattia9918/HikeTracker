@@ -132,7 +132,61 @@ async function getHikes() {
      }
  };
 
+ async function putHikePoint(obj, type) {
+    let url;
+
+    switch(type){
+        case "start":
+            url = APIURL + `hike/${obj.hikeid}/startingPoint`
+            break;
+
+        case "intermediate":
+            url = APIURL + `hike/${obj.hikeid}/intermediatePoint`
+            break;
+
+        case "end":
+            url = APIURL + `hike/${obj.hikeid}/arrivalPoint`
+            break;
+
+        default:
+            console.log("unreachable switch case");
+            break;
+    }
+    
+    try {
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                { 
+                    id: obj.pointid, 
+                    latitude: obj.longitude,
+                    longitude: obj.latitude
+                }
+            )
+        });
+        if (response.ok) {
+            return true;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            console.log(response); 
+            throw new TypeError(appErrText);
+
+        }
+
+    } catch (error) {
+        console.log(error); 
+        throw (error);
+    }
+}
+ 
 
 
-  const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces}; 
+
+  const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint}; 
   export default APIHikes; 
