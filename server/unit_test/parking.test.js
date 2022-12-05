@@ -1,7 +1,6 @@
 const parking_dao = require('../modules/dao/parkingdao.js');
 const hike_dao = require('../modules/dao/hikedao.js');
 
-
 const parking1 = {
     id: undefined,
     name: "5 Guys",
