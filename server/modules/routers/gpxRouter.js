@@ -5,26 +5,12 @@ const hike_dao = require("../dao/hikedao");
 const manageFile = require("../../manageGpx");
 const {resolve} = require("path");
 const fileUpload = require('express-fileupload');
+const checkAuth = require("../../authMiddleware");
 
 const router = express.Router();
 router.use(fileUpload());
 
-const isLoggedIn = (req, res, next) => {
-	if(req.isAuthenticated()) {
-	    return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
-
-router.post('/upload', isLoggedIn, async (req, res) => {
-    /*if (req.user === undefined)
-        return res.status(401).json({ error: 'not authenticated!' });
-
-    if(req.user.role !== "localGuide")
-        return res.status(401).json({ error: 'not authorized!' });
-
-     */
+router.post('/upload', checkAuth.isLocalGuide, async (req, res) => {
 
     if (req.files === undefined) {
         return res.status(400).json({ msg: 'No file uploaded' });
@@ -55,15 +41,7 @@ router.post('/upload', isLoggedIn, async (req, res) => {
 });
 
 //POST GPX AS BLOB
-router.post('/api/gpx', isLoggedIn, async (req, res) => {
-
-    /*if (req.user === undefined)
-        return res.status(401).json({ error: 'not authenticated!' });
-
-    if(req.user.role !== "localGuide")
-        return res.status(401).json({ error: 'not authorized!' });
-
-     */
+router.post('/api/gpx', checkAuth.isLocalGuide, async (req, res) => {
 
     try {
 
@@ -93,7 +71,6 @@ router.get("/api/gpx/:id", async (req, res) => {
             res.status(404).json({err:"Not Found"}); 
 
     } catch (err) {
-        //console.log(err);
         res.status(500).end();
     }
 });

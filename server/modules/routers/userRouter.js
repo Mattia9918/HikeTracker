@@ -1,6 +1,6 @@
 "use strict";
 
-require('dotenv').config({ path: '/server/PARAM.env' })
+require('dotenv').config({ path: '../../PARAM.env' })
 
 const express = require("express");
 const user_dao = require('../dao/userdao.js');

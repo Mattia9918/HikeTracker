@@ -4,46 +4,19 @@ const express = require("express");
 const hut_dao = require("../dao/hutdao");
 const {check, validationResult} = require("express-validator");
 const hike_dao = require("../dao/hikedao");
+const checkAuth = require("../../authMiddleware");
 
 const router = express.Router();
 
-const isLocalGuide = (req, res, next) => {
-	if(req.isAuthenticated()) {
-        if(req.user.role === 'localGuide')
-            return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
-const isLoggedIn = (req, res, next) => {
-	if(req.isAuthenticated()) {
-	    return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
-
-
-// TODO: aggiungere inserimento punto
-router.post('/api/hut', isLocalGuide,
+router.post('/api/hut', checkAuth.isLocalGuide,
     []
     , async (req, res) => {
-
-        /*if (req.user === undefined)
-            return res.status(401).json({ error: 'not authenticated!' });
-
-        if(req.user.role !== "localGuide")
-            return res.status(401).json({ error: 'not authorized!' });
-
-         */
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
         try {
-            //console.log(req.body)
-
             const pointId = await hike_dao.postPointHut(
                 req.body.latitude,
                 req.body.longitude,
@@ -67,7 +40,7 @@ router.post('/api/hut', isLocalGuide,
     })
 
 // Post the Hike_Point linked with Hut
-router.post('/api/hutLinkHike',isLocalGuide,
+router.post('/api/hutLinkHike', checkAuth.isLocalGuide,
 []
 , async (req, res) => {
 
@@ -80,7 +53,6 @@ router.post('/api/hutLinkHike',isLocalGuide,
        
 
         const  hut   = await hut_dao.getHutById(req.body.hutID);
-        console.log(hut)
         const hikeID = await hike_dao.postHike_Point(req.body.hikeID, "hut", hut.point_id);
 
         return res.status(201).json({ "id": hikeID });
@@ -94,12 +66,7 @@ router.post('/api/hutLinkHike',isLocalGuide,
 })
 
 /** Get all huts **/
-router.get("/api/huts", isLoggedIn, async (req, res) => {
-
-    /*if (req.user === undefined)
-        return res.status(401).json({ error: 'not authenticated!' });
-
-     */
+router.get("/api/huts", checkAuth.isLoggedIn, async (req, res) => {
 
     try {
         const huts = await hut_dao.getHuts();
@@ -111,12 +78,7 @@ router.get("/api/huts", isLoggedIn, async (req, res) => {
 });
 
 /** Get hut by id **/
-router.get("/api/hut/:id", isLoggedIn, async (req, res) => {
-
-    /*if (req.user === undefined)
-        return res.status(401).json({ error: 'not authenticated!' });
-
-     */
+router.get("/api/hut/:id", checkAuth.isLoggedIn, async (req, res) => {
 
     try {
         const id = req.params.id;
@@ -131,12 +93,7 @@ router.get("/api/hut/:id", isLoggedIn, async (req, res) => {
 });
 
 /** Get huts with filters **/
-router.get(`/api/hut*`, isLoggedIn, async (req, res) => {
-
-    /*if (req.user === undefined)
-        return res.status(401).json({ error: 'not authenticated!' });
-
-     */
+router.get(`/api/hut*`, checkAuth.isLoggedIn, async (req, res) => {
 
     try {
         let huts;

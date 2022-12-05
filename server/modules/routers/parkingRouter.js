@@ -4,27 +4,13 @@ const express = require("express");
 const hike_dao = require("../dao/hikedao");
 const parking_dao = require("../dao/parkingdao");
 const {check, validationResult} = require("express-validator");
+const checkAuth = require("../../authMiddleware");
 
 const router = express.Router();
 
-const isLocalGuide = (req, res, next) => {
-	if(req.isAuthenticated()) {
-        if(req.user.role === 'localGuide')
-            return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
-const isLoggedIn = (req, res, next) => {
-	if(req.isAuthenticated()) {
-	    return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
 //PARKING_LOT TABLE
 
-router.get("/api/parking", isLoggedIn, async (req, res) => {
+router.get("/api/parking", checkAuth.isLoggedIn, async (req, res) => {
 
     try {
         const parks = await parking_dao.getParks();
@@ -35,7 +21,7 @@ router.get("/api/parking", isLoggedIn, async (req, res) => {
     }
 });
 
-router.get("/api/parking/:id", isLoggedIn, async (req, res) => {
+router.get("/api/parking/:id", checkAuth.isLoggedIn, async (req, res) => {
     try {
         const id = req.params.id;
         const park = await parking_dao.getParkById(id);
@@ -45,9 +31,11 @@ router.get("/api/parking/:id", isLoggedIn, async (req, res) => {
     }
 });
 
-router.post('/api/parking', isLocalGuide, 
-[/*check('guarded').isNumeric(),
-    check('parking_spaces').isNumeric()*/]
+router.post('/api/parking', checkAuth.isLocalGuide, 
+[
+    check('guarded').isNumeric(),
+    check('parking_spaces').isNumeric()
+]
 , async (req, res) => {
 
     try {
@@ -66,7 +54,7 @@ router.post('/api/parking', isLocalGuide,
 });
 
 // hiking delete
-router.delete('/api/parking/delete', isLocalGuide, async (req, res) => {
+router.delete('/api/parking/delete', async (req, res) => {
     try {
         await parking_dao.deleteParks();
         return res.status(204).end();

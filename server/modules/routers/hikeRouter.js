@@ -3,16 +3,9 @@
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
 const {check, validationResult} = require("express-validator");
+const checkAuth = require("../../authMiddleware");
 
 const router = express.Router();
-
-const isLoggedIn = (req, res, next) => {
-	if(req.isAuthenticated()) {
-	    return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
 
 /* -- API -- */
 
@@ -82,16 +75,8 @@ router.get(`/api/hike*`, async (req, res) => {
 router.post('/api/hiking',
     [check('length').isNumeric(),
         check('estimatedTime').isNumeric()
-        ], isLoggedIn, 
+        ], checkAuth.isLocalGuide, 
         async (req, res) => {
-
-        /*if (req.user === undefined)
-            return res.status(401).json({ error: 'not authenticated!' });
-
-        if(req.user.role !== "localGuide")
-            return res.status(401).json({ error: 'not authorized!' });
-
-         */
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -158,7 +143,5 @@ router.delete('/api/points', async (req, res) => {
         res.status(500).end();
     }
 });
-
-
 
 module.exports = router;
