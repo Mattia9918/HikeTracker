@@ -218,6 +218,9 @@ const rowJsonMapping = (rows) => {
 			case "interest":
 				interestingPoints.push(point);
 				break;
+			case "hut":
+				interestingPoints.push(point);
+				break;
 			default:
 				console.log("error type point");
 				throw "error type point";
@@ -506,7 +509,7 @@ exports.deleteHike_Point = () => {
 
 };
 
-
+/*
 exports.deleteHike_Point_Hut = () => {
 	return new Promise((resolve, reject) => {
 		const sql = 'DELETE FROM hike_point HP, hut H WHERE HP.pointID = H.point_id';
@@ -519,7 +522,9 @@ exports.deleteHike_Point_Hut = () => {
 		});
 	});
 };
-	
+ */
+
+/*
 exports.deleteHike_Point_Hut_Id = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'DELETE FROM hike_point HP, hut H WHERE HP.pointID = H.point_id AND hikeID=?';
@@ -532,6 +537,8 @@ exports.deleteHike_Point_Hut_Id = (id) => {
 		});
 	});
 };
+
+ */
 
 exports.postHike_Point = (hikeID, type, pointID) => {
 	return new Promise((resolve, reject) => {
@@ -581,7 +588,7 @@ exports.getFileContentById = (id) => {
 /* Gets all the cities in which there's an hike */
 exports.getHikeCities = () => {
 	return new Promise((resolve, reject) => {
-		const sql = 'SELECT DISTINCT city FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = "start")';
+		const sql = "SELECT DISTINCT city FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = 'start')";
 		db.all(sql, [], function (err, rows) {
 			if (err) {
 				console.log(err);
@@ -597,7 +604,7 @@ exports.getHikeCities = () => {
 /* Gets all the provinces in which there's an hike */
 exports.getHikeProvinces = () => {
 	return new Promise((resolve, reject) => {
-		const sql = 'SELECT DISTINCT province FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = "start")';
+		const sql = "SELECT DISTINCT province FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = 'start')";
 		db.all(sql, [], function (err, rows) {
 			if (err) {
 				console.log(err);
@@ -614,7 +621,7 @@ exports.getHikeProvinces = () => {
 exports.deleteGpx = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DROP TABLE IF EXISTS gpx';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS gpx(hikeID INTEGER, gpxfile blob NOT NULL, PRIMARY KEY(hikeID))'
+		const sql2 = "CREATE TABLE IF NOT EXISTS gpx(hikeID INTEGER, gpxfile blob NOT NULL, PRIMARY KEY(hikeID))"
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);
