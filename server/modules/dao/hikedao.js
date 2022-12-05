@@ -224,7 +224,6 @@ const rowJsonMapping = (rows) => {
 			default:
 				console.log("error type point");
 				throw "error type point";
-				break;
 		}
 	}
 	hikes.push({
@@ -645,20 +644,3 @@ exports.deleteGpx = () => {
 
 
 
-
-
-
-
-//exports.getHikeById = (id) => {
-//	return new Promise((resolve, reject) => {
-//		const sql =
-//			"SELECT H.id AS hikeID, title, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, latitude, longitude, P.type AS pointType, P.description AS pointDescription, city, province, HP.type AS HPtype, U.username FROM hike H, point P, hike_point HP, user U WHERE H.id = HP.hikeID AND P.id = HP.pointID AND H.localguideID = U.id AND P.id = HP.pointID AND H.id = ?";
-//		db.all(sql, [id], (err, rows) => {
-//			if (err) reject(err);
-//			else {
-//				const hikes = rowJsonMapping(rows);
-//				resolve(hikes);
-//			}
-//		});
-//	});
-//};

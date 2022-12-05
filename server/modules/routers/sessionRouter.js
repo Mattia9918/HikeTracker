@@ -8,25 +8,24 @@ const router = express.Router();
 /** API Login and Logout **/
 // POST /sessions
 // login
-router.post('', passport.authenticate('local'), (req, res) =>  {
-    res.status(201).json(req.user);
-    // passport.authenticate('local', (err, user, info) => {
-    //     if (err)
-    //         return next(err);
-    //     if (!user) {
-    //         // display wrong login messages
-    //         return res.status(401).json(info);
-    //     }
-    //     // success, perform the login
-    //     req.login(user, (err) => {
-    //         if (err)
-    //             return next(err);
+router.post('', (req, res, next) =>  {
+    passport.authenticate('local', (err, user, info) => {
+        if (err)
+            return next(err);
+        if (!user) {
+            // display wrong login messages
+            return res.status(401).json(info);
+        }
+        // success, perform the login
+        req.login(user, (err) => {
+            if (err)
+                return next(err);
 
-    //         // req.user contains the authenticated user, we send all the user info back
-    //         // this is coming from dao.getUserByCredentials()
-    //         return res.json(req.user);
-    //     });
-    // })(req, res, next);
+            // req.user contains the authenticated user, we send all the user info back
+            // this is coming from dao.getUserByCredentials()
+            return res.json(req.user);
+        });
+    })(req, res, next);
 
 });
 
