@@ -506,6 +506,33 @@ exports.deleteHike_Point = () => {
 
 };
 
+
+exports.deleteHike_Point_Hut = () => {
+	return new Promise((resolve, reject) => {
+		const sql = 'DELETE FROM hike_point HP, hut H WHERE HP.pointID = H.point_id';
+		db.run(sql, [], (err) => {
+		if (err)
+			reject(err);
+		else {
+			resolve(null);
+		}
+		});
+	});
+};
+	
+exports.deleteHike_Point_Hut_Id = (id) => {
+	return new Promise((resolve, reject) => {
+		const sql = 'DELETE FROM hike_point HP, hut H WHERE HP.pointID = H.point_id AND hikeID=?';
+		db.run(sql, [id], (err) => {
+		if (err)
+			reject(err);
+		else {
+			resolve(null);
+		}
+		});
+	});
+};
+
 exports.postHike_Point = (hikeID, type, pointID) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO hike_point(hikeID, type, pointID) VALUES (?, ?, ?)';
