@@ -55,9 +55,9 @@ function LinkingModal(props) {
             <Modal.Body >
                 <Row>
                     <Col>
-                        <Nav fill variant="tabs" defaultActiveKey="1" id="hpnav">
+                        <Nav fill variant="tabs" defaultActiveKey="1">
                             <Nav.Item>
-                                <Nav.Link eventKey="1" onClick={() => {
+                                <Nav.Link id = "linkingnavitem" eventKey="1" onClick={() => {
                                     loadHuts();
                                     setMode(0)
                                 }}>
@@ -66,7 +66,7 @@ function LinkingModal(props) {
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link eventKey="2" onClick={() => {
+                                <Nav.Link id = "linkingnavitem" eventKey="2" onClick={() => {
                                     loadParkingLots();
                                     setMode(1)
                                 }}>
@@ -81,14 +81,14 @@ function LinkingModal(props) {
                     <Col>
                         <ListGroup id="hplistgroup">
                             {(mode === 0 &&
-                                hutList.map((hut) => <ListGroup.Item action onClick={() => {
+                                hutList.map((hut) => <ListGroup.Item id = "hpitem" action onClick={() => {
                                     setSelectedHut(hut);
                                     setSelectedParkingLot();
                                 }}>
                                     <b>{hut.name}</b>, {hut.city}, {hut.province}
                                 </ListGroup.Item>)) ||
                                 (mode === 1 &&
-                                    parkingLotList.map((parkingLot) => <ListGroup.Item action onClick={() => {
+                                    parkingLotList.map((parkingLot) => <ListGroup.Item id = "hpitem" action onClick={() => {
                                         setSelectedParkingLot(parkingLot);
                                         setSelectedHut();
                                     }}>

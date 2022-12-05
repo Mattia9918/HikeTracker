@@ -11,7 +11,7 @@ function Layout(props) {
             </Row>
 
             {/* -- BODY  -- */}
-            <Row>
+            <Row id = "bg">
                 <Outlet />
             </Row>
         </>

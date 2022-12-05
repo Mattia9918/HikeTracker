@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {MapContainer,TileLayer,Marker,GeoJSON, Rectangle,Popup} from 'react-leaflet'; 
 import {useMap,useMapEvents} from 'react-leaflet/hooks';
-import {Modal,Button} from 'react-bootstrap'; 
+import {Modal,Button,Accordion,Row,Col} from 'react-bootstrap'; 
 import APIGpx from '../../API/APIGpx';
 import "leaflet-area-select";
 import L from 'leaflet';
@@ -178,7 +178,10 @@ function MapModal(props) {
 
           {/* Modal body */}
           <Modal.Body >
-              {areadragmap && <>Press ctrl + mouse drag to define a geographic area where you want to find hikes<br></br><hr></hr></>}
+              {areadragmap && <div className = "mb-3">Press ctrl + mouse drag to define a geographic area where you want to find hikes</div>}
+              
+              <Legenda />
+              
               {(areadragmap &&
                   <AreaDragMap mode = {2} bounds = {bounds} setBounds = {setBounds} />) ||
                 (markermap && 
@@ -261,4 +264,45 @@ function GetCustomIcon (type) {
 
 
 export {MapItem, AreaDragMap, MarkerMap,MapModal}; 
+
+
+function Legenda(props) {
+  return (
+<Accordion className = "mb-2">
+      <Accordion.Item eventKey="0">
+        <Accordion.Header>Legend</Accordion.Header>
+        <Accordion.Body>
+          <Row>
+            <Col>
+              <div className = "mb-2">
+                <img src = "http://localhost:3000/start1.png" alt = "symbol1" style = {{"height":"40px"}}/>
+                {" "}Starting point
+              </div>
+              <div className = "mb-2">
+              <img src = "http://localhost:3000/finish1.png" alt = "symbol2" style = {{"height":"40px"}}/>
+                {" "}Ending point
+              </div>
+              <div>
+              <img src = "http://localhost:3000/flag1.png" alt = "symbol3" style = {{"height":"40px"}}/>
+                {" "}Intermediate point
+              </div>
+            </Col>
+            <Col>
+              <div className = "mb-2">
+                <img src = "http://localhost:3000/hut.png" alt = "symbol4" style = {{"height":"40px"}}/>
+                {" "}Hut
+              </div>
+              <div className = "mb-2">
+              <img src = "http://localhost:3000/park.png" alt = "symbol5" style = {{"height":"40px"}}/>
+                {" "}Parking lot
+              </div>
+            </Col>
+            
+          </Row>
+          
+        </Accordion.Body>
+      </Accordion.Item>
+    </Accordion>
+  );
+}
 

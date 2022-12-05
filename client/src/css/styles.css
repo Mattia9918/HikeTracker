@@ -1,5 +1,10 @@
+#bg {
+    background-color: #f7f7f754;
+}
+
 #cardscontainer {
     border-radius: 10px;
+    background-color: #FFFFFF;
 }
 
 #navlink:focus{
@@ -38,4 +43,19 @@
 
 #hplistgroup {
     border-radius: 0px;
+    max-height: 370px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+}
+
+#hpitem:focus {
+    background-color: #0d6dfd37;
+}
+
+#linkingnavitem:focus {
+    background-color: #0d6dfd37;
+}
+
+#linkingnavitem:hover {
+    background-color: #0d6dfd15;
 }
