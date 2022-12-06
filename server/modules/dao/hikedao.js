@@ -45,22 +45,6 @@ exports.getHikeById = (id) => {
 	});
 };
 
-exports.getHikeCreatorById = (id) => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT localGuideID FROM hike WHERE id = ?"
-
-		db.get(sql, [id], (err, row) => {
-			if (err) {
-				reject(err);
-			}
-			else {
-				resolve(row.localguideID);
-			}
-		});
-	});
-};
-
 exports.getHikeByAscent = (ascent1, ascent2) => {
 	return new Promise((resolve, reject) => {
 		const sql =
@@ -127,9 +111,7 @@ exports.getHikeByExpectedTime = (minTime, maxTime) => {
 
 					if (hikeTime>=start && hikeTime<=end)
 					{
-						//console.log(hikeTime);
-						return h; 
-						
+						return h;
 					}
 						
 				}
@@ -252,7 +234,7 @@ const rowJsonMapping = (rows) => {
 				break;
 			default:
 				console.log("error type point");
-				throw "error type point";
+				throw new Error("error type point");
 		}
 	}
 	hikes.push({
