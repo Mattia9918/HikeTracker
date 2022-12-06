@@ -177,6 +177,7 @@ router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
                 .json({error: "Operation Forbidden: you must be creator of the hike"})
             }
 
+            await hike_dao.checkRadius(req.body);
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'start')
             return res.status(200).json({msg: "Success: point set as start"})
         } catch (err) {
