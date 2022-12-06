@@ -53,7 +53,7 @@ router.post('/api/parking', checkAuth.isLocalGuide,
 
 });
 
-// hiking delete
+// parking delete
 router.delete('/api/parking/delete', async (req, res) => {
     try {
         await parking_dao.deleteParks();

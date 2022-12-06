@@ -53,7 +53,7 @@ router.post('/api/hutLinkHike', checkAuth.isLocalGuide,
        
 
         const  hut   = await hut_dao.getHutById(req.body.hutID);
-        const hikeID = await hike_dao.postHike_Point(req.body.hikeID, "hut", hut.point_id);
+        const hikeID = await hike_dao.postHike_Point(req.body.HikeID, "hut", hut.point_id);
 
         return res.status(201).json({ "id": hikeID });
         
@@ -76,6 +76,18 @@ router.get("/api/huts", checkAuth.isLoggedIn, async (req, res) => {
         return res.status(500).json({ error: err });
     }
 });
+
+// hikeLinkedhut delete
+router.delete('/api/hut/deleteLink', async (req, res) => {
+    try {
+        await hut_dao.deleteHikeLinkedHut();
+        return res.status(204).end();
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
+
 
 /** Get hut by id **/
 router.get("/api/hut/:id", checkAuth.isLoggedIn, async (req, res) => {

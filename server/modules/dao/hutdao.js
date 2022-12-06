@@ -59,6 +59,21 @@ exports.deleteAllHuts = () => {
 	})
 };
 
+exports.deleteHikeLinkedHut= () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"DELETE FROM  hike_point  WHERE type='hut'  ";
+		db.run(sql, [], function (err) {
+			if (err) {
+				reject(err);
+				return;
+			}
+			resolve();
+		});
+	})
+};
+
+
 exports.getHuts = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
