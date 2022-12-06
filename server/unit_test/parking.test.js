@@ -63,7 +63,7 @@ describe("test hikes and filtering", () => {
 })
 
 testGetParks();
-testGetParkById(1);
+testGetParkById();
 
 });
 
