@@ -78,7 +78,6 @@ function getHuts(expectedHTTPStatus, hut1, hut2) {
 			.send(hut1)
 			.then(function (res) {
 				hutID1 = res.body.id;
-                console.log(hutID1);
 			});
 		await agent
 			.post("/api/hut")
@@ -104,7 +103,6 @@ function getHutsByAltitude(expectedHTTPStatus, hut1, hut2, minALtitude) {
 			.send(hut1)
 			.then(function (res) {
 				hutID1 = res.body.id;
-                console.log(hutID1);
 			});
 		await agent
 			.post("/api/hut")
