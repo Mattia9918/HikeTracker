@@ -636,5 +636,23 @@ exports.updateHikePoint = (hikeID, pointID, type) => {
 	})
 }
 
+/* This function verifies if the given coordinates
+ * are within a radius of (radius) km from every
+ * point of a given hike
+ */
+exports.checkRadius = (body) => {
+	return new Promise((resolve, reject) => {
+		const sql = "UPDATE hike_point SET pointID = ? WHERE hikeID = ? AND type = ?"
+		db.run(sql, [pointID, hikeID, type], function (err) {
+			if (err) {
+				reject(err)
+			}
+			else {
+				resolve(this.lastID)
+			}
+		})
+	})
+}
+
 
 
