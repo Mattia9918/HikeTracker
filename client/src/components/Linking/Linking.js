@@ -14,9 +14,6 @@ function LinkingModal(props) {
     const [selectedHut, setSelectedHut] = useState();
     const [selectedParkingLot, setSelectedParkingLot] = useState();
 
-    console.log(selectedParkingLot)
-    console.log(selectedHut)
-
     async function putHikePoint(point, type) {
         try {
             const obj = {
