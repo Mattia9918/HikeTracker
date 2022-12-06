@@ -194,7 +194,7 @@ describe("test get huts and add filters", () => {
                 point4.longitude,
                 point4.city,
                 point4.province)
-            const hutlast = await hut_dao.postHut(
+            await hut_dao.postHut(
                 hut4.name,
                 hut4.address,
                 hut4.phone_number,

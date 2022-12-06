@@ -125,7 +125,7 @@ router.post('/api/hiking',
 // hiking delete
 router.delete('/api/hiking/delete', async (req, res) => {
     try {
-        const status = await hike_dao.deleteHikes();
+        await hike_dao.deleteHikes();
         return res.status(204).end();
     } catch (err) {
         console.log(err);
