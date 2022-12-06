@@ -77,7 +77,7 @@ exports.deleteHikeLinkedHut= () => {
 exports.getHuts = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.id AS point_id, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
 			"FROM hut H, point P WHERE H.point_id = P.id ORDER BY H.id DESC"
 

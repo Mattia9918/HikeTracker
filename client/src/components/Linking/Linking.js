@@ -14,11 +14,14 @@ function LinkingModal(props) {
     const [selectedHut, setSelectedHut] = useState();
     const [selectedParkingLot, setSelectedParkingLot] = useState();
 
+    console.log(selectedParkingLot)
+    console.log(selectedHut)
+
     async function putHikePoint(point, type) {
         try {
             const obj = {
                 hikeid: props.hike.id,
-                pointid: point.id,
+                pointid: point.point_id,
                 latitude: point.latitude,
                 longitude: point.longitude,
             }

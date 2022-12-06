@@ -154,6 +154,7 @@ async function getHikes() {
     }
     
     try {
+        console.log(obj)
 
         const response = await fetch(url, {
             method: 'PUT',

@@ -30,7 +30,36 @@ exports.getHikes = () => {
 	});
 };
 
+exports.getHikeById = (id) => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT * FROM hike WHERE id = ?"
 
+		db.get(sql, [id], (err, row) => {
+			if (err)
+				reject(err);
+			else {
+				resolve(row);
+			}
+		});
+	});
+};
+
+exports.getHikeCreatorById = (id) => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT localGuideID FROM hike WHERE id = ?"
+
+		db.get(sql, [id], (err, row) => {
+			if (err) {
+				reject(err);
+			}
+			else {
+				resolve(row.localguideID);
+			}
+		});
+	});
+};
 
 exports.getHikeByAscent = (ascent1, ascent2) => {
 	return new Promise((resolve, reject) => {
@@ -508,37 +537,6 @@ exports.deleteHike_Point = () => {
 
 };
 
-/*
-exports.deleteHike_Point_Hut = () => {
-	return new Promise((resolve, reject) => {
-		const sql = 'DELETE FROM hike_point HP, hut H WHERE HP.pointID = H.point_id';
-		db.run(sql, [], (err) => {
-		if (err)
-			reject(err);
-		else {
-			resolve(null);
-		}
-		});
-	});
-};
- */
-
-/*
-exports.deleteHike_Point_Hut_Id = (id) => {
-	return new Promise((resolve, reject) => {
-		const sql = 'DELETE FROM hike_point HP, hut H WHERE HP.pointID = H.point_id AND hikeID=?';
-		db.run(sql, [id], (err) => {
-		if (err)
-			reject(err);
-		else {
-			resolve(null);
-		}
-		});
-	});
-};
-
- */
-
 exports.postHike_Point = (hikeID, type, pointID) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO hike_point(hikeID, type, pointID) VALUES (?, ?, ?)';
@@ -641,6 +639,20 @@ exports.deleteGpx = () => {
 	})
 
 };
+
+exports.updateHikePoint = (hikeID, pointID, type) => {
+	return new Promise((resolve, reject) => {
+		const sql = "UPDATE hike_point SET pointID = ? WHERE hikeID = ? AND type = ?"
+		db.run(sql, [pointID, hikeID, type], function (err) {
+			if (err) {
+				reject(err)
+			}
+			else {
+				resolve(this.lastID)
+			}
+		})
+	})
+}
 
 
 
