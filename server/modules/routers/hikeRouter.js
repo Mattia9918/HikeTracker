@@ -144,6 +144,19 @@ router.delete('/api/points', async (req, res) => {
     }
 });
 
+async function checkConstraints(req, res) {
+    const hike = await hike_dao.getHikeById(req.params.id)
+    // Check if hike exists
+    if (hike === undefined) {
+        return res.status(404).json({error: "Error: hike not found"})
+    }
+    // Check if it is my hike
+    if(hike.localguideID !== req.user.id) {
+        return res.status(403)
+            .json({error: "Operation Forbidden: you must be creator of the hike"})
+    }
+}
+
 /** APIs to update starting and arrival point of a hut */
 
 router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide, 
@@ -159,24 +172,10 @@ router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
             return res.status(422).json({ errors: errors.array() });
         }
 
-        console.log(req.body)
-
         // Aggiungere check sulla distanza
 
         try {
-            const hike = await hike_dao.getHikeById(req.params.id)
-
-            // Check if hike exists
-            if (hike === undefined) {
-                return res.status(404).json({error: "Error: hike not found"})
-            }
-
-            // Check if it is my hike
-            if(hike.localguideID !== req.user.id) {
-                return res.status(403)
-                .json({error: "Operation Forbidden: you must be creator of the hike"})
-            }
-
+            await checkConstraints(req, res);
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'start')
             return res.status(200).json({msg: "Success: point set as start"})
         } catch (err) {
@@ -201,19 +200,7 @@ router.put('/api/hike/:id/arrivalPoint', checkAuth.isLocalGuide,
         // Aggiungere check sulla distanza
 
         try {
-            const hike = await hike_dao.getHikeById(req.params.id)
-
-            // Check if hike exists
-            if (hike === undefined) {
-                return res.status(404).json({error: "Error: hike not found"})
-            }
-
-            // Check if it is my hike
-            if(hike.localguideID !== req.user.id) {
-                return res.status(403)
-                .json({error: "Operation Forbidden: you must be creator of the hike"})
-            }
-
+            await checkConstraints(req, res);
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'arrive')
             return res.status(200).json({msg: "Success: point set as arrival"})
         } catch (err) {
