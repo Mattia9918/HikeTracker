@@ -2,6 +2,7 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
+const point = require("../dao/point");
 const manageFile = require("../../manageGpx");
 const {resolve} = require("path");
 const fileUpload = require('express-fileupload');
@@ -67,6 +68,22 @@ router.get("/api/gpx/:id", async (req, res) => {
             const json = manageFile.getGeoJSONbyContent(content);
             res.status(200).json(json);
         }
+        else 
+            res.status(404).json({err:"Not Found"}); 
+
+    } catch (err) {
+        res.status(500).end();
+    }
+});
+
+
+router.get("/api/point/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const coord = await point.getPointByHikeId(id);
+        if(coord)
+            res.status(200).json(coord);
         else 
             res.status(404).json({err:"Not Found"}); 
 

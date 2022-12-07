@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react';
 import {MapContainer,TileLayer,Marker,GeoJSON, Rectangle,Popup} from 'react-leaflet'; 
 import {useMap,useMapEvents} from 'react-leaflet/hooks';
 import {Modal,Button,Accordion,Row,Col} from 'react-bootstrap'; 
-import APIGpx from '../../API/APIGpx';
 import "leaflet-area-select";
 import L from 'leaflet';
+import APIGpx from '../../API/APIGpx';
 
-
+import {useCoordinatesPoint} from './hooksMap'; 
 
 const MapItem = (props)=>{
 
+    
+    const {start,arrive} = useCoordinatesPoint(props.hikeid); 
+   
     const [coordinates, setCoordinates] = useState({});
     const [firstPoint, setFirstPoint] = useState([]);
     const [lastPoint, setLastPoint] = useState([]);
@@ -20,10 +23,11 @@ const MapItem = (props)=>{
         const getJson = async()=>{
             try {
                     const json = await APIGpx.getFileById(props.hikeid);
+                    
                     const c = json.features;
                     
                     setCoordinates(c);
-
+                 
                     const arrayCoordinates = c[0].geometry.coordinates;
                     const last = arrayCoordinates.length - 1;
                     const middle = Math.round(last / 2);
@@ -42,9 +46,6 @@ const MapItem = (props)=>{
         getJson();
     }, [props.hikeid]);
 
-    
-   
-
     return <>
         {coordinates.length &&
             <center>
@@ -54,14 +55,26 @@ const MapItem = (props)=>{
                     {(props.dynamicmarker &&
                         <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />)
                     }
-  
-                    <Marker position={firstPoint} icon={GetCustomIcon("starting")} >
+
+                    <Marker position={start} icon={GetCustomIcon("starting")} >
                       <Popup>Starting Point</Popup>
                     </Marker>
 
-                    <Marker position={lastPoint} icon={GetCustomIcon("ending")}>
-                      <Popup>Ending Point</Popup>
+                    <Marker position={arrive} icon={GetCustomIcon("ending")} >
+                      <Popup>Starting Point</Popup>
                     </Marker>
+                    
+                    { (start[0]!==firstPoint[0] && start[1]!==firstPoint[1]) && 
+                      <Marker position={firstPoint}  >
+                        <Popup>Starting Point</Popup>
+                      </Marker>
+                    }
+
+                    { (arrive[0]!==lastPoint[0] && arrive[1]!==lastPoint[1]) && 
+                      <Marker position={lastPoint}>
+                        <Popup>Ending Point</Popup>
+                      </Marker>
+                    }
                     
                 </MapContainer>
             </center>

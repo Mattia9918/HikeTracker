@@ -56,6 +56,26 @@ async function postGpx(filePath) {
     }
 }
 
+//get start and arrival point with hikeId (JOIN with hike_point & point)
+async function getPointByHikeId(id) {
+    const url = APIURL + `point/${id}`;
+     try {
+         const response = await fetch(url);
+         if (response.ok) {
+             const ris = await response.json();
+             
+             return ris;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
 
-const APIpostGpx = {postGpx , getFileById}; 
+const APIpostGpx = {postGpx , getFileById,getPointByHikeId}; 
 export default APIpostGpx; 
