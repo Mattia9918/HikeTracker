@@ -36,7 +36,7 @@ async function postHike(Hike) {
 
 async function getInfo(info) {
 
-    const url = 'http://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+info.lat+'&longitude='+info.long+'&localityLanguage=en';
+    const url = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+info.lat+'&longitude='+info.long+'&localityLanguage=en';
 
 
 

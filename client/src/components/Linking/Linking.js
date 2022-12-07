@@ -100,14 +100,14 @@ function LinkingModal(props) {
                     <Col>
                         <ListGroup id="hplistgroup">
                             {(mode === 0 &&
-                                hutList.map((hut) => <ListGroup.Item id = "hpitem" action onClick={() => {
+                                hutList.map((hut) => <ListGroup.Item key = {hut.id} id = "hpitem" action onClick={() => {
                                     setSelectedHut(hut);
                                     setSelectedParkingLot();
                                 }}>
                                     <b>{hut.name}</b>, {hut.city}, {hut.province}
                                 </ListGroup.Item>)) ||
                                 (mode === 1 &&
-                                    parkingLotList.map((parkingLot) => <ListGroup.Item id = "hpitem" action onClick={() => {
+                                    parkingLotList.map((parkingLot) => <ListGroup.Item key = {parkingLot.id} id = "hpitem" action onClick={() => {
                                         setSelectedParkingLot(parkingLot);
                                         setSelectedHut();
                                     }}>

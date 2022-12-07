@@ -16,7 +16,7 @@ function HutForm(props) {
     const [address, setAddress] = useState("Corso Luigi Einaudi"); 
     const [phonenumber, setPhonenumber] = useState("393333333333"); 
     const [email, setEmail] = useState("email@email.it"); 
-    const [website, setWebsite] = useState("http://www.test.it"); 
+    const [website, setWebsite] = useState("https://www.test.it"); 
     const [description, setDescription] = useState("description"); 
     const [latitude, setLatitude] = useState(""); 
     const [longitude, setLongitude] = useState("");
