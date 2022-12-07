@@ -165,8 +165,8 @@ async function getHikes() {
             body: JSON.stringify(
                 { 
                     id: obj.pointid, 
-                    latitude: obj.longitude,
-                    longitude: obj.latitude
+                    latitude: obj.latitude,
+                    longitude: obj.longitude
                 }
             )
         });

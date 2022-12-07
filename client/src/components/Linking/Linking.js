@@ -1,4 +1,4 @@
-import { Row, Col, Button, Modal, ListGroup, ButtonGroup, Nav, Form } from 'react-bootstrap';
+import { Row, Col, Button, Modal, ListGroup, ButtonGroup, Nav, Form, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import APIHikes from '../../API/APIHikes';
 import APIHuts from '../../API/APIHutGet';
@@ -13,6 +13,8 @@ function LinkingModal(props) {
     const [parkingLotList, setParkingLotList] = useState([]);
     const [selectedHut, setSelectedHut] = useState();
     const [selectedParkingLot, setSelectedParkingLot] = useState();
+    const [message, setMessage] = useState();
+    console.log(message);
 
     async function putHikePoint(point, type) {
         try {
@@ -23,9 +25,10 @@ function LinkingModal(props) {
                 longitude: point.longitude,
             }
             await APIHikes.putHikePoint(obj, type);
+            setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
         }
         catch(err) {
-            console.log(err);
+            setMessage({variant: "danger", msg: err.message});
         }
     };
 
@@ -68,6 +71,7 @@ function LinkingModal(props) {
 
             {/* Modal body */}
             <Modal.Body >
+                {message && <Alert variant={message.variant}>{message.msg}</Alert>}
                 <Row>
                     <Col>
                         <Nav fill variant="tabs" defaultActiveKey="1">
