@@ -1,3 +1,4 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Mattia9918_HikeTracker&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Mattia9918_HikeTracker)
 
 # Requirements
 - a machine with docker and docker-compose installed and running
