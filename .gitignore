@@ -1,8 +1,6 @@
 *.DS_Store
 *.db
 *.http
-code/server/coverage/
 node_modules/
 /.idea/
 /server/PARAM.env
-/server/coverage/
