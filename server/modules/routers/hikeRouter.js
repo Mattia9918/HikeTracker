@@ -147,6 +147,13 @@ router.delete('/api/points', async (req, res) => {
 });
 
 async function checkConstraints(req) {
+
+    // Check validation constraints
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return {status: 422, err: errors.array()}
+    }
+
     const hike = await hike_dao.getHikeById(req.params.id);
     const gpx = await hike_dao.getFileContentById(req.params.id);
     
@@ -184,27 +191,11 @@ router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
         check('longitude').isNumeric(),
     ],
     async (req, res) => {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
         try {
             let result = await checkConstraints(req);
-            switch (result.status){
-                case 403:
-                    return res.status(403).json(result.err);
-                
-                case 404:
-                    return res.status(404).json(result.err);
-                
-                case 422:
-                    return res.status(422).json(result.err);
-                
-                default:
-                    //case 200, proceed
-                    break;
-            }
+            if(result.status !== 200)
+                return res.status(result.status).json(result.err)
+
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'start')
             return res.status(200).json({msg: "Success: point set as start"})
         } catch (err) {
@@ -220,33 +211,15 @@ router.put('/api/hike/:id/arrivalPoint', checkAuth.isLocalGuide,
         check('longitude').isNumeric(),
     ],
     async (req, res) => {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
-
-        // Aggiungere check sulla distanza
-
         try {
             let result = await checkConstraints(req);
-            switch (result.status){
-                case 403:
-                    return res.status(403).json(result.err);
-                
-                case 404:
-                    return res.status(404).json(result.err);
-                
-                case 422:
-                    return res.status(422).json(result.err);
-                
-                default:
-                    //case 200, proceed
-                    break;
-            }
+            if(result.status !== 200)
+                return res.status(result.status).json(result.err)
+
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'arrive')
             return res.status(200).json({msg: "Success: point set as arrival"})
         } catch (err) {
+            console.log(err)
             return res.status(500).json({error: err});
         }
 })
