@@ -380,17 +380,15 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 
 exports.deleteHikes = () => {
 	return new Promise((resolve, reject) => {
-		const sql1 = 'DROP TABLE IF EXISTS hike';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS hike(id INTEGER, title text NOT NULL, length real NOT NULL, description text NOT NULL, difficulty text NOT NULL, estimatedTime text NOT NULL, ascent real NOT NULL, localguideID integer NOT NULL ,PRIMARY KEY(id) ) '
+		const sql1 = 'DELETE FROM hike';
+		const sql2 = "UPDATE sqlite_sequence SET seq=0 WHERE name='hike'"
 		db.run(sql1, [], function (err) {
 			if (err) {
-				console.log(err);
 				reject(err);
 			}
 			else {
 				db.run(sql2, [], function (err) {
 					if (err) {
-						console.log(err);
 						reject(err)
 					}
 					else {
@@ -405,17 +403,15 @@ exports.deleteHikes = () => {
 
 exports.deletePoint = () => {
 	return new Promise((resolve, reject) => {
-		const sql1 = 'DROP TABLE IF EXISTS point';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS point(id INTEGER, latitude real NOT NULL, longitude real NOT NULL, type text NOT NULL, description text NOT NULL, city text NOT NULL, province text NOT NULL, PRIMARY KEY(id) ) '
+		const sql1 = 'DELETE FROM point';
+		const sql2 = "UPDATE sqlite_sequence SET seq=0 WHERE name='point'"
 		db.run(sql1, [], function (err) {
 			if (err) {
-				console.log(err);
 				reject(err);
 			}
 			else {
 				db.run(sql2, [], function (err) {
 					if (err) {
-						console.log(err);
 						reject(err)
 					}
 					else {
@@ -428,28 +424,17 @@ exports.deletePoint = () => {
 
 };
 
-exports.deletePointCCs = () => {
-	return new Promise((resolve, reject) => {
-		const sql1 = 'DELETE FROM point';
-		db.run(sql1, [], function (err) {
-				db.run(sql1, [], function (err) {
-					if (err) {
-						console.log(err);
-						reject(err)
-					}
-					else {
-						resolve()
-					}
-				});
-			
-		})
-	})
-};
-
-exports.postPointHut = (latitude, longitude, city, province) => {
+exports.postPointHut = (point) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?)';
-		db.run(sql, [latitude, longitude, "hut", "descrizione", city, province], function (err) {
+		db.run(sql, [
+			point.latitude,
+			point.longitude,
+			"hut",
+			"descrizione",
+			point.city,
+			point.province
+		], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -461,12 +446,10 @@ exports.postPointHut = (latitude, longitude, city, province) => {
 	})
 };
 
-
-
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "hut", "da sostituire", body.locality, body.localityInfo.administrative[2].name], function (err) {
+		db.run(sql, [undefined, body.latitude, body.longitude, "point", "da sostituire", body.locality, body.localityInfo.administrative[2].name], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -496,23 +479,14 @@ exports.postParkPoint = (body) => {
 
 exports.deleteHike_Point = () => {
 	return new Promise((resolve, reject) => {
-		const sql1 = 'DROP TABLE IF EXISTS hike_point';
-		const sql2 = 'CREATE TABLE IF NOT EXISTS hike_point(hikeID INTEGER, type text NOT NULL, pointID integer NOT NULL, PRIMARY KEY(hikeID, pointID)) '
+		const sql1 = 'DELETE FROM hike_point';
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
 			}
 			else {
-				db.run(sql2, [], function (err) {
-					if (err) {
-						console.log(err);
-						reject(err)
-					}
-					else {
-						resolve()
-					}
-				});
+				resolve(this.changes);
 			}
 		})
 	})
@@ -599,23 +573,14 @@ exports.getHikeProvinces = () => {
 
 exports.deleteGpx = () => {
 	return new Promise((resolve, reject) => {
-		const sql1 = 'DROP TABLE IF EXISTS gpx';
-		const sql2 = "CREATE TABLE IF NOT EXISTS gpx(hikeID INTEGER, gpxfile blob NOT NULL, PRIMARY KEY(hikeID))"
+		const sql1 = 'DELETE FROM gpx';
 		db.run(sql1, [], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
 			}
 			else {
-				db.run(sql2, [], function (err) {
-					if (err) {
-						console.log(err);
-						reject(err)
-					}
-					else {
-						resolve()
-					}
-				});
+				resolve()
 			}
 		})
 	})

@@ -46,7 +46,7 @@ const point6 = {
 describe("test hikes and filtering", () => {
     beforeEach(async () => {
 
-        await hike_dao.deletePointCCs();
+        await hike_dao.deletePoint();
         await parking_dao.deleteParks();
 
         try {
