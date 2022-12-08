@@ -12,11 +12,20 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 
 /** USER AND ACTIVATION **/
 
-exports.insertUser = (email, hash, salt, role, name, surname, username) => {
+exports.insertUser = (user) => {
     return new Promise((resolve, reject) => {
         const sql =
             "INSERT INTO user(email, hash, role, username, isActive, salt, name, surname) VALUES(?, ?, ?, ?, 0, ?, ?, ?)";
-        db.run(sql, [email, hash, role, username, salt, name, surname], function (err) {
+        db.run(sql, 
+            [
+                user.email,
+                user.hash, 
+                user.role, 
+                user.username, 
+                user.salt, 
+                user.name, 
+                user.surname
+            ], function (err) {
             if (err) {
                 reject(err);
                 return;
