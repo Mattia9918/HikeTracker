@@ -1,6 +1,6 @@
 import { Row, Col, Button, Modal, ListGroup, ButtonGroup, Nav, Form, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-
+import APIHikes from '../../API/APIHikes';
 import APIHuts from '../../API/APIHutGet';
 import APIParkingGet from '../../API/APIParkingGet';
 import { AiOutlineHome } from 'react-icons/ai';
@@ -25,7 +25,7 @@ function LinkingModal(props) {
                 longitude: point.longitude,
                 hutId : selectedHut.id
             }
-            await APIHuts.linkHut(obj, type);
+            await APIHikes.putHikePoint(obj, type);
             setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
         }
         catch(err) {
