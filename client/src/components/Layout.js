@@ -11,9 +11,11 @@ function Layout(props) {
             </Row>
 
             {/* -- BODY  -- */}
-            <Row id = "bg">
-                <Outlet />
-            </Row>
+            <div id = "bg">
+                <Row>
+                    <Outlet />
+                </Row>
+            </div>
         </>
     )
 };
