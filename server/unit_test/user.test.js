@@ -18,24 +18,17 @@ function testUserOk() {
         surname: "Rossi",
         username: "mariorossi1",
         email: "mario.rossi@mail.it",
-        password: "password",
+        hash: "password",
+        salt: "",
         role: "role"
     }
 
     test("Insert user OK", async () => {
 
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(user.password, salt);
+        user.salt = await bcrypt.genSalt(10);
+        user.hash = await bcrypt.hash(user.hash, salt);
 
-        let id = await dao.insertUser(
-            user.email,
-            hash,
-            salt,
-            user.role,
-            user.name,
-            user.surname,
-            user.username
-        );
+        let id = await dao.insertUser(user);
 
         let result = await dao.getUserById(id)
 

@@ -44,7 +44,7 @@ const park2 = {
 
 describe("test api/parking (case success 20(0-4))", () => {
 	beforeEach(async () => {
-		await hikeDao.deletePointCCs();
+		await hikeDao.deletePoint();
         await parkDao.deleteParks();
 	});
 

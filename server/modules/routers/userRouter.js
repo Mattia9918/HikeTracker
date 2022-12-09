@@ -85,7 +85,17 @@ router.post('/register',
                 return res.status(500).json({ error: "Username already used!" });
             }
 
-            await user_dao.insertUser(email, password, salt, role, name, surname, username);
+            const user = {
+                email: email,
+                hash: password,
+                salt: salt,
+                role: role,
+                name: name,
+                surname: surname,
+                username: username
+            }
+
+            await user_dao.insertUser(user);
 
             // Generate activation code
             const code = crypto.randomBytes(64).toString('hex');
