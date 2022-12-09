@@ -86,11 +86,11 @@ const ParkingGeo = (props)=>{
         <Row>
             
             <Col className="c">
-                <Number obj={{label:"Parking Latitude",number:latitude,setNumber:setLatitude}}/>
+                <Number obj={{label:"Parking Latitude",number:latitude,setNumber:setLatitude, disabled:true}}/>
                 
             </Col>
             <Col className="c">
-                <Number obj={{label:"Parking Longitude",number:longitude,setNumber:setLongitude}}/>
+                <Number obj={{label:"Parking Longitude",number:longitude,setNumber:setLongitude, disabled:true}}/>
                 
             </Col>
             

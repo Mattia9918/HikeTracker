@@ -13,13 +13,14 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 
 exports.getPointByHikeId = (id) => {
 	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT latitude,longitude FROM hike_point H,point P WHERE H.hikeID=? AND H.pointID=P.id "
+		const sql = "SELECT latitude,longitude FROM hike_point H,point P WHERE H.hikeID=? AND H.pointID=P.id "
 		db.all(sql, [id], (err, rows) => {
-			if (err) reject(err);
-			else {
-				resolve(rows);
+			if (err) {
+				console.log(err);
+				reject(err);
 			}
+			
+			resolve(rows);
 		});
 	});
 };

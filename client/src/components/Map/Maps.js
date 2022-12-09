@@ -6,24 +6,23 @@ import "leaflet-area-select";
 import L from 'leaflet';
 import APIGpx from '../../API/APIGpx';
 
-import {useCoordinatesPoint} from './hooksMap'; 
-
 const MapItem = (props)=>{
-
     
-    const {start,arrive} = useCoordinatesPoint(props.hikeid); 
-   
     const [coordinates, setCoordinates] = useState({});
     const [firstPoint, setFirstPoint] = useState([]);
     const [lastPoint, setLastPoint] = useState([]);
     const [center, setCenter] = useState([]);
+    const [start,setStart] = useState([]); 
+    const [arrive,setArrive] = useState([]); 
+    
  
 
     useEffect(() => {
-        const getJson = async()=>{
+        const getJson = async ()=>{
             try {
                     const json = await APIGpx.getFileById(props.hikeid);
-                    
+                    const point = await APIGpx.getPointByHikeId(props.hikeid); 
+                  
                     const c = json.features;
                     
                     setCoordinates(c);
@@ -40,11 +39,16 @@ const MapItem = (props)=>{
                     setCenter(center);
                     setLastPoint(lastPoint);
 
+                    setStart([point[1].latitude,point[1].longitude]); 
+                    setArrive([point[0].latitude,point[0].longitude]);
+
 
             } catch (err) { }
         };
         getJson();
-    }, [props.hikeid]);
+      
+        // eslint-disable-next-line
+    }, []);
 
     return <>
         {coordinates.length &&
@@ -52,10 +56,8 @@ const MapItem = (props)=>{
                 <MapContainer style={{ height: "500px", width: "770px"}} center={center} zoom={12} scrollWheelZoom={true}>
                     <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <GeoJSON data={coordinates} />
-                    {(props.dynamicmarker &&
-                        <CustomMarker latlng = {props.latlng} setLatlng = {props.setLatlng} />)
-                    }
-
+                    
+                    
                     <Marker position={start} icon={GetCustomIcon("starting")} >
                       <Popup>Starting Point</Popup>
                     </Marker>
@@ -64,15 +66,14 @@ const MapItem = (props)=>{
                       <Popup>Starting Point</Popup>
                     </Marker>
                     
+                    
                     { (start[0]!==firstPoint[0] && start[1]!==firstPoint[1]) && 
                       <Marker position={firstPoint}  >
-                        <Popup>Starting Point</Popup>
                       </Marker>
                     }
 
                     { (arrive[0]!==lastPoint[0] && arrive[1]!==lastPoint[1]) && 
                       <Marker position={lastPoint}>
-                        <Popup>Ending Point</Popup>
                       </Marker>
                     }
                     
@@ -83,6 +84,7 @@ const MapItem = (props)=>{
 }
 
 const MarkerMap = (props)=>{
+  
   return <>
           <center>
             <MapContainer style={{ height: "500px", width: "770px"}} center = {{lat: 44.763765, lng: 10.929165}} zoom={5} scrollWheelZoom={true}>
@@ -151,8 +153,10 @@ function AreaSelect(props) {
 
 
 function MapModal(props) {
+  
   const [latlng,setLatlng] = useState([]); 
   const [bounds,setBounds] = useState([]);
+  console.log("2")
   
   const {showModal,setShowModal,areadragmap,markermap,title,
   setLatitude,setLongitude,onClickButton,hikeid,loadFilter
@@ -199,7 +203,7 @@ function MapModal(props) {
                   <AreaDragMap mode = {2} bounds = {bounds} setBounds = {setBounds} />) ||
                 (markermap && 
                   <MarkerMap latlng = {latlng} setLatlng = {setLatlng} iconmode = {props.iconmode} type = {props.type}/>) ||
-              <MapItem hikeid={hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
+                  <MapItem hikeid={hikeid} latlng = {latlng} setLatlng = {setLatlng} bounds = {bounds} setBounds = {setBounds} mode = {props.mode} />
               }
           </Modal.Body>
 

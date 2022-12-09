@@ -94,7 +94,7 @@ const HutGeo = (props)=>{
                     <Number obj={{label:"Hut latitude",
                                         setNumber:setLatitude,
                                         number:latitude,
-                                        disable:true
+                                        disabled:true
                                         }}
                         />
                 </Col>
@@ -102,7 +102,7 @@ const HutGeo = (props)=>{
                     <Number obj={{label:"Hut longitude",
                                             setNumber:setLongitude,
                                             number:longitude,
-                                            disable:true
+                                            disabled:true
                                             }}
                             />
                 </Col>

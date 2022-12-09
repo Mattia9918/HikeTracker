@@ -63,7 +63,6 @@ async function getPointByHikeId(id) {
          const response = await fetch(url);
          if (response.ok) {
              const ris = await response.json();
-             
              return ris;
          } else {
              /* Application error */
