@@ -12,33 +12,37 @@ async function postHut(Hut) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name : Hut.hutname,
-                address : Hut.address,
-                phone_number : Hut.phonenumber,
-                email : Hut.email,
-                website : Hut.website,
-                description : Hut.description,
-                city: Hut.city,
-                province : Hut.province,
-                altitude: Hut.altitude,
-                languages : Hut.language,
-                latitude: Hut.latitude,
-                longitude: Hut.longitude,
-                bike_friendly : Hut.bikefriendly,
-                reachability : Hut.reachability,
-                disabled_services : Hut.disable ,
-                rooms : Hut.rooms,
-                bathrooms : Hut.bathrooms,
-                beds : Hut.beds,
-                restaurant_services : Hut.restservice })
+                hut: {
+                    name : Hut.hutname,
+                    address : Hut.address,
+                    phone_number : Hut.phonenumber,
+                    email : Hut.email,
+                    website : Hut.website,
+                    description : Hut.description,
+                    altitude: Hut.altitude,
+                    languages : Hut.language,
+                    bike_friendly : Hut.bikefriendly,
+                    reachability : Hut.reachability,
+                    disabled_services : Hut.disable ,
+                    rooms : Hut.rooms,
+                    bathrooms : Hut.bathrooms,
+                    beds : Hut.beds,
+                    restaurant_services : Hut.restservice
+                },
+                point: {
+                    city: Hut.city,
+                    province : Hut.province,
+                    latitude: Hut.latitude,
+                    longitude: Hut.longitude
+                }
+            })
         });
 
         if (response.ok) {
             return true;
         } else {
             /* Application error */
-            const appErrText = await response.text();
-            console.log(response); 
+            const appErrText = await response.text(); 
             throw new TypeError(appErrText);
 
         }

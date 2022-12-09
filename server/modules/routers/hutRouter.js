@@ -17,17 +17,9 @@ router.post('/api/hut', checkAuth.isLocalGuide,
             return res.status(422).json({ errors: errors.array() });
         }
         try {
-            const pointId = await hike_dao.postPointHut(
-                req.body.latitude,
-                req.body.longitude,
-                req.body.city,
-                req.body.province);
-            
+            const pointId = await hike_dao.postPointHut(req.body.point);
 
-            const hutID = await hut_dao.postHut(req.body.name, req.body.address, req.body.phone_number, req.body.email,
-                req.body.website, req.body.description, req.body.altitude, req.body.languages,
-                req.body.bike_friendly, req.body.reachability, req.body.disabled_services, req.body.rooms, req.body.bathrooms,
-                req.body.beds, req.body.restaurant_services, pointId );
+            const hutID = await hut_dao.postHut(req.body.hut, pointId);
 
             return res.status(201).json({ "id": hutID });
             
@@ -51,14 +43,15 @@ router.post('/api/hutLinkHike', checkAuth.isLocalGuide,
     }
     try {
        
-
-        const  hut   = await hut_dao.getHutById(req.body.hutID);
-        const hikeID = await hike_dao.postHike_Point(req.body.HikeID, "hut", hut.point_id);
+        
+        const  hut   = await hut_dao.getHutById(req.body.hutId);
+        
+        const hikeID = await hike_dao.postHike_Point(req.body.hikeid, "hut", hut.point_id);
 
         return res.status(201).json({ "id": hikeID });
         
     } catch (err) {
-        console.log(err);
+        
         res.status(500).json({ error: `Generic error` }).end();
     }
 

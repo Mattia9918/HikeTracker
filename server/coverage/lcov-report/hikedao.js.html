@@ -1809,7 +1809,7 @@ exports.deletePoint = () =&gt; {
 &nbsp;
 };
 &nbsp;
-exports.deletePointCCs = () =&gt; {
+exports.deletePoint = () =&gt; {
 	return new Promise((resolve, reject) =&gt; {
 		const sql1 = 'DELETE FROM point';
 		db.run(sql1, [], function (err) {

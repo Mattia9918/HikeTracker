@@ -10,20 +10,32 @@ const db = new sqlite.Database("hiketracker.db", (err) => {
 	if (err) throw err;
 });
 
-exports.postHut = (name, address, phone_number, email,
-                    website, description,
-                    altitude, languages, bike_friendly,
-                    reachability, disabled_services, rooms, bathrooms,beds, restaurant_services, point_id) => {
+exports.postHut = (hut, point_id) => {
 
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO hut(name, address, phone_number, email, web_site,
             description, altitude, languages, bike_friendly,
             reachability, disabled_services, rooms,
             bathrooms,beds, restaurant_service, point_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )`;
-		db.run(sql, [name, address, phone_number, email, website,
-                    description, altitude, languages, bike_friendly,
-                    reachability, disabled_services, rooms,
-                    bathrooms,beds, restaurant_services, point_id], function (err) {
+		db.run(sql, 
+			[
+				hut.name,
+				hut.address,
+				hut.phone_number,
+				hut.email,
+				hut.website,
+				hut.description,
+				hut.altitude,
+				hut.languages,
+				hut.bike_friendly,
+				hut.reachability,
+				hut.disabled_services,
+				hut.rooms,
+                hut.bathrooms,
+				hut.beds,
+				hut.restaurant_services, 
+				point_id
+			], function (err) {
 			if (err) {
 				reject(err);
 				return;

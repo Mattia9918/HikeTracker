@@ -1,6 +1,6 @@
 import { Row, Col, Button, Modal, ListGroup, ButtonGroup, Nav, Form, Alert } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import APIHikes from '../../API/APIHikes';
+
 import APIHuts from '../../API/APIHutGet';
 import APIParkingGet from '../../API/APIParkingGet';
 import { AiOutlineHome } from 'react-icons/ai';
@@ -23,8 +23,9 @@ function LinkingModal(props) {
                 pointid: point.point_id,
                 latitude: point.latitude,
                 longitude: point.longitude,
+                hutId : selectedHut.id
             }
-            await APIHikes.putHikePoint(obj, type);
+            await APIHuts.linkHut(obj, type);
             setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
         }
         catch(err) {
@@ -127,7 +128,7 @@ function LinkingModal(props) {
                     <Col align = "right">
                         <ButtonGroup className = "me-2">
                             <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "start")}>Start</Button>
-                            <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "intermediate")}>Intermediate</Button>
+                            {mode === 0 ? <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut), "link")}>Link</Button> : null}
                             <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "end")}>End</Button>
                         </ButtonGroup>
                         <Button variant="secondary" onClick={() => props.setShowLinkingModal(false)}>Close</Button>

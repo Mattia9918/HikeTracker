@@ -175,24 +175,8 @@ describe("test hikes and filtering", () => {
 			await hike_dao.postHike_Point(3, "arrive", 2);
 			await hike_dao.postHike_Point(4, "start", 3);
 			await hike_dao.postHike_Point(4, "arrive", 4);
-			await user_dao.insertUser(
-				localguide1.email,
-				localguide1.hash,
-				localguide1.salt,
-				localguide1.role,
-				localguide1.name,
-				localguide1.surname,
-				localguide1.username
-			);
-			await user_dao.insertUser(
-				localguide2.email,
-				localguide2.hash,
-				localguide2.salt,
-				localguide2.role,
-				localguide2.name,
-				localguide2.surname,
-				localguide2.username
-			);
+			await user_dao.insertUser(localguide1);
+			await user_dao.insertUser(localguide2);
 			await hike_dao.saveFile(gpx1.gpxfile);
 		} catch (err) {
 			console.log(err);
