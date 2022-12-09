@@ -118,5 +118,35 @@ async function getHutProvinces() {
     }
 };
 
-const APIHuts = {getFilter, getHuts, getHutFilter, getHutCities, getHutProvinces};
+
+//function that links a hut to a hike 
+
+async function linkHut(hutInfo, type) {
+    const url = APIURL + `hutLinkHike`; 
+    
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                hutId : hutInfo.hutId,
+                hikeid: hutInfo.hikeid,
+                pointid: hutInfo.pointid,
+                latitude: hutInfo.latitude,
+                longitude: hutInfo.longitude
+                 })
+        });
+    } catch (err) {
+        /* Network error */
+        console.log(err);
+        throw (err);
+    }
+
+
+}
+
+const APIHuts = {getFilter, getHuts, getHutFilter, getHutCities, getHutProvinces, linkHut};
 export default APIHuts;
