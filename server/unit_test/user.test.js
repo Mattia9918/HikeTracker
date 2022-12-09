@@ -26,7 +26,7 @@ function testUserOk() {
     test("Insert user OK", async () => {
 
         user.salt = await bcrypt.genSalt(10);
-        user.hash = await bcrypt.hash(user.hash, salt);
+        user.hash = await bcrypt.hash(user.hash, user.salt);
 
         let id = await dao.insertUser(user);
 

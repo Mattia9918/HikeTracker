@@ -426,12 +426,11 @@ exports.deletePoint = () => {
 
 exports.postPointHut = (point) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'INSERT INTO point(latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?)';
+		const sql = 'INSERT INTO point(latitude, longitude, type, city, province) VALUES (?, ?, ?, ?, ?)';
 		db.run(sql, [
 			point.latitude,
 			point.longitude,
 			"hut",
-			"descrizione",
 			point.city,
 			point.province
 		], function (err) {
@@ -448,8 +447,8 @@ exports.postPointHut = (point) => {
 
 exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, "point", "da sostituire", body.locality, body.localityInfo.administrative[2].name], function (err) {
+		const sql = 'INSERT INTO point(id, latitude, longitude, type, city, province) VALUES (?, ?, ?, ?, ?, ?)';
+		db.run(sql, [undefined, body.latitude, body.longitude, "point", body.locality, body.localityInfo.administrative[2].name], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
@@ -463,8 +462,8 @@ exports.postPoint = (body) => {
 
 exports.postParkPoint = (body) => {
 	return new Promise((resolve, reject) => {
-		const sql = 'INSERT INTO point(id, latitude, longitude, type, description, city, province) VALUES (?, ?, ?, ?, ?, ?, ?)';
-		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.description, body.city, body.province], function (err) {
+		const sql = 'INSERT INTO point(id, latitude, longitude, type, city, province) VALUES (?, ?, ?, ?, ?, ?)';
+		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.city, body.province], function (err) {
 			if (err) {
 				console.log(err);
 				reject(err);
