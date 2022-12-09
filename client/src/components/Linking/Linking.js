@@ -23,8 +23,25 @@ function LinkingModal(props) {
                 pointid: point.point_id,
                 latitude: point.latitude,
                 longitude: point.longitude,
+                hutId : selectedHut.id
             }
             await APIHikes.putHikePoint(obj, type);
+            setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
+        }
+        catch(err) {
+            setMessage({variant: "danger", msg: err.message});
+        }
+    };
+    async function linkHut(point, type) {
+        try {
+            const obj = {
+                hikeid: props.hike.id,
+                pointid: point.point_id,
+                latitude: point.latitude,
+                longitude: point.longitude,
+                hutId : selectedHut.id
+            }
+            await APIHuts.linkHut(obj, type);
             setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
         }
         catch(err) {
@@ -127,7 +144,7 @@ function LinkingModal(props) {
                     <Col align = "right">
                         <ButtonGroup className = "me-2">
                             <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "start")}>Start</Button>
-                            <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "intermediate")}>Intermediate</Button>
+                            {mode === 0 ? <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => linkHut((selectedHut), "link")}>Link</Button> : null}
                             <Button variant="primary" disabled = {!selectedHut && !selectedParkingLot} onClick ={() => putHikePoint((selectedHut || selectedParkingLot), "end")}>End</Button>
                         </ButtonGroup>
                         <Button variant="secondary" onClick={() => props.setShowLinkingModal(false)}>Close</Button>

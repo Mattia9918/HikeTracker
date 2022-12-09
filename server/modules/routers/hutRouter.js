@@ -43,14 +43,15 @@ router.post('/api/hutLinkHike', checkAuth.isLocalGuide,
     }
     try {
        
-
-        const  hut   = await hut_dao.getHutById(req.body.hutID);
-        const hikeID = await hike_dao.postHike_Point(req.body.HikeID, "hut", hut.point_id);
+        
+        const  hut   = await hut_dao.getHutById(req.body.hutId);
+        
+        const hikeID = await hike_dao.postHike_Point(req.body.hikeid, "hut", hut.point_id);
 
         return res.status(201).json({ "id": hikeID });
         
     } catch (err) {
-        console.log(err);
+        
         res.status(500).json({ error: `Generic error` }).end();
     }
 

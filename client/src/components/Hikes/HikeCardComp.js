@@ -6,6 +6,8 @@ import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo';
 import {FiMapPin} from 'react-icons/fi';
 import {FaFlagCheckered} from 'react-icons/fa';
 import {BiChevronDown,BiChevronUp} from 'react-icons/bi';
+import { AiOutlineHome } from 'react-icons/ai';
+import { RiParkingBoxLine } from 'react-icons/ri'
 
 
 
@@ -76,6 +78,7 @@ const HiddenItem = (props)=>{
     const description = props.hike.description; 
     const start = props.hike.startingPoint; 
     const end = props.hike.endingPoint; 
+    let [startText, endText] = getProperText([start.type, end.type]);
     
     return <>
    
@@ -86,15 +89,19 @@ const HiddenItem = (props)=>{
         <ListGroup className = "mb-3">
             
             <ListGroupItem>
-                <FiMapPin/>
-                {"  "}{start.city}, {start.province}<br/>
+                {(start.type === "hut" && <AiOutlineHome/>) ||
+                 (start.type === "parkingLot" && <RiParkingBoxLine />) ||
+                 <FiMapPin/>}
+                {"  "}<b>{startText}</b>{start.city}, {start.province}<br/>
                 <i>(lat: {start.latitude} - long: {start.longitude})
                 </i>
             </ListGroupItem>
             
             <ListGroupItem>
-                <FaFlagCheckered/>
-                {" "}{end.city}, {end.province}<br/>
+                {(start.type === "hut" && <AiOutlineHome/>) ||
+                 (start.type === "parkingLot" && <RiParkingBoxLine />) ||
+                 <FiMapPin/>}
+                {" "}<b>{endText}</b>{end.city}, {end.province}<br/>
                 <i>(lat: {end.latitude}, long: {end.longitude}) - </i>
                 
             </ListGroupItem>
@@ -146,6 +153,29 @@ const CardHeader = (props)=>{
             </Row>
         </Card.Header>
     </>
+}
+
+function getProperText(pointTypes) {
+    let result = [];
+
+    for (let i = 0; i < 2; i++) {
+        switch(pointTypes[i]) {
+            case "hut":
+                result[i] = "Hut in: "
+                break;
+            
+            case "parkingLot":
+                result[i] = "Parking in: "
+                break;
+    
+            default:
+                result[i] = ""
+                break;
+        }
+    }
+
+    return result;
+    
 }
 
 export {HiddenItem,AlertUser,CardHeader,VisibleItem,CardImg}; 
