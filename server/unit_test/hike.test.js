@@ -193,7 +193,122 @@ describe("test hikes and filtering", () => {
 	testGetHikeProvinces();
 	testGetHikeById();
 	testUpdateHikePoint(1, 1, "start");
+	testGetHikesByArea()
 });
+
+function testGetHikesByArea() {
+	describe("Testing getHikes()", () => {
+		test("4 hikes posted -> get these 4 hikes", async () => {
+			let res = await hike_dao.getHikesByArea("9.0,10.0", "1.0,2.0");
+			expect(res).toEqual([
+				{
+					id: 4,
+					title: "Hike4",
+					length: 40,
+					description: "I'm Hike4!",
+					difficulty: "Easy",
+					estimatedTime: "4",
+					ascent: 1500,
+					localguideID: 2,
+					localguideUsername: "Franceschino",
+					startingPoint: {
+						latitude: 5.1,
+						longitude: 6.1,
+						type: "point",
+						city: "Grugliasco",
+						province: "Torino",
+					},
+					endingPoint: {
+						latitude: 7.1,
+						longitude: 8.1,
+						type: "point",
+						city: "Grugliasco",
+						province: "Torino",
+					},
+					pointsOfInterest: [],
+				},
+				{
+					id: 3,
+					title: "Hike3",
+					length: 30,
+					description: "I'm Hike3!",
+					difficulty: "Difficult",
+					estimatedTime: "3",
+					ascent: 800,
+					localguideID: 1,
+					localguideUsername: "Francescone",
+					startingPoint: {
+						latitude: 1.1,
+						longitude: 2.1,
+						type: "point",
+						city: "Torino",
+						province: "Torino",
+					},
+					endingPoint: {
+						latitude: 3.1,
+						longitude: 4.1,
+						type: "point",
+						city: "Torino",
+						province: "Torino",
+					},
+					pointsOfInterest: [],
+				},
+				{
+					id: 2,
+					title: "Hike2",
+					length: 20,
+					description: "I'm Hike2!",
+					difficulty: "Average",
+					estimatedTime: "2",
+					ascent: 400,
+					localguideID: 2,
+					localguideUsername: "Franceschino",
+					startingPoint: {
+						latitude: 5.1,
+						longitude: 6.1,
+						type: "point",
+						city: "Grugliasco",
+						province: "Torino",
+					},
+					endingPoint: {
+						latitude: 7.1,
+						longitude: 8.1,
+						type: "point",
+						city: "Grugliasco",
+						province: "Torino",
+					},
+					pointsOfInterest: [],
+				},
+				{
+					id: 1,
+					title: "Hike1",
+					length: 10,
+					description: "I'm Hike1!",
+					difficulty: "Easy",
+					estimatedTime: "1",
+					ascent: 120,
+					localguideID: 1,
+					localguideUsername: "Francescone",
+					startingPoint: {
+						latitude: 1.1,
+						longitude: 2.1,
+						type: "point",
+						city: "Torino",
+						province: "Torino",
+					},
+					endingPoint: {
+						latitude: 3.1,
+						longitude: 4.1,
+						type: "point",
+						city: "Torino",
+						province: "Torino",
+					},
+					pointsOfInterest: [],
+				},
+			]);
+		});
+	});
+}
 
 function testGetHikes() {
 	describe("Testing getHikes()", () => {
