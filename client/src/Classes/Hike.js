@@ -1,16 +1,16 @@
-function Hike(id, title, length, description, difficulty, ascent, estimatedTime, localguideUsername, startingPoint, pointsOfInterest, endingPoint)
+function Hike(params)
 {
-    this.id = id;
-    this.title = title;
-    this.length = length;
-    this.description = description;
-    this.difficulty = difficulty;
-    this.ascent = ascent;
-    this.estimatedTime = estimatedTime;
-    this.localguideUsername = localguideUsername;
-    this.startingPoint = startingPoint;
-    this.pointsOfInterest = pointsOfInterest;
-    this.endingPoint = endingPoint;
+    this.id = params[0];
+    this.title = params[1];
+    this.length = params[2];
+    this.description = params[3];
+    this.difficulty = params[4];
+    this.ascent = params[5];
+    this.estimatedTime = params[6];
+    this.localguideUsername = params[7];
+    this.startingPoint = params[8];
+    this.pointsOfInterest = params[9];
+    this.endingPoint = params[10];
 
 }
 
