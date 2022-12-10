@@ -137,8 +137,15 @@ async function linkHut(hutInfo, type) {
                 pointid: hutInfo.pointid,
                 latitude: hutInfo.latitude,
                 longitude: hutInfo.longitude
-                 })
+            })
         });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
     } catch (err) {
         /* Network error */
         console.log(err);

@@ -11,20 +11,23 @@ async function getHikes() {
          });
          if (response.ok) {
              const list = await response.json();
-             const hikeList = list.map((hike) => 
-                 new Hike(
-                     hike.id,
-                     hike.title,
-                     hike.length,
-                     hike.description,
-                     hike.difficulty,
-                     hike.ascent,
-                     hike.estimatedTime,
-                     hike.localguideUsername,
-                     hike.startingPoint,
-                     hike.pointsOfInterest,
-                     hike.endingPoint
-                 ));
+             const hikeList = list.map((hike) => {
+                const params = [
+                    hike.id,
+                    hike.title,
+                    hike.length,
+                    hike.description,
+                    hike.difficulty,
+                    hike.ascent,
+                    hike.estimatedTime,
+                    hike.localguideUsername,
+                    hike.startingPoint,
+                    hike.pointsOfInterest,
+                    hike.endingPoint
+                 ]
+                 return new Hike(params);
+             }       
+         );
              return hikeList;
          } else {
              /* Application error */
@@ -62,20 +65,22 @@ async function getHikes() {
           if (response.ok) {
               const list = await response.json();
               console.log(list)
-              const filteredHikeList = list.map((hike) => 
-                  new Hike(
-                      hike.id,
-                      hike.title,
-                      hike.length,
-                      hike.description,
-                      hike.difficulty,
-                      hike.ascent,
-                      hike.estimatedTime,
-                      hike.localguideUsername,
-                      hike.startingPoint,
-                      hike.pointsOfInterest,
-                      hike.endingPoint
-                  ));
+              const filteredHikeList = list.map((hike) => {
+                const params = [
+                    hike.id,
+                    hike.title,
+                    hike.length,
+                    hike.description,
+                    hike.difficulty,
+                    hike.ascent,
+                    hike.estimatedTime,
+                    hike.localguideUsername,
+                    hike.startingPoint,
+                    hike.pointsOfInterest,
+                    hike.endingPoint
+                 ]
+                 return new Hike(params);
+              });
               return filteredHikeList;
           } else {
               /* Application error */

@@ -40,7 +40,7 @@ docker-compose up -d
 # Usage
 
 - open the browser and type `http://localhost:3000/`
-- login with one of the following credentials
+- login to the app with one of the following credentials
 
 | Email | Password | Role |
 | --- | ----------- | ----------|

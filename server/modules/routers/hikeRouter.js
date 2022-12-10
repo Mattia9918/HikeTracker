@@ -2,10 +2,9 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
-const {check, validationResult} = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const checkAuth = require("../../authMiddleware");
-const { convertBLOB2String, getGeoJSONbyContent } = require("../../manageGpx");
-const haversine = require('haversine-distance');
+const functions = require("../functions/functions")
 
 const router = express.Router();
 
@@ -52,11 +51,11 @@ router.get(`/api/hike*`, async (req, res) => {
                 break;
             case "city":
                 hikes = await hike_dao.getHikeByCity(req.query.value1);
-             
+
                 break;
             case "province":
                 hikes = await hike_dao.getHikeByProvince(req.query.value1);
-               
+
                 break;
             case "area":
                 hikes = await hike_dao.getHikesByArea(req.query.value1, req.query.value2);
@@ -75,17 +74,34 @@ router.get(`/api/hike*`, async (req, res) => {
 
 //hiking post
 router.post('/api/hiking',
-    [check('length').isNumeric(),
-        check('estimatedTime').isNumeric()
-        ], checkAuth.isLocalGuide, 
-        async (req, res) => {
+    [
+        check('length').isNumeric(),
+        check('estimatedTime').isNumeric(),
+        check('title').notEmpty(),
+        check('description').notEmpty(),
+        check('difficulty').isIn(["Easy", "Average", "Difficult"]),
+        check('ascent').isNumeric(),
+        check('startingPoint').notEmpty(),
+        check('endingPoint').notEmpty()
+    ], 
+    checkAuth.isLocalGuide,
+    async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
         try {
-            const hikeID = await hike_dao.createHiking(req.body.title, req.body.length, req.body.description, req.body.difficulty, req.body.estimatedTime, req.body.ascent, req.body.localguideID);
+            const hikeID = await hike_dao.createHiking(
+                req.body.title,
+                req.body.length, 
+                req.body.description, 
+                req.body.difficulty, 
+                req.body.estimatedTime, 
+                req.body.ascent, 
+                req.user.id
+            );
+
             const startingPointID = await hike_dao.postPoint(req.body.startingPoint);
             const endingPointID = await hike_dao.postPoint(req.body.endingPoint);
             await hike_dao.postHike_Point(hikeID, "start", startingPointID);
@@ -151,40 +167,29 @@ async function checkConstraints(req) {
     // Check validation constraints
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return {status: 422, err: errors.array()}
+        return { status: 422, err: errors.array() }
     }
 
     const hike = await hike_dao.getHikeById(req.params.id);
-    const gpx = await hike_dao.getFileContentById(req.params.id);
-    
+
     // Check if hike exists
-    if (hike === undefined || gpx === undefined) {
-        return {status: 404, err: "hike or gpx not found"}
+    if (hike === undefined) {
+        return { status: 404, err: "hike not found" }
     }
 
     // Check if it is my hike
-    if(hike.localguideID !== req.user.id) {
-        return {status: 403, err: "Operation forbidden: you must be creator of the hike"}
+    if (hike.localguideID !== req.user.id) {
+        return { status: 403, err: "Operation forbidden: you must be creator of the hike" }
     }
 
-    // Check if hut within (maxRadius) km from any of the hike track points
-    const blob = convertBLOB2String(gpx.gpxfile);
-    const json = getGeoJSONbyContent(blob);
-    const coordinates = json.features[0].geometry.coordinates;
-    const maxRadius = 5; //radius in km from whatever hike point;
-    for (let coordinate of coordinates) {
-        let pointA = { latitude: coordinate[1], longitude: coordinate[0] };
-        let pointB = { latitude: req.body.latitude, longitude: req.body.longitude};
-        if ((haversine(pointA, pointB)/1000) < maxRadius) {
-            return {status: 200, err: ""}
-        }
-    };
-    return {status: 422, err: `Selected interest point not within ${maxRadius}km from any point of the hike`}
+    const maxRadius = 5;
+    if (await functions.checkRadiusDistance(req.params.id, req.body, maxRadius)) return { status: 200, err: "" };
+    return { status: 422, err: `Selected interest point not within ${maxRadius}km from any point of the hike` }
 };
 
 /** APIs to update starting and arrival point of a hut */
 
-router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide, 
+router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
     [
         check('id').isNumeric(),
         check('latitude').isNumeric(),
@@ -193,16 +198,16 @@ router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
     async (req, res) => {
         try {
             let result = await checkConstraints(req);
-            if(result.status !== 200)
+            if (result.status !== 200)
                 return res.status(result.status).json(result.err)
 
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'start')
-            return res.status(200).json({msg: "Success: point set as start"})
+            return res.status(200).json({ msg: "Success: point set as start" })
         } catch (err) {
             console.log(err)
-            return res.status(500).json({error: err});
+            return res.status(500).json({ error: err });
         }
-})
+    })
 
 router.put('/api/hike/:id/arrivalPoint', checkAuth.isLocalGuide,
     [
@@ -213,15 +218,15 @@ router.put('/api/hike/:id/arrivalPoint', checkAuth.isLocalGuide,
     async (req, res) => {
         try {
             let result = await checkConstraints(req);
-            if(result.status !== 200)
+            if (result.status !== 200)
                 return res.status(result.status).json(result.err)
 
             await hike_dao.updateHikePoint(req.params.id, req.body.id, 'arrive')
-            return res.status(200).json({msg: "Success: point set as arrival"})
+            return res.status(200).json({ msg: "Success: point set as arrival" })
         } catch (err) {
             console.log(err)
-            return res.status(500).json({error: err});
+            return res.status(500).json({ error: err });
         }
-})
+    })
 
 module.exports = router;

@@ -26,11 +26,8 @@ exports.insertUser = (user) => {
                 user.name, 
                 user.surname
             ], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(this.lastID);
+            if (err) reject(err);
+            else resolve(this.lastID);
         });
     });
 };
@@ -39,11 +36,8 @@ exports.insertActivation = (email, code) => {
     return new Promise((resolve, reject) => {
         const sql = "INSERT INTO activation(email, code) VALUES(?, ?)";
         db.run(sql, [email, code], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(code);
+            if (err) reject(err);
+            else resolve(code);
         });
     });
 };
@@ -52,9 +46,8 @@ exports.getActivationByCode = (code) => {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM activation WHERE code = ?";
         db.get(sql, [code], function (err, row) {
-            if (err) {
-                reject(err);
-            } else {
+            if (err) reject(err);
+             else {
                 resolve(row);
             }
         });

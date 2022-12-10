@@ -14,7 +14,6 @@ function LinkingModal(props) {
     const [selectedHut, setSelectedHut] = useState();
     const [selectedParkingLot, setSelectedParkingLot] = useState();
     const [message, setMessage] = useState();
-
     async function putHikePoint(point, type) {
         try {
             const obj = {
@@ -24,7 +23,9 @@ function LinkingModal(props) {
                 longitude: point.longitude,
             }
             await APIHikes.putHikePoint(obj, type);
-            setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
+            const updatedHikeInfo = await APIHikes.getHikes();
+            props.setHikes(updatedHikeInfo);
+            setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`});
         }
         catch(err) {
             setMessage({variant: "danger", msg: err.message});
@@ -40,6 +41,8 @@ function LinkingModal(props) {
                 hutId : selectedHut.id
             }
             await APIHuts.linkHut(obj, type);
+            const updatedHikeInfo = await APIHikes.getHikes();
+            props.setHikes(updatedHikeInfo);
             setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
         }
         catch(err) {
@@ -49,7 +52,10 @@ function LinkingModal(props) {
 
     async function loadParkingLots() {
         try {
-            const parkingLotList = await APIParkingGet.getParkingLots();
+            const list = await APIParkingGet.getParkingLots();
+            const parkingLotList = list.filter((parking) =>
+                !(parking.latitude === props.hike.startingPoint.latitude && parking.longitude === props.hike.startingPoint.longitude || parking.latitude === props.hike.endingPoint.latitude && parking.longitude === props.hike.endingPoint.longitude)
+            );
             setParkingLotList(parkingLotList);
         } catch (err) { 
             console.log(err);
@@ -58,7 +64,10 @@ function LinkingModal(props) {
 
     async function loadHuts() {
         try {
-            const hutList = await APIHuts.getHuts();
+            const list = await APIHuts.getHuts();
+            const hutList = list.filter((hut) => 
+                !(hut.latitude === props.hike.startingPoint.latitude && hut.longitude === props.hike.startingPoint.longitude || hut.latitude === props.hike.endingPoint.latitude && hut.longitude === props.hike.endingPoint.longitude)
+            );
             setHutList(hutList);
         } catch (err) { 
             console.log(err);
@@ -66,8 +75,8 @@ function LinkingModal(props) {
     };
 
     useEffect(() => {
-        loadHuts();
-    }, []);
+        mode === 0 && loadHuts() || loadParkingLots();
+    }, [props.hike]);
 
 
     /* -- RENDERING -- */
@@ -95,7 +104,7 @@ function LinkingModal(props) {
                                     loadHuts();
                                     setMode(0)
                                 }}>
-                                    <AiOutlineHome className="me-2" style={{ "font-size": "1.2rem", "margin-top": "-5px" }} />
+                                    <AiOutlineHome className="me-2" style={{ "fontSize": "1.2rem", "marginTop": "-5px" }} />
                                     Huts
                                 </Nav.Link>
                             </Nav.Item>
@@ -104,7 +113,7 @@ function LinkingModal(props) {
                                     loadParkingLots();
                                     setMode(1)
                                 }}>
-                                    <RiParkingBoxLine className="me-2" style={{ "font-size": "1.2rem", "margin-top": "-5px" }} />
+                                    <RiParkingBoxLine className="me-2" style={{ "fontSize": "1.2rem", "marginTop": "-5px" }} />
                                     Parking lots
                                 </Nav.Link>
                             </Nav.Item>

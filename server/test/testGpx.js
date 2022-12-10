@@ -1,20 +1,62 @@
+
 const { expect } = require('chai');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
-const dao = require('../modules/dao/hikedao.js');
+const hike_dao = require('../modules/dao/hikedao.js');
+const user_dao = require("../modules/dao/userdao.js");
+const bcrypt = require("bcrypt");
 const { app } = require('../index');
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
+const pwd = "password"
 
 const fileName="new (7).gpx";
+
+const localGuide = {
+    name: "Mario",
+    surname: "Rossi",
+    username: "mariorossi1",
+    email: "mario.rossi@mail.it",
+    hash: "",
+    salt: "",
+    password: pwd,
+    role: "localGuide",
+  };
+
+async function deleteTables() {
+    await hike_dao.deleteGpx();
+    await user_dao.deleteUser(); 
+  }
+
+  async function insertUser() {
+ 
+    localGuide.salt = await bcrypt.genSalt(10);
+    localGuide.hash = await bcrypt.hash(localGuide.password, localGuide.salt);
+  
+    await user_dao.insertUser(localGuide);
+    await user_dao.activateUser(localGuide.email);
+  }
+
+  async function logUser(email, password) {
+    await agent
+      .post("/api/sessions")
+      .send({ username: email, password: password });
+  }
 
 //POST GPX (201) 
 describe('test api/gpx (success 201 Created)', () => {
 
 
     before(async ()=>{
-        await dao.deleteGpx();
+        // delete tables gpx and user
+        await deleteTables();
+        
+        // insert local guide
+        await insertUser();
+
+        // log local guide
+        await logUser("mario.rossi@mail.it", "password");
     }); 
 
     const gpx = {
@@ -24,26 +66,6 @@ describe('test api/gpx (success 201 Created)', () => {
     
     
 });
-
-/*
-//500 = campo gpxfile unique
-//POST GPX (500)
-describe('test api/gpx (case gpx already defined 500 SQLITE_CONSTRAINT)', () => {
-
-
-    before(async ()=>{
-        await dao.deleteGpx();
-    }); 
-
-    
-    const gpx = {
-        "path":`/uploads/${fileName}` 
-    }; 
-    addGpx(201, gpx);
-    addGpx(500, gpx);
-    
-});
-*/
 
 
 //API POST GPX
@@ -78,7 +100,8 @@ describe('test api/gpx/:id (success 200 OK)', () => {
 
 
     before(async ()=>{
-        await dao.deleteGpx();
+        // delete tables gpx and user
+        await deleteTables();
     }); 
 
     const gpx = {
@@ -96,7 +119,8 @@ describe('test api/gpx/:id (success 404 Not Found)', () => {
 
 
     before(async ()=>{
-        await dao.deleteGpx();
+        // delete tables gpx and user
+        await deleteTables();
     }); 
     
     getGpx(404,1);
@@ -134,5 +158,24 @@ function getGpx(expectedHTTPStatus,id) {
         })
         ; 
     })
-}
+} 
 
+/*
+//500 = campo gpxfile unique
+//POST GPX (500)
+describe('test api/gpx (case gpx already defined 500 SQLITE_CONSTRAINT)', () => {
+
+
+    before(async ()=>{
+        await dao.deleteGpx();
+    }); 
+
+    
+    const gpx = {
+        "path":`/uploads/${fileName}` 
+    }; 
+    addGpx(201, gpx);
+    addGpx(500, gpx);
+    
+});
+*/
