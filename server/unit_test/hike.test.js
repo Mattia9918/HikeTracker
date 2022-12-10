@@ -1,7 +1,6 @@
 const hike_dao = require("../modules/dao/hikedao.js");
 const user_dao = require("../modules/dao/userdao.js");
 
-console.log("readFile called");
 const hike1 = {
 	id: undefined,
 	title: "Hike1",
