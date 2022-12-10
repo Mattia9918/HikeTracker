@@ -55,30 +55,30 @@ router.post(
 		}
 		try {
 			const hut = await hut_dao.getHutById(req.body.hutId);
-
+			const maxRadius = 5;
+			if (
+				!(await functions.checkRadiusDistance(
+					req.body.hikeid,
+					req.body,
+					maxRadius
+				))
+			)
+				return res
+					.status(422)
+					.json(
+						"Selected interest point not within ${maxRadius}km from any point of the hike"
+					);
 			const hikeID = await hike_dao.postHike_Point(
 				req.body.hikeid,
 				"hut",
 				hut.point_id
 			);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-    try {
-        const hut = await hut_dao.getHutById(req.body.hutId);
-        const maxRadius = 5;
-        if (!(await functions.checkRadiusDistance(req.body.hikeid, req.body, maxRadius)))
-            return res.status(422).json(`Selected interest point not within ${maxRadius}km from any point of the hike`)
-        const hikeID = await hike_dao.postHike_Point(req.body.hikeid, "hut", hut.point_id);
-        return res.status(201).json({ "id": hikeID });
-    } catch (err) {    
-        res.status(500).json({ error: `Generic error` }).end();
-    }
-
-
-})
+			return res.status(201).json({ id: hikeID });
+		} catch (err) {
+			res.status(500).json({ error: "Generic error" }).end();
+		}
+	}
+);
 
 /** Get all huts **/
 router.get("/api/huts", checkAuth.isLoggedIn, async (req, res) => {
@@ -88,17 +88,6 @@ router.get("/api/huts", checkAuth.isLoggedIn, async (req, res) => {
 	} catch (err) {
 		console.log(err);
 		return res.status(500).json({ error: err });
-	}
-});
-
-// hikeLinkedhut delete
-router.delete("/api/hut/deleteLink", async (req, res) => {
-	try {
-		await hut_dao.deleteHikeLinkedHut();
-		return res.status(204).end();
-	} catch (err) {
-		console.log(err);
-		res.status(500).end();
 	}
 });
 
@@ -187,36 +176,6 @@ router.get("/api/provincesHut", async (req, res) => {
 	try {
 		const provinces = await hut_dao.getHutProvinces();
 		res.status(200).json(provinces);
-	} catch (err) {
-		console.log(err);
-		res.status(500).end();
-	}
-});
-
-router.get("/api/linkedHut", async (req, res) => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(422).json({ errors: errors.array() });
-	}
-	try {
-		const linkedHut = await hut_dao.getHutsLinkedHike();
-		res.status(200).json(linkedHut);
-	} catch (err) {
-		console.log(err);
-		res.status(500).end();
-	}
-});
-
-router.get("/api/linkedHut/:id", async (req, res) => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(422).json({ errors: errors.array() });
-	}
-
-	try {
-		const id = req.params.id;
-		const linkedHut = await hut_dao.getHutLinkedToHikeById(id);
-		res.status(200).json(linkedHut);
 	} catch (err) {
 		console.log(err);
 		res.status(500).end();
