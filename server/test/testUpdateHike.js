@@ -10,6 +10,7 @@ const { app } = require("../index");
 const { postHut } = require("../modules/dao/hutdao.js");
 let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
+const pwd = "password"
 
 const localGuide = {
   name: "Mario",
@@ -18,7 +19,7 @@ const localGuide = {
   email: "mario.rossi@mail.it",
   hash: "",
   salt: "",
-  password: "password",
+  password: pwd,
   role: "localGuide",
 };
 const localGuide2 = {
@@ -28,7 +29,7 @@ const localGuide2 = {
   email: "giulia.brambilla@mail.it",
   hash: "",
   salt: "",
-  password: "password",
+  password: pwd,
   role: "localGuide",
 };
 const hike = {

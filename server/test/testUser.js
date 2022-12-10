@@ -6,7 +6,7 @@ chai.should();
 const dao = require('../modules/dao/userdao.js');
 const { app } = require('../index');
 let agent = chai.request.agent(app);
-
+const pwd = "password"
 
 
 
@@ -24,7 +24,7 @@ describe('test api/register (case success 200)', () => {
     const user = {
         "email":"c@gmail.com",
         "role":"admin",
-        "password":"password",
+        "password": pwd,
         "name":"name",
         "surname":"surname",
         "username":"username",
@@ -59,7 +59,7 @@ describe('test api/register (case invalid data 422)', () => {
     const user = {
         "email":"cgmail.com",
         "role":"admin",
-        "password":"password",
+        "password": pwd,
         "name":"name",
         "surname":"surname",
         "username":"username",
@@ -80,7 +80,7 @@ describe('test api/register (case user already defined 500)', () => {
     const user = {
         "email":"c@gmail.com",
         "role":"admin",
-        "password":"password",
+        "password": pwd,
         "name":"name",
         "surname":"surname",
         "username":"username",
@@ -115,7 +115,7 @@ describe('test api/validate/:code', async() => {
     const user = {
         "email":"c@gmail.com",
         "role":"admin",
-        "password":"password",
+        "password": pwd,
         "name":"name",
         "surname":"surname",
         "username":"username",
@@ -190,7 +190,7 @@ describe('test api/sessions 200', async() => {
     const user = {
         "email":"c@gmail.com",
         "role":"admin",
-        "password":"password",
+        "password": pwd,
         "name":"name",
         "surname":"surname",
         "username":"username",
@@ -248,7 +248,7 @@ describe('test api/sessions 200', async() => {
     const user = {
         "email":"c@gmail.com",
         "role":"admin",
-        "password":"password",
+        "password": pwd,
         "name":"name",
         "surname":"surname",
         "username":"username",

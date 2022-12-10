@@ -9,6 +9,7 @@ const user_dao = require("../modules/dao/userdao.js");
 const bcrypt = require("bcrypt");
 const { app } = require('../index');
 let agent = chai.request.agent(app);
+const pwd = "password"
 
 const fileName="new (7).gpx";
 
@@ -19,7 +20,7 @@ const localGuide = {
     email: "mario.rossi@mail.it",
     hash: "",
     salt: "",
-    password: "password",
+    password: pwd,
     role: "localGuide",
   };
 
