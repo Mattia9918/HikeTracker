@@ -68,18 +68,6 @@ router.get("/api/huts", checkAuth.isLoggedIn, async (req, res) => {
     }
 });
 
-// hikeLinkedhut delete
-router.delete('/api/hut/deleteLink', async (req, res) => {
-    try {
-        await hut_dao.deleteHikeLinkedHut();
-        return res.status(204).end();
-    } catch (err) {
-        console.log(err);
-        res.status(500).end();
-    }
-});
-
-
 /** Get hut by id **/
 router.get("/api/hut/:id", checkAuth.isLoggedIn, async (req, res) => {
 
@@ -163,38 +151,5 @@ router.get("/api/provincesHut", async (req, res) => {
         res.status(500).end();
     }
 });
-
-router.get("/api/linkedHut", async (req, res) => {
-    
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-    try {
-        const linkedHut = await hut_dao.getHutsLinkedHike();
-        res.status(200).json(linkedHut);
-    } catch (err) {
-        console.log(err);
-        res.status(500).end();
-    }
-});
-
-router.get("/api/linkedHut/:id", async (req, res) => {
-    
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-    
-    try {
-        const id = req.params.id;
-        const linkedHut = await hut_dao.getHutLinkedToHikeById(id);
-        res.status(200).json(linkedHut);
-    } catch (err) {
-        console.log(err);
-        res.status(500).end();
-    }
-});
-
 
 module.exports = router; 

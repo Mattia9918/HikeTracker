@@ -71,21 +71,6 @@ exports.deleteAllHuts = () => {
 	})
 };
 
-exports.deleteHikeLinkedHut= () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"DELETE FROM  hike_point  WHERE type='hut'  ";
-		db.run(sql, [], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
-		});
-	})
-};
-
-
 exports.getHuts = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
@@ -109,40 +94,6 @@ exports.getHutById = (id) => {
 			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service, point_id " +
 			"FROM hut H, point P WHERE H.id = ? AND H.point_id = P.id"
-
-		db.get(sql, [id], (err, row) => {
-			if (err)
-				reject(err);
-			else {
-				resolve(row);
-			}
-		});
-	});
-};
-
-exports.getHutsLinkedHike = () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
-			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
-			"FROM hut H, point P, hike_point HP WHERE  H.point_id = HP.pointID "
-
-			db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
-			else {
-				resolve(rows);
-			}
-		});
-	});
-};
-
-exports.getHutLinkedToHikeById = (id) => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT H.id AS HutID, HP.HikeID AS HikeID, P.id AS PointID, H.name, H.address,  HP.type, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
-			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
-			"FROM hut H, point P, hike_point HP WHERE H.id = ? AND H.point_id = P.id AND HP.pointID = H.point_id " 
 
 		db.get(sql, [id], (err, row) => {
 			if (err)
