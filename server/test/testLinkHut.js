@@ -11,6 +11,7 @@ const { postHut } = require("../modules/dao/hutdao.js");
 var agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
 
+
 const localGuide = {
   name: "Mario",
   surname: "Rossi",
@@ -473,12 +474,48 @@ async function logUser(email, password) {
 }
 
 const logoutUser = async()=> await agent.delete("/api/sessions/current"); 
-    
+   
+function getHuts(expectedHTTPStatus, hut1, hut2) {
+	it("test getHuts", async () => {
+		let hutID1, hutID2;
+		await agent
+			.post("/api/hut")
+			.send(hut1)
+			.then(function (res) {
+				hutID1 = res.body.id;
+			});
+		await agent
+			.post("/api/hut")
+			.send(hut2)
+			.then(function (res) {
+				hutID2 = res.body.id;
+			});
 
-async function postHike(fname, hike) {
+		await agent.get("/api/huts").then(function (res) {
+			res.should.have.status(expectedHTTPStatus);
+			res.body.length.should.equal(2);
+			res.body[0].name.should.equal("Dollo Zone");
+		});
+	});
+}
+
+function linkHuts(expectedHTTPStatus, hike , hut) {
+    it('test post /api/hutLinkHike', async () => {
+        await agent.post('/api/hutLinkHike')
+        .send({hikeid : 1 , hutId : 1})
+        .then(function(res) {
+            res.should.have.status(expectedHTTPStatus); 
+        })
+    })
+
+}
+//API POST NEW HIKE
+async function postHike(fname,hikes) {
   // Insert hike to Rifugio Bertorello
-
-  await agent.post("/api/hiking").send(hike);
+  console.log("---------------------");
+  console.log(hikes);
+  console.log("---------------------");
+  await agent.post("/api/hiking").send(hikes);
 
   const gpx = {
     path: `/uploads/${fname}`,
@@ -487,137 +524,24 @@ async function postHike(fname, hike) {
 
 }
 
-// TEST UPDATE HIKES (starting point) 
 
-describe("test update hike starting point", () => {
-  before(async () => {
-    // delete hike, point, hike_point, gpx, user
-    await deleteTables();
+describe('test api/hutLinkHike', () => {
 
-    // create users
-    await insertUsers();
 
-    //login & postHike localGuide 2 
-    await logUser("giulia.brambilla@mail.it","password");
-    await postHike("new (7).gpx",hike2);
-    await logoutUser(); 
+    before(async ()=>{
+      await deleteTables();
 
-    //login & postHike_gpx localGuide 1
-    await logUser("mario.rossi@mail.it", "password");
-    await postHike("Bertorello.gpx",hike);
-   
-
-    await agent.post("/api/hut").send({ hut: hut, point: point });
-    await agent.post("/api/hut").send({ hut: hut2, point: point2 });
-  });
-
-  // success
-  updateHike(200, 2, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude
-  }, "startingPoint");
-
-  //hut troppo distante
-  updateHike(422, 2, {
-    id: 6,
-    latitude: point2.latitude,
-    longitude: point2.longitude,
-  }, "startingPoint");  
-
-  //hike o gpx non esistente (tutti e 2 usano l'id della hike, quindi basta un test)
-  updateHike(404, 1000, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "startingPoint"); 
-
-  //modifica di un hike di un'altra localGuide
-  updateHike(403, 1, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "startingPoint");  
-
-  //campi errati
-  updateHike(422, 2, {
-    id: "null",
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "startingPoint");
-});
-
-function updateHike(expectedHTTPStatus, hikeID, point, type) {
-  it("test put /api/hike/:id/:type", async () => {
-    await agent
-      .put(`/api/hike/${hikeID}/${type}`)
-      .send({
-        id: point.id,
-        latitude: point.latitude,
-        longitude: point.longitude,
-      })
-      .then(function (res) {
-        res.should.have.status(expectedHTTPStatus);
-      });
-  });
-}
-
-// TEST UPDATE HIKES (arrive point) 
-describe("test update hike arrival point", () => {
-  before(async () => {
-    // delete hike, point, hike_point, gpx, user
-    await deleteTables();
-
-    // create local guide and hiker
-    await insertUsers();
-
-    //login & postHike localGuide 2 
-    await logUser("giulia.brambilla@mail.it","password");
-    await postHike("new (7).gpx",hike2);
-    await logoutUser(); 
-
-    //login & postHike_gpx localGuide 1
-    await logUser("mario.rossi@mail.it", "password");
-    await postHike("Bertorello.gpx",hike);
-   
-
-    await agent.post("/api/hut").send({ hut: hut, point: point });
-    await agent.post("/api/hut").send({ hut: hut2, point: point2 });
+      // create local guide and hiker
+      await insertUsers();
   
-  });
+      // log local guide
+      await logUser("mario.rossi@mail.it", "password");
+      await postHike("Bertorello.gpx",hike);
+      await agent.post("/api/hut").send({ hut: hut, point: point });
+      //await agent.post("/api/hut").send({ hut: hut2, point: point2 });
+      
+    }); 
 
-  //success
-  updateHike(200, 2, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "arrivalPoint"); 
-
-   //hut troppo distante
-   updateHike(422, 2, {
-    id: 6,
-    latitude: point2.latitude,
-    longitude: point2.longitude,
-  }, "arrivalPoint");  
-
-  //hike o gpx non esistente (tutti e 2 usano l'id della hike, quindi basta un test)
-  updateHike(404, 1000, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "arrivalPoint"); 
-
-  //modifica di un hike di un'altra localGuide
-  updateHike(403, 1, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "arrivalPoint");  
-
-  //campi errati
-  updateHike(422, 2, {
-    id: "null",
-    latitude: point.latitude,
-    longitude: point.longitude,
-  }, "arrivalPoint");
+    linkHuts(201, hike, hut); 
+    
 });
