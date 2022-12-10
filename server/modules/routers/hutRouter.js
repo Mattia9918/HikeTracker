@@ -5,6 +5,7 @@ const hut_dao = require("../dao/hutdao");
 const {check, validationResult} = require("express-validator");
 const hike_dao = require("../dao/hikedao");
 const checkAuth = require("../../authMiddleware");
+const functions = require("../functions/functions");
 
 const router = express.Router();
 
@@ -42,16 +43,13 @@ router.post('/api/hutLinkHike', checkAuth.isLocalGuide,
         return res.status(422).json({ errors: errors.array() });
     }
     try {
-       
-        
-        const  hut   = await hut_dao.getHutById(req.body.hutId);
-        
+        const hut = await hut_dao.getHutById(req.body.hutId);
+        const maxRadius = 5;
+        if (!(await functions.checkRadiusDistance(req.body.hikeid, req.body, maxRadius)))
+            return res.status(422).json(`Selected interest point not within ${maxRadius}km from any point of the hike`)
         const hikeID = await hike_dao.postHike_Point(req.body.hikeid, "hut", hut.point_id);
-
         return res.status(201).json({ "id": hikeID });
-        
-    } catch (err) {
-        
+    } catch (err) {    
         res.status(500).json({ error: `Generic error` }).end();
     }
 

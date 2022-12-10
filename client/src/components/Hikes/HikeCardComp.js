@@ -41,27 +41,27 @@ const VisibleItem = (props)=>{
         <Row id = "infocontainer" className = "mt-4"  align = "center">
 
             <Col>
-                <div><i class="bi bi-geo-alt"   style={{"font-size":size}}/></div>
+                <div><i className="bi bi-geo-alt"   style={{"fontSize":size}}/></div>
                 <i id = "smallfont">{props.hike.startingPoint.city}</i>
             </Col>
 
             <Col>
                 {props.hike.ascent > 0 ? 
-                    <div><i class="bi bi-arrow-up-right-square"  style={{"font-size":size}}/></div> : 
+                    <div><i className="bi bi-arrow-up-right-square"  style={{"fontSize":size}}/></div> : 
                     
-                    <div><i class="bi bi-arrow-down-right-square"  style={{"font-size":size}} />
+                    <div><i className="bi bi-arrow-down-right-square"  style={{"fontSize":size}} />
                     </div>
                 }
                  <i id = "smallfont">{props.hike.ascent} m</i>
             </Col>
 
             <Col>
-                <div><i class="bi bi-stopwatch" style={{"font-size":size}} /></div>
+                <div><i className="bi bi-stopwatch" style={{"fontSize":size}} /></div>
                 <i id = "smallfont">{props.hike.estimatedTime} h </i>
             </Col>
             
             <Col>
-                <div><i class="bi bi-cursor"  style={{"font-size":size}}/></div>
+                <div><i className="bi bi-cursor"  style={{"fontSize":size}}/></div>
                 <i id = "smallfont">{props.hike.length} km</i>
             </Col>
         </Row>
@@ -78,7 +78,6 @@ const HiddenItem = (props)=>{
     const description = props.hike.description; 
     const start = props.hike.startingPoint; 
     const end = props.hike.endingPoint; 
-    console.log(start, end);
     let [startText, endText] = getProperText([start.type, end.type]);
     
     return <>

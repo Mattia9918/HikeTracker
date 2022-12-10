@@ -156,7 +156,6 @@ function MapModal(props) {
   
   const [latlng,setLatlng] = useState([]); 
   const [bounds,setBounds] = useState([]);
-  console.log("2")
   
   const {showModal,setShowModal,areadragmap,markermap,title,
   setLatitude,setLongitude,onClickButton,hikeid,loadFilter
