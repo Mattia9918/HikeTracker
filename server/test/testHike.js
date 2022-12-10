@@ -8,6 +8,7 @@ const user_dao = require('../modules/dao/userdao.js');
 const { app } = require('../index');
 let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
+const pwd = "password"
 
 const localGuide = {
   name: "Mario",
@@ -16,7 +17,7 @@ const localGuide = {
   email: "mario.rossi@mail.it",
   hash: "",
   salt: "",
-  password: "password",
+  password: pwd,
   role: "localGuide",
 };
 
