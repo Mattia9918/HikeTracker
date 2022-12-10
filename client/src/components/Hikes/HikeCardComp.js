@@ -40,27 +40,27 @@ const VisibleItem = (props)=>{
         <Row id = "infocontainer" className = "mt-4"  align = "center">
 
             <Col>
-                <div><i class="bi bi-geo-alt"   style={{"font-size":size}}/></div>
+                <div><i className="bi bi-geo-alt"   style={{"fontSize":size}}/></div>
                 <i id = "smallfont">{props.hike.startingPoint.city}</i>
             </Col>
 
             <Col>
                 {props.hike.ascent > 0 ? 
-                    <div><i class="bi bi-arrow-up-right-square"  style={{"font-size":size}}/></div> : 
+                    <div><i className="bi bi-arrow-up-right-square"  style={{"fontSize":size}}/></div> : 
                     
-                    <div><i class="bi bi-arrow-down-right-square"  style={{"font-size":size}} />
+                    <div><i className="bi bi-arrow-down-right-square"  style={{"fontSize":size}} />
                     </div>
                 }
                  <i id = "smallfont">{props.hike.ascent} m</i>
             </Col>
 
             <Col>
-                <div><i class="bi bi-stopwatch" style={{"font-size":size}} /></div>
+                <div><i className="bi bi-stopwatch" style={{"fontSize":size}} /></div>
                 <i id = "smallfont">{props.hike.estimatedTime} h </i>
             </Col>
             
             <Col>
-                <div><i class="bi bi-cursor"  style={{"font-size":size}}/></div>
+                <div><i className="bi bi-cursor"  style={{"fontSize":size}}/></div>
                 <i id = "smallfont">{props.hike.length} km</i>
             </Col>
         </Row>
@@ -88,20 +88,35 @@ const HiddenItem = (props)=>{
         <ListGroup className = "mb-3">
             
             <ListGroupItem>
-                {(start.type === "hut" && <AiOutlineHome/>) ||
-                 (start.type === "parkingLot" && <RiParkingBoxLine />) ||
+                {(start.type === "hut" && <AiOutlineHome style = {{'marginTop': '-3px'}} />) ||
+                 (start.type === "parking" && <RiParkingBoxLine style = {{'marginTop': '-3px'}}/>) ||
                  <FiMapPin/>}
-                {"  "}<b>{startText}</b>{start.city}, {start.province}<br/>
-                <i>(lat: {start.latitude} - long: {start.longitude})
-                </i>
+                {"  "}<b>{startText}</b>{start.city}, {start.province}
+                    <Badge bg = "primary" className = "ms-3">Start</Badge><br/>
+                <ListGroup variant = "flush" id = "smallgroups">
+                    <ListGroupItem>
+                        <i>latitude</i>: {start.latitude}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <i>longitude</i>: {start.longitude}
+                    </ListGroupItem>
+                </ListGroup>
             </ListGroupItem>
             
             <ListGroupItem>
-                {(start.type === "hut" && <AiOutlineHome/>) ||
-                 (start.type === "parkingLot" && <RiParkingBoxLine />) ||
+                {(end.type === "hut" && <AiOutlineHome style = {{'marginTop': '-3px'}}/>) ||
+                 (end.type === "parking" && <RiParkingBoxLine style = {{'marginTop': '-3px'}} />) ||
                  <FiMapPin/>}
-                {" "}<b>{endText}</b>{end.city}, {end.province}<br/>
-                <i>(lat: {end.latitude}, long: {end.longitude}) - </i>
+                {" "}<b>{endText}</b>{end.city}, {end.province}
+                    <Badge bg = "primary" className = "ms-3">End</Badge><br/>
+                <ListGroup variant = "flush" id = "smallgroups">
+                    <ListGroupItem>
+                        <i>latitude</i>: {end.latitude}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <i>longitude</i>: {end.longitude}
+                    </ListGroupItem>
+                </ListGroup>
                 
             </ListGroupItem>
         </ListGroup>
@@ -163,7 +178,7 @@ function getProperText(pointTypes) {
                 result[i] = "Hut in: "
                 break;
             
-            case "parkingLot":
+            case "parking":
                 result[i] = "Parking in: "
                 break;
     

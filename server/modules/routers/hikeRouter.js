@@ -4,8 +4,7 @@ const express = require("express");
 const hike_dao = require("../dao/hikedao");
 const {check, validationResult} = require("express-validator");
 const checkAuth = require("../../authMiddleware");
-const { convertBLOB2String, getGeoJSONbyContent } = require("../../manageGpx");
-const haversine = require('haversine-distance');
+const functions = require("../functions/functions")
 
 const router = express.Router();
 
@@ -155,11 +154,10 @@ async function checkConstraints(req) {
     }
 
     const hike = await hike_dao.getHikeById(req.params.id);
-    const gpx = await hike_dao.getFileContentById(req.params.id);
     
     // Check if hike exists
-    if (hike === undefined || gpx === undefined) {
-        return {status: 404, err: "hike or gpx not found"}
+    if (hike === undefined) {
+        return {status: 404, err: "hike not found"}
     }
 
     // Check if it is my hike
@@ -167,18 +165,8 @@ async function checkConstraints(req) {
         return {status: 403, err: "Operation forbidden: you must be creator of the hike"}
     }
 
-    // Check if hut within (maxRadius) km from any of the hike track points
-    const blob = convertBLOB2String(gpx.gpxfile);
-    const json = getGeoJSONbyContent(blob);
-    const coordinates = json.features[0].geometry.coordinates;
-    const maxRadius = 5; //radius in km from whatever hike point;
-    for (let coordinate of coordinates) {
-        let pointA = { latitude: coordinate[1], longitude: coordinate[0] };
-        let pointB = { latitude: req.body.latitude, longitude: req.body.longitude};
-        if ((haversine(pointA, pointB)/1000) < maxRadius) {
-            return {status: 200, err: ""}
-        }
-    };
+    const maxRadius = 5;
+    if (await functions.checkRadiusDistance(req.params.id, req.body, maxRadius)) return {status: 200, err: ""};
     return {status: 422, err: `Selected interest point not within ${maxRadius}km from any point of the hike`}
 };
 
