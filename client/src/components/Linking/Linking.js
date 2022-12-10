@@ -24,7 +24,10 @@ function LinkingModal(props) {
                 longitude: point.longitude,
             }
             await APIHikes.putHikePoint(obj, type);
-            setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
+            const updatedHikeInfo = await APIHikes.getHikes();
+            props.setHikes(updatedHikeInfo);
+            setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`});
+            selectedHut && loadHuts() || loadParkingLots();
         }
         catch(err) {
             setMessage({variant: "danger", msg: err.message});
@@ -49,7 +52,10 @@ function LinkingModal(props) {
 
     async function loadParkingLots() {
         try {
-            const parkingLotList = await APIParkingGet.getParkingLots();
+            const list = await APIParkingGet.getParkingLots();
+            const parkingLotList = list.filter((parking) =>
+                !(parking.latitude === props.hike.startingPoint.latitude && parking.longitude === props.hike.startingPoint.longitude || parking.latitude === props.hike.endingPoint.latitude && parking.longitude === props.hike.endingPoint.longitude)
+            );
             setParkingLotList(parkingLotList);
         } catch (err) { 
             console.log(err);
@@ -58,7 +64,12 @@ function LinkingModal(props) {
 
     async function loadHuts() {
         try {
-            const hutList = await APIHuts.getHuts();
+            const list = await APIHuts.getHuts();
+            const hutList = list.filter((hut) => {
+                console.log(hut.name, hut.latitude, hut.longitude, props.hike.startingPoint.latitude, props.hike.startingPoint.longitude);
+                return !(hut.latitude === props.hike.startingPoint.latitude && hut.longitude === props.hike.startingPoint.longitude || hut.latitude === props.hike.endingPoint.latitude && hut.longitude === props.hike.endingPoint.longitude)
+            }
+            );
             setHutList(hutList);
         } catch (err) { 
             console.log(err);
@@ -66,8 +77,8 @@ function LinkingModal(props) {
     };
 
     useEffect(() => {
-        loadHuts();
-    }, []);
+        mode === 0 && loadHuts() || loadParkingLots();
+    }, [props.hike]);
 
 
     /* -- RENDERING -- */
