@@ -313,6 +313,6 @@ describe('test api/hutLinkHike', () => {
       
     }); 
 
-    linkHuts(201, hike, hut); 
+    linkHuts(201); 
     
 });
