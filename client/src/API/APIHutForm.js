@@ -27,7 +27,7 @@ async function postHut(Hut) {
                     rooms : Hut.rooms,
                     bathrooms : Hut.bathrooms,
                     beds : Hut.beds,
-                    restaurant_services : Hut.restservice
+                    restaurant_service : Hut.restservice
                 },
                 point: {
                     city: Hut.city,

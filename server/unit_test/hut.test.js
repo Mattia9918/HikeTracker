@@ -18,7 +18,7 @@ const hut1 = {
 	rooms: 10,
 	bathrooms: 10,
 	beds: 15,
-	restaurant_services: 1,
+	restaurant_service: 1,
 };
 
 const hut2 = {
@@ -36,7 +36,7 @@ const hut2 = {
 	rooms: 10,
 	bathrooms: 10,
 	beds: 15,
-	restaurant_services: 1,
+	restaurant_service: 1,
 };
 
 const hut3 = {
@@ -54,7 +54,7 @@ const hut3 = {
 	rooms: 0,
 	bathrooms: 10,
 	beds: 0,
-	restaurant_services: 1,
+	restaurant_service: 1,
 };
 
 const hut4 = {
@@ -72,7 +72,7 @@ const hut4 = {
 	rooms: 0,
 	bathrooms: 10,
 	beds: 0,
-	restaurant_services: 0,
+	restaurant_service: 0,
 };
 
 const point1 = {

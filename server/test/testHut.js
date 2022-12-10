@@ -36,7 +36,7 @@ const hut1 = {
 	"rooms": 10,
 	"bathrooms": 10,
 	"beds": 15,
-	"restaurant_services": 1
+	"restaurant_service": 1
 };
 const point1 = {
 	"latitude": 45.459,
@@ -59,7 +59,7 @@ const hut2 = {
 	"rooms": 10,
 	"bathrooms": 10,
 	"beds": 15,
-	"restaurant_services": 1
+	"restaurant_service": 1
 };
 const point2 = {
 	"latitude": 44.704,
@@ -107,7 +107,7 @@ describe("test api/huts (case success 200)", () => {
 
     getHuts(200);
 	getHutsByAltitude(200, 300);
-	getHutsByResturantService(200);
+	getHutsByRestaurantService(200);
 	getHutsByBikeFriendly(200);
 	getHutsByDIsabledService(200);
 	getHutsByCity(200, "Bra");
@@ -136,9 +136,9 @@ function getHutsByAltitude(expectedHTTPStatus, minALtitude) {
 });
 }
 
-function getHutsByResturantService(expectedHTTPStatus) {
+function getHutsByRestaurantService(expectedHTTPStatus) {
 	it('test get by altitude', async () => {
-			await agent.get(`/api/huts?filter=resturant_service&value1=true`).then( function (res) {
+			await agent.get(`/api/huts?filter=restaurant_service&value1=true`).then( function (res) {
 				res.should.have.status(expectedHTTPStatus);
 	});
 });
