@@ -59,10 +59,8 @@ exports.createParking = (
 				point_id,
 			],
 			function (err) {
-				if (err) {
-					reject(err);
-					return;
-				}
+				if (err) reject(err);
+					
 				resolve(this.lastID);
 			}
 		);

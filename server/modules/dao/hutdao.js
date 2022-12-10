@@ -79,8 +79,7 @@ exports.getHuts = () => {
 			"FROM hut H, point P WHERE H.point_id = P.id ORDER BY H.id DESC"
 
 			db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -96,8 +95,7 @@ exports.getHutById = (id) => {
 			"FROM hut H, point P WHERE H.id = ? AND H.point_id = P.id"
 
 		db.get(sql, [id], (err, row) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(row);
 			}
@@ -113,8 +111,7 @@ exports.getHutByCity = (city) => {
 			"FROM hut H, point P WHERE P.city = ? AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [city], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -130,8 +127,7 @@ exports.getHutByProvince = (province) => {
 			"FROM hut H, point P WHERE P.province = ? AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [province], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -147,8 +143,7 @@ exports.getHutByAltitude = (altitude1, altitude2) => {
 			"FROM hut H, point P WHERE altitude BETWEEN ? AND ? AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [altitude1, altitude2], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -164,8 +159,7 @@ exports.getHutWithRestaurant = () => {
 			"FROM hut H, point P WHERE restaurant_service = 1 AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -181,8 +175,7 @@ exports.getHutWithDisabledServices = () => {
 			"FROM hut H, point P WHERE disabled_services = 1 AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -198,8 +191,7 @@ exports.getHutBikeFriendly = () => {
 			"FROM hut H, point P WHERE bike_friendly = 1 AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -215,8 +207,7 @@ exports.getHutWithBeds = () => {
 			"FROM hut H, point P WHERE beds > 0 AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -232,8 +223,7 @@ exports.getHutByReachability = (reachability) => {
 			"FROM hut H, point P WHERE H.reachability = ? AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [reachability], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -254,8 +244,7 @@ exports.getHutByArea = (northEastPoint, southWestPoint) => {
 			"FROM hut H, point P WHERE (latitude BETWEEN ? AND ?) AND (longitude BETWEEN ? AND ?) AND H.point_id = P.id ORDER BY H.id DESC"
 
 		db.all(sql, [Number(swCoordinates[0]), Number(neCoordinates[0]), Number(swCoordinates[1]), Number(neCoordinates[1])], (err, rows) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(rows);
 			}
@@ -268,10 +257,7 @@ exports.getHutCities = () => {
 	return new Promise((resolve, reject) => {
 		const sql = 'SELECT DISTINCT P.city FROM hut H, point P WHERE H.point_id = P.id';
 		db.all(sql, [], function (err, rows) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(rows)
 			}
@@ -284,10 +270,7 @@ exports.getHutProvinces = () => {
 	return new Promise((resolve, reject) => {
 		const sql = 'SELECT DISTINCT P.province FROM hut H, point P WHERE H.point_id = P.id';
 		db.all(sql, [], function (err, rows) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(rows)
 			}

@@ -36,8 +36,7 @@ exports.getHikeById = (id) => {
 			"SELECT * FROM hike WHERE id = ?"
 
 		db.get(sql, [id], (err, row) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else {
 				resolve(row);
 			}
@@ -352,8 +351,7 @@ exports.getHikeDesc = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'SELECT description FROM HIKE WHERE id=? ';
 		db.get(sql, [id], (err, row) => {
-			if (err)
-				reject(err);
+			if (err) reject(err);
 			else
 				resolve(row);
 		})
@@ -365,11 +363,9 @@ exports.createHiking = (title, length, description, difficulty, estimatedTime, a
 	return new Promise((resolve, reject) => {
 		const sql = `INSERT INTO hike(title, length, description, difficulty, estimatedTime, ascent, localguideID) VALUES(?, ?, ?, ?, ?, ?, ?)`;
 		db.run(sql, [title, length, description, difficulty, estimatedTime, ascent, localguideID], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(this.lastID);
+			if (err) reject(err);
+			
+			else resolve(this.lastID);
 		});
 	});
 }
@@ -382,14 +378,12 @@ exports.deleteHikes = () => {
 		const sql1 = 'DELETE FROM hike';
 		const sql2 = "UPDATE sqlite_sequence SET seq=0 WHERE name='hike'"
 		db.run(sql1, [], function (err) {
-			if (err) {
-				reject(err);
-			}
+			if (err) reject(err);
+		
 			else {
 				db.run(sql2, [], function (err) {
-					if (err) {
-						reject(err)
-					}
+					if (err) reject(err)
+					
 					else {
 						resolve()
 					}
@@ -405,14 +399,11 @@ exports.deletePoint = () => {
 		const sql1 = 'DELETE FROM point';
 		const sql2 = "UPDATE sqlite_sequence SET seq=0 WHERE name='point'"
 		db.run(sql1, [], function (err) {
-			if (err) {
-				reject(err);
-			}
+			if (err) reject(err);
+			
 			else {
 				db.run(sql2, [], function (err) {
-					if (err) {
-						reject(err)
-					}
+					if (err) reject(err)
 					else {
 						resolve()
 					}
@@ -433,10 +424,8 @@ exports.postPointHut = (point) => {
 			point.city,
 			point.province
 		], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
+			
 			else {
 				resolve(this.lastID)
 			}
@@ -448,10 +437,7 @@ exports.postPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, city, province) VALUES (?, ?, ?, ?, ?, ?)';
 		db.run(sql, [undefined, body.latitude, body.longitude, "point", body.locality, body.localityInfo.administrative[2].name], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(this.lastID)
 			}
@@ -463,10 +449,7 @@ exports.postParkPoint = (body) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO point(id, latitude, longitude, type, city, province) VALUES (?, ?, ?, ?, ?, ?)';
 		db.run(sql, [undefined, body.latitude, body.longitude, body.type, body.city, body.province], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(this.lastID)
 			}
@@ -479,10 +462,7 @@ exports.deleteHike_Point = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DELETE FROM hike_point';
 		db.run(sql1, [], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(this.changes);
 			}
@@ -495,10 +475,7 @@ exports.postHike_Point = (hikeID, type, pointID) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO hike_point(hikeID, type, pointID) VALUES (?, ?, ?)';
 		db.run(sql, [hikeID, type, pointID], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(this.lastID)
 			}
@@ -510,10 +487,7 @@ exports.saveFile = (bin) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'INSERT INTO gpx(gpxfile) VALUES (?)';
 		db.run(sql, [bin], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve()
 			}
@@ -525,10 +499,7 @@ exports.getFileContentById = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql = 'SELECT gpxfile FROM gpx WHERE hikeID = ? ';
 		db.get(sql, [id], function (err, row) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(row)
 			}
@@ -541,10 +512,7 @@ exports.getHikeCities = () => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT DISTINCT city FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = 'start')";
 		db.all(sql, [], function (err, rows) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(rows)
 			}
@@ -557,10 +525,7 @@ exports.getHikeProvinces = () => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT DISTINCT province FROM point WHERE id IN (SELECT pointID FROM hike_point WHERE type = 'start')";
 		db.all(sql, [], function (err, rows) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve(rows)
 			}
@@ -573,10 +538,7 @@ exports.deleteGpx = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 = 'DELETE FROM gpx';
 		db.run(sql1, [], function (err) {
-			if (err) {
-				console.log(err);
-				reject(err);
-			}
+			if (err) reject(err);
 			else {
 				resolve()
 			}
@@ -589,27 +551,7 @@ exports.updateHikePoint = (hikeID, pointID, type) => {
 	return new Promise((resolve, reject) => {
 		const sql = "UPDATE hike_point SET pointID = ? WHERE hikeID = ? AND type = ?"
 		db.run(sql, [pointID, hikeID, type], function (err) {
-			if (err) {
-				reject(err)
-			}
-			else {
-				resolve(this.lastID)
-			}
-		})
-	})
-}
-
-/* This function verifies if the given coordinates
- * are within a radius of (radius) km from every
- * point of a given hike
- */
-exports.checkRadius = (body) => {
-	return new Promise((resolve, reject) => {
-		const sql = "UPDATE hike_point SET pointID = ? WHERE hikeID = ? AND type = ?"
-		db.run(sql, [pointID, hikeID, type], function (err) {
-			if (err) {
-				reject(err)
-			}
+			if (err) reject(err)
 			else {
 				resolve(this.lastID)
 			}

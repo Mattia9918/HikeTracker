@@ -15,10 +15,8 @@ exports.getPointByHikeId = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT latitude,longitude FROM hike_point H,point P WHERE H.hikeID=? AND H.pointID=P.id "
 		db.all(sql, [id], (err, rows) => {
-			if (err) {
-				reject(err);
-			}
-			resolve(rows);
+			if (err) reject(err);
+			else resolve(rows);
 		});
 	});
 };
