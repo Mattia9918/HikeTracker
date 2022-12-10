@@ -6,8 +6,9 @@ const park_dao = require("../modules/dao/parkingdao.js");
 const hike_dao = require("../modules/dao/hikedao.js");
 const user_dao = require("../modules/dao/userdao.js");
 const { app } = require("../index");
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
+const pwd = "password"
 
 const localGuide = {
 	name: "Mario",
@@ -16,7 +17,7 @@ const localGuide = {
 	email: "mario.rossi@mail.it",
 	hash: "",
 	salt: "",
-	password: "password",
+	password: pwd,
 	role: "localGuide",
   };
 
@@ -90,19 +91,12 @@ describe("test api/parking (case success 20(0-4))", () => {
 
 function getParks(expectedHTTPStatus, park1, park2) {
 	it("test getParks", async () => {
-		let parkID1, parkID2;
 		await agent
 			.post("/api/parking")
 			.send(park1)
-			.then(function (res) {
-				parkID1 = res.body.id;
-			});
 		await agent
 			.post("/api/parking")
 			.send(park2)
-			.then(function (res) {
-				parkID2 = res.body.id;
-			});
 
 		await agent.get("/api/parking").then(function (res) {
             console.log(res.body);

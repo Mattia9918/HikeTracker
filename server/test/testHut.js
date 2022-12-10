@@ -7,7 +7,8 @@ const hike_dao = require("../modules/dao/hikedao.js");
 const user_dao = require("../modules/dao/userdao.js");
 const bcrypt = require("bcrypt");
 const { app } = require("../index");
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
+const pwd = "password";
 
 const localGuide = {
 	name: "Mario",
@@ -16,7 +17,7 @@ const localGuide = {
 	email: "mario.rossi@mail.it",
 	hash: "",
 	salt: "",
-	password: "password",
+	password: pwd,
 	role: "localGuide",
 };
 
@@ -102,7 +103,7 @@ describe("test api/huts (case success 200)", () => {
 
 	getHuts(200);
 	getHutsByAltitude(200, 300);
-	getHutsByResturantService(200);
+	getHutsByRestaurantService(200);
 	getHutsByBikeFriendly(200);
 	getHutsByDIsabledService(200);
 	getHutsByCity(200, "Bra");

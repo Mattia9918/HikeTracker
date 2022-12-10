@@ -6,8 +6,9 @@ chai.should();
 const hike_dao = require('../modules/dao/hikedao.js');
 const user_dao = require('../modules/dao/userdao.js');
 const { app } = require('../index');
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
+const pwd = "password"
 
 const localGuide = {
   name: "Mario",
@@ -16,7 +17,7 @@ const localGuide = {
   email: "mario.rossi@mail.it",
   hash: "",
   salt: "",
-  password: "password",
+  password: pwd,
   role: "localGuide",
 };
 
@@ -51,7 +52,6 @@ const hikeOK = {
   difficulty: "Easy",
   estimatedTime: 0.5,
   ascent: 198.0,
-  localguideID: 1,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
@@ -231,7 +231,6 @@ const hikeMalformed = {
   difficulty: "Easy",
   estimatedTime: "blaaa",
   ascent: 198.0,
-  localguideID: 1,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
@@ -486,9 +485,8 @@ describe('test Get Hikes', () => {
       "length": 10,
       "description": "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
       "difficulty": "Easy",
-      "estimatedTime": "10",
+      "estimatedTime": 10,
       "ascent": 800,
-      "localguideID": 1,
       "startingPoint": {
         latitude: 44.645612034,
         longitude: 7.256143788,
@@ -668,7 +666,6 @@ describe('test Get Hikes', () => {
       "difficulty": "Easy",
       "estimatedTime": "10",
       "ascent": 300,
-      "localguideID": 1,
       "startingPoint": {
         latitude: 44.645612034,
         longitude: 7.256143788,
@@ -854,13 +851,8 @@ describe('test Get Hikes', () => {
 
 function getHikes(expectedHTTPStatus, hike1, hike2) {
   it('test getHikes', async () => {
-      let hike1ID, hike2ID;
-      await agent.post('/api/hiking').send(hike1).then(function (res) {
-          hike1ID = res.body.id;
-      });
-      await agent.post('/api/hiking').send(hike2).then(function (res) {
-          hike2ID = res.body.id;
-      });
+      await agent.post('/api/hiking').send(hike1)
+      await agent.post('/api/hiking').send(hike2)
 
       await agent.get('/api/hikes').then( function (res) {
           res.should.have.status(expectedHTTPStatus);

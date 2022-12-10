@@ -8,8 +8,9 @@ const user_dao = require("../modules/dao/userdao.js");
 const hut_dao = require("../modules/dao/hutdao.js");
 const { app } = require("../index");
 const { postHut } = require("../modules/dao/hutdao.js");
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
+const pwd = "password"
 
 const localGuide = {
   name: "Mario",
@@ -18,7 +19,7 @@ const localGuide = {
   email: "mario.rossi@mail.it",
   hash: "",
   salt: "",
-  password: "password",
+  password: pwd,
   role: "localGuide",
 };
 const localGuide2 = {
@@ -28,7 +29,7 @@ const localGuide2 = {
   email: "giulia.brambilla@mail.it",
   hash: "",
   salt: "",
-  password: "password",
+  password: pwd,
   role: "localGuide",
 };
 const hike = {
@@ -38,7 +39,6 @@ const hike = {
   difficulty: "Easy",
   estimatedTime: 0.5,
   ascent: 198.0,
-  localguideID: 1,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
@@ -218,7 +218,6 @@ const hike2 = {
   difficulty: "Easy",
   estimatedTime: 0.5,
   ascent: 198.0,
-  localguideID: 2,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,

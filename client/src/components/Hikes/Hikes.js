@@ -1,5 +1,5 @@
 import { Container, Card, Row, Col, Button,Accordion, ButtonGroup } from 'react-bootstrap';
-import {  useState,useEffect, useCallback } from 'react';
+import {  useState,useEffect } from 'react';
 
 import {MapModal} from '../Map/Maps';
 
@@ -140,11 +140,11 @@ function Hikes(props) {
                             {(hikes.length === 1 && hikes[0].id === undefined) ||
                                 <>
                                     <Col lg = {6} xs = {12}>
-                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  />)}
+                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  setHikes = {setHikes}/>)}
                                     </Col>
                                     
                                     <Col>
-                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} />)}
+                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} setHikes = {setHikes}/>)}
                                     </Col>
                                 </>
                             }
@@ -216,7 +216,7 @@ function HikeCard(props) {
                     obj={{showModal,setShowModal,title:props.hike.title,hikeid:props.hike.id}}
              />}
 
-            {showLinkingModal && <LinkingModal hike = {props.hike} showLinkingModal = {showLinkingModal} setShowLinkingModal = {setShowLinkingModal}/>}
+            {showLinkingModal && <LinkingModal hike = {props.hike} showLinkingModal = {showLinkingModal} setShowLinkingModal = {setShowLinkingModal} setHikes = {props.setHikes}/>}
 
         </Container>
     );
