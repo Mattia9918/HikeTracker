@@ -131,7 +131,7 @@ function getHutsByAltitude(expectedHTTPStatus, minALtitude) {
 	});
 }
 
-function getHutsByResturantService(expectedHTTPStatus) {
+function getHutsByRestaurantService(expectedHTTPStatus) {
 	it("test get by altitude", async () => {
 		await agent
 			.get(`/api/huts?filter=restaurant_services&value1=1`)
