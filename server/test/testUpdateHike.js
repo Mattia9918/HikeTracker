@@ -475,10 +475,10 @@ async function logUser(email, password) {
 const logoutUser = async()=> await agent.delete("/api/sessions/current"); 
     
 
-async function postHike(fname,hikes) {
+async function postHike(fname, hike) {
   // Insert hike to Rifugio Bertorello
 
-  await agent.post("/api/hiking").send(hikes);
+  await agent.post("/api/hiking").send(hike);
 
   const gpx = {
     path: `/uploads/${fname}`,
@@ -487,14 +487,14 @@ async function postHike(fname,hikes) {
 
 }
 
-/** TEST UPDATE HIKES (starting point) */
+// TEST UPDATE HIKES (starting point) 
 
 describe("test update hike starting point", () => {
   before(async () => {
     // delete hike, point, hike_point, gpx, user
     await deleteTables();
 
-    // create local guide and hiker
+    // create users
     await insertUsers();
 
     //login & postHike localGuide 2 
@@ -562,7 +562,7 @@ function updateHike(expectedHTTPStatus, hikeID, point, type) {
   });
 }
 
-/** TEST UPDATE HIKES (arrive point) */
+// TEST UPDATE HIKES (arrive point) 
 describe("test update hike arrival point", () => {
   before(async () => {
     // delete hike, point, hike_point, gpx, user

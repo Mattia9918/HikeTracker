@@ -2,10 +2,23 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 chai.should();
-const parkDao = require("../modules/dao/parkingdao.js");
-const hikeDao = require("../modules/dao/hikedao.js");
+const park_dao = require("../modules/dao/parkingdao.js");
+const hike_dao = require("../modules/dao/hikedao.js");
+const user_dao = require("../modules/dao/userdao.js");
 const { app } = require("../index");
 var agent = chai.request.agent(app);
+const bcrypt = require("bcrypt");
+
+const localGuide = {
+	name: "Mario",
+	surname: "Rossi",
+	username: "mariorossi1",
+	email: "mario.rossi@mail.it",
+	hash: "",
+	salt: "",
+	password: "password",
+	role: "localGuide",
+  };
 
 const park1 = {
     "parkID": 1,
@@ -42,24 +55,37 @@ const park2 = {
 	}
 };
 
+async function deleteTables() {
+	await hike_dao.deletePoint();
+	await user_dao.deleteUser();
+	await park_dao.deleteParks(); 
+  }
+  
+  async function insertUsers() {
+   
+	localGuide.salt = await bcrypt.genSalt(10);
+	localGuide.hash = await bcrypt.hash(localGuide.password, localGuide.salt);
+  
+	await user_dao.insertUser(localGuide);
+	await user_dao.activateUser(localGuide.email);
+  }
+  
+  async function logUser(email, password) {
+	await agent
+	  .post("/api/sessions")
+	  .send({ username: email, password: password });
+  }
+
 describe("test api/parking (case success 20(0-4))", () => {
 	beforeEach(async () => {
-		await hikeDao.deletePoint();
-        await parkDao.deleteParks();
+		await deleteTables();
+
+		await insertUsers();
+
+		await logUser("mario.rossi@mail.it", "password")
 	});
 
-
-
     getParks(200, park1, park2);
-	// getHutsByAltitude(200, hut1, hut2, 300);
-	// getHutsByResturantService(200, hut1, hut2);
-	// getHutsByBikeFriendly(200, hut1, hut2);
-	// getHutsByDIsabledService(200, hut1, hut2);
-	// getHutsByCity(200, hut1, hut2, "Bra");
-	// getHutsByProvince(200, hut1, hut2, "Cuneo");
-	// getHutsByBeds(200, hut1, hut2, 2);
-	// getHutsByReachability(200, hut1, hut2, "By Car");
-
 });
 
 function getParks(expectedHTTPStatus, park1, park2) {
@@ -70,7 +96,6 @@ function getParks(expectedHTTPStatus, park1, park2) {
 			.send(park1)
 			.then(function (res) {
 				parkID1 = res.body.id;
-                console.log(parkID1);
 			});
 		await agent
 			.post("/api/parking")
@@ -86,28 +111,3 @@ function getParks(expectedHTTPStatus, park1, park2) {
 		});
 	});
 }
-
-/*
-function getHutsByAltitude(expectedHTTPStatus, hut1, hut2, minALtitude) {
-	it('test get by altitude', async () => {
-		let hutID1, hutID2;
-		await agent
-			.post("/api/hut")
-			.send(hut1)
-			.then(function (res) {
-				hutID1 = res.body.id;
-                console.log(hutID1);
-			});
-		await agent
-			.post("/api/hut")
-			.send(hut2)
-			.then(function (res) {
-				hutID2 = res.body.id;
-			});
-
-			await agent.get(`/api/huts?filter=altitude&value1=${minALtitude}`).then( function (res) {
-				res.should.have.status(expectedHTTPStatus);
-	});
-});
-}
-*/
