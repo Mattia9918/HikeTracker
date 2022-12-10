@@ -489,7 +489,7 @@ async function postHike(fname,hikes) {
 
 /** TEST UPDATE HIKES (starting point) */
 
-describe("test update hike starting point success (200)", () => {
+describe("test update hike starting point", () => {
   before(async () => {
     // delete hike, point, hike_point, gpx, user
     await deleteTables();
@@ -497,28 +497,60 @@ describe("test update hike starting point success (200)", () => {
     // create local guide and hiker
     await insertUsers();
 
-    // log local guide
-    await logUser("mario.rossi@mail.it", "password");
+    //login & postHike localGuide 2 
+    await logUser("giulia.brambilla@mail.it","password");
+    await postHike("new (7).gpx",hike2);
+    await logoutUser(); 
 
-    // post hike and gpx
+    //login & postHike_gpx localGuide 1
+    await logUser("mario.rossi@mail.it", "password");
     await postHike("Bertorello.gpx",hike);
+   
 
     await agent.post("/api/hut").send({ hut: hut, point: point });
-
+    await agent.post("/api/hut").send({ hut: hut2, point: point2 });
   });
 
-  
-  updateHikeStart(200, 1, {
-    id: 3,
+  // success
+  updateHike(200, 2, {
+    id: 5,
+    latitude: point.latitude,
+    longitude: point.longitude
+  }, "startingPoint");
+
+  //hut troppo distante
+  updateHike(422, 2, {
+    id: 6,
+    latitude: point2.latitude,
+    longitude: point2.longitude,
+  }, "startingPoint");  
+
+  //hike o gpx non esistente (tutti e 2 usano l'id della hike, quindi basta un test)
+  updateHike(404, 1000, {
+    id: 5,
     latitude: point.latitude,
     longitude: point.longitude,
-  });
+  }, "startingPoint"); 
+
+  //modifica di un hike di un'altra localGuide
+  updateHike(403, 1, {
+    id: 5,
+    latitude: point.latitude,
+    longitude: point.longitude,
+  }, "startingPoint");  
+
+  //campi errati
+  updateHike(422, 2, {
+    id: "null",
+    latitude: point.latitude,
+    longitude: point.longitude,
+  }, "startingPoint");
 });
 
-function updateHikeStart(expectedHTTPStatus, hikeID, point) {
-  it("test put /api/hike/:id/startingPoint", async () => {
+function updateHike(expectedHTTPStatus, hikeID, point, type) {
+  it("test put /api/hike/:id/:type", async () => {
     await agent
-      .put(`/api/hike/${hikeID}/startingPoint`)
+      .put(`/api/hike/${hikeID}/${type}`)
       .send({
         id: point.id,
         latitude: point.latitude,
@@ -531,7 +563,7 @@ function updateHikeStart(expectedHTTPStatus, hikeID, point) {
 }
 
 /** TEST UPDATE HIKES (arrive point) */
-describe("test update hike starting point success (200)", () => {
+describe("test update hike arrival point", () => {
   before(async () => {
     // delete hike, point, hike_point, gpx, user
     await deleteTables();
@@ -555,55 +587,37 @@ describe("test update hike starting point success (200)", () => {
   });
 
   //success
-  updateHikeArrive(200, 2, {
-    id: 1,
+  updateHike(200, 2, {
+    id: 5,
     latitude: point.latitude,
     longitude: point.longitude,
-  }); 
+  }, "arrivalPoint"); 
 
    //hut troppo distante
-   updateHikeArrive(422, 2, {
+   updateHike(422, 2, {
     id: 6,
     latitude: point2.latitude,
     longitude: point2.longitude,
-  });  
+  }, "arrivalPoint");  
 
   //hike o gpx non esistente (tutti e 2 usano l'id della hike, quindi basta un test)
-  updateHikeArrive(404, 1000, {
-    id: 3,
+  updateHike(404, 1000, {
+    id: 5,
     latitude: point.latitude,
     longitude: point.longitude,
-  }); 
+  }, "arrivalPoint"); 
 
   //modifica di un hike di un'altra localGuide
-  updateHikeArrive(403, 1, {
-    id: 3,
+  updateHike(403, 1, {
+    id: 5,
     latitude: point.latitude,
     longitude: point.longitude,
-  });  
+  }, "arrivalPoint");  
 
   //campi errati
-  updateHikeArrive(422, 2, {
+  updateHike(422, 2, {
     id: "null",
     latitude: point.latitude,
     longitude: point.longitude,
-  });
-
- 
-
+  }, "arrivalPoint");
 });
-
-function updateHikeArrive(expectedHTTPStatus, hikeID, point) {
-  it("test put /api/hike/:id/arrivalPoint", async () => {
-    await agent
-      .put(`/api/hike/${hikeID}/arrivalPoint`)
-      .send({
-        id: point.id,
-        latitude: point.latitude,
-        longitude: point.longitude,
-      })
-      .then(function (res) {
-        res.should.have.status(expectedHTTPStatus);
-      });
-  });
-}
