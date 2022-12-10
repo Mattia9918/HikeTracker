@@ -33,7 +33,7 @@ exports.postHut = (hut, point_id) => {
 				hut.rooms,
                 hut.bathrooms,
 				hut.beds,
-				hut.restaurant_services, 
+				hut.restaurant_service, 
 				point_id
 			], function (err) {
 			if (err) {

@@ -15,7 +15,7 @@ async function postHike(Hike) {
             },
             body: JSON.stringify({ title: Hike.title, length: Hike.length, 
                 description: Hike.description, difficulty: Hike.difficulty, estimatedTime: Hike.estimatedtime,
-                 ascent: Hike.ascent, localguideID: Hike.localguideID, 
+                 ascent: Hike.ascent, 
                  startingPoint : Hike.spoint, endingPoint: Hike.epoint })
         });
         if (response.ok) {
