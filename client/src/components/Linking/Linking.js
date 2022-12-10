@@ -14,7 +14,6 @@ function LinkingModal(props) {
     const [selectedHut, setSelectedHut] = useState();
     const [selectedParkingLot, setSelectedParkingLot] = useState();
     const [message, setMessage] = useState();
-    console.log(message);
 
     async function putHikePoint(point, type) {
         try {
@@ -23,7 +22,6 @@ function LinkingModal(props) {
                 pointid: point.point_id,
                 latitude: point.latitude,
                 longitude: point.longitude,
-                hutId : selectedHut.id
             }
             await APIHikes.putHikePoint(obj, type);
             setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`})
