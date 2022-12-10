@@ -16,7 +16,6 @@ exports.getPointByHikeId = (id) => {
 		const sql = "SELECT latitude,longitude FROM hike_point H,point P WHERE H.hikeID=? AND H.pointID=P.id "
 		db.all(sql, [id], (err, rows) => {
 			if (err) {
-				//console.log(err);
 				reject(err);
 			}
 			resolve(rows);
