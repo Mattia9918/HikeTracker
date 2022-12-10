@@ -52,7 +52,6 @@ const hikeOK = {
   difficulty: "Easy",
   estimatedTime: 0.5,
   ascent: 198.0,
-  localguideID: 1,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
@@ -232,7 +231,6 @@ const hikeMalformed = {
   difficulty: "Easy",
   estimatedTime: "blaaa",
   ascent: 198.0,
-  localguideID: 1,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
@@ -487,9 +485,8 @@ describe('test Get Hikes', () => {
       "length": 10,
       "description": "\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
       "difficulty": "Easy",
-      "estimatedTime": "10",
+      "estimatedTime": 10,
       "ascent": 800,
-      "localguideID": 1,
       "startingPoint": {
         latitude: 44.645612034,
         longitude: 7.256143788,
@@ -669,7 +666,6 @@ describe('test Get Hikes', () => {
       "difficulty": "Easy",
       "estimatedTime": "10",
       "ascent": 300,
-      "localguideID": 1,
       "startingPoint": {
         latitude: 44.645612034,
         longitude: 7.256143788,

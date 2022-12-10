@@ -39,7 +39,6 @@ const hike = {
   difficulty: "Easy",
   estimatedTime: 0.5,
   ascent: 198.0,
-  localguideID: 1,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
@@ -219,7 +218,6 @@ const hike2 = {
   difficulty: "Easy",
   estimatedTime: 0.5,
   ascent: 198.0,
-  localguideID: 2,
   startingPoint: {
     latitude: 44.645612034,
     longitude: 7.256143788,
