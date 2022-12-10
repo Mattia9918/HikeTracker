@@ -36,6 +36,17 @@ exports.getParkById = (id) => {
 		});
 	});
 };
+
+exports.getParkByName = (name) => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT P.id AS parkID, name, guarded, parking_spaces, price_per_hour, disabled_parkings, timetable, point_id,  latitude, longitude, PO.type, city, province FROM parking_lot P, point PO WHERE name=? AND P.point_id = PO.id";
+		db.get(sql, [name], (err, row) => {
+			if (err) reject(err);
+			else resolve(row);
+		});
+	});
+};
 exports.createParking = (
 	name,
 	guarded,

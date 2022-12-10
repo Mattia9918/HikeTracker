@@ -18,7 +18,7 @@ const parking2 = {
 	parking_spaces: 9,
 	price_per_hour: 11,
 	disabled_parkings: 21,
-	timetable: "iyi aksamlar",
+	timetable: "iyi aksamlar"
 };
 
 const point5 = {
@@ -26,7 +26,7 @@ const point5 = {
 	longitude: 52.1,
 	type: "parking lot",
 	city: "Torino",
-	province: "Torino",
+	province: "Torino"
 };
 
 const point6 = {
@@ -34,7 +34,7 @@ const point6 = {
 	longitude: 84.1,
 	type: "parking lot",
 	city: "Torino",
-	province: "Torino",
+	province: "Torino"
 };
 
 describe("test hikes and filtering", () => {
@@ -70,6 +70,8 @@ describe("test hikes and filtering", () => {
 
 	testGetParks();
 	testGetParkById();
+	testCreatePark();
+	testGetParkByName();
 });
 
 function testGetParks() {
@@ -131,6 +133,45 @@ function testGetParkById() {
 				city: "Torino",
 				province: "Torino",
 			});
+		});
+	});
+}
+
+function testGetParkByName() {
+	describe("Testing getParkById(id)", () => {
+		test("specific park_lot depending on Id", async () => {
+			let res = await parking_dao.getParkByName("5 Guys");
+			expect(res).toEqual({
+				parkID: 1,
+				name: "5 Guys",
+				guarded: 2,
+				parking_spaces: 11,
+				price_per_hour: 9,
+				disabled_parkings: 10,
+				timetable: "gunaydin",
+				point_id: 1,
+				latitude: 67.6,
+				longitude: 52.1,
+				type: "parking lot",
+				city: "Torino",
+				province: "Torino",
+			});
+		});
+	});
+}
+
+function testCreatePark() {
+	describe("Testing createParking", () => {
+		test("specific returning the Id posted", async () => {
+			let p5 = await hike_dao.postParkPoint(point5);
+			let res = await parking_dao.createParking(parking1.name,
+				parking1.guarded,
+				parking1.parking_spaces,
+				parking1.price_per_hour,
+				parking1.disabled_parkings,
+				parking1.timetable,
+				p5);
+			expect(res).toEqual(3);
 		});
 	});
 }

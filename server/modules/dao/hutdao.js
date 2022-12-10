@@ -123,9 +123,9 @@ exports.getHutById = (id) => {
 exports.getHutsLinkedHike = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"SELECT H.id, name, address, phone_number, email, web_site, H.description, P.latitude, P.longitude, P.city, P.province,  point_id, altitude, languages, " +
 			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
-			"FROM hut H, point P, hike_point HP WHERE  H.point_id = HP.pointID "
+			"FROM hut H, point P, hike_point HP WHERE HP.type='hut' AND H.point_id = HP.pointID  AND H.point_id = P.id"
 
 			db.all(sql, [], (err, rows) => {
 			if (err)
@@ -140,9 +140,9 @@ exports.getHutsLinkedHike = () => {
 exports.getHutLinkedToHikeById = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"SELECT H.id AS HutID, HP.HikeID AS HikeID, P.id AS PointID, H.name, H.address,  HP.type, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
-			"bike_friendly, reachability, disabled_services, rooms, bathrooms, beds, restaurant_service " +
-			"FROM hut H, point P, hike_point HP WHERE H.id = ? AND H.point_id = P.id AND HP.pointID = H.point_id " 
+			"SELECT H.id AS HutID, HP.HikeID AS HikeID, P.id AS PointID, H.name, H.web_site, H.address,  HP.type, P.latitude, P.longitude, P.city, P.province, altitude, languages, " +
+			"bike_friendly, reachability, description, email, phone_number, disabled_services, rooms, bathrooms, beds, restaurant_service " +
+			"FROM hut H, point P, hike_point HP WHERE H.id = ? AND HP.type='hut' AND H.point_id = P.id AND HP.pointID = H.point_id " 
 
 		db.get(sql, [id], (err, row) => {
 			if (err)

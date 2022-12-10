@@ -39,12 +39,14 @@ router.post('/api/parking', checkAuth.isLocalGuide,
 , async (req, res) => {
 
     try {
+       
         const parkingPointID = await hike_dao.postParkPoint(req.body.parkingPoint);
         if(parkingPointID){
-          await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, req.body.timetable, parkingPointID);
+          const id=await parking_dao.createParking(req.body.name, req.body.guarded, req.body.parking_spaces, req.body.price_per_hour, req.body.disabled_parkings, req.body.timetable, parkingPointID);
+          return res.status(201).json(id);
         }
        
-        return res.status(201).json();
+        
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: `Generic error` }).end();

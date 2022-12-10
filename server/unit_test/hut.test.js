@@ -111,6 +111,7 @@ describe("test get huts and add filters", () => {
 	beforeEach(async () => {
 		await hike_dao.deletePoint();
 		await hut_dao.deleteAllHuts();
+		await hut_dao.deleteHikeLinkedHut();
 		try {
 			const point1_id = await hike_dao.postPointHut(point1);
 
@@ -126,6 +127,12 @@ describe("test get huts and add filters", () => {
 
 			const point4_id = await hike_dao.postPointHut(point4);
 			await hut_dao.postHut(hut4, point4_id);
+
+        
+			await hike_dao.postHike_Point(5,"hut", point2_id);
+
+			await hike_dao.postHike_Point(6,"hut", point4_id);
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -141,6 +148,8 @@ describe("test get huts and add filters", () => {
 	testGetHutsWithRestaurant();
 	testGetHutSByAltitude();
 	testGetHutsWithBeds();
+	testGetHutsLinkedHike();
+	testGetHutsLinkedHikeById();
 });
 
 function testGetHuts() {
@@ -726,6 +735,93 @@ function testGetHutsWithBeds() {
 					city: "Ivrea",
 				},
 			]);
+		});
+	});
+}
+
+function testGetHutsLinkedHike() {
+	describe("Testing getHutsLinkedHike()", () => {
+		test("get these hutsLinked", async () => {
+			let res = await hut_dao.getHutsLinkedHike();
+			expect(res).toEqual([{
+				id: 2,
+				name: "Hut a Bra",
+				address: "Via Bra",
+				phone_number: "2222",
+				email: "hut@mail.it",
+				web_site: "www.hut.it",
+				description: "un hut a Bra",
+				altitude: 300,
+				languages: "Francese",
+				bike_friendly: 1,
+				reachability: "foot",
+				disabled_services: 1,
+				rooms: 10,
+				bathrooms: 10,
+				beds: 15,
+				restaurant_service: 1,
+				latitude: 44.704,
+				longitude: 7.8567,
+				province: "Cuneo",
+				city: "Bra",
+				point_id: 2
+			},
+			{
+				id: 4,
+				name: "Hut a Barolo",
+				address: "Via Barolo 2",
+				phone_number: "4444",
+				email: "hut@mail.it",
+				web_site: "www.hut.it",
+				description: "un hut a Barolo",
+				altitude: 3000,
+				languages: "Inglese",
+				bike_friendly: 1,
+				reachability: "cable",
+				disabled_services: 0,
+				rooms: 0,
+				bathrooms: 10,
+				beds: 0,
+				restaurant_service: 0,
+				latitude: 44.61666,
+				longitude: 7.933333,
+				province: "Cuneo",
+				city: "Barolo",
+				point_id: 4,
+			}]);
+		});
+	});
+}
+
+function testGetHutsLinkedHikeById() {
+	describe("Testing getHutsLinkedHikeByID()", () => {
+		test("get hutsLinked with ID", async () => {
+			let res = await hut_dao.getHutLinkedToHikeById(2);
+			expect(res).toEqual({
+				HikeID: 5,
+				HutID:2,
+				PointID:2,
+				name: "Hut a Bra",
+				address: "Via Bra",
+				phone_number: "2222",
+				email: "hut@mail.it",
+				web_site: "www.hut.it",
+				description: "un hut a Bra",
+				altitude: 300,
+				languages: "Francese",
+				bike_friendly: 1,
+				reachability: "foot",
+				disabled_services: 1,
+				rooms: 10,
+				bathrooms: 10,
+				beds: 15,
+				restaurant_service: 1,
+				latitude: 44.704,
+				longitude: 7.8567,
+				province: "Cuneo",
+				city: "Bra",
+				type: "hut"
+			});
 		});
 	});
 }
