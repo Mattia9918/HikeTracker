@@ -8,7 +8,7 @@ const user_dao = require("../modules/dao/userdao.js");
 const hut_dao = require("../modules/dao/hutdao.js");
 const { app } = require("../index");
 const { postHut } = require("../modules/dao/hutdao.js");
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
 
 const localGuide = {

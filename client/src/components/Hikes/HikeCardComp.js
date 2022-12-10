@@ -4,7 +4,6 @@ import {  useState } from 'react';
 import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
 
 import {FiMapPin} from 'react-icons/fi';
-import {FaFlagCheckered} from 'react-icons/fa';
 import {BiChevronDown,BiChevronUp} from 'react-icons/bi';
 import { AiOutlineHome } from 'react-icons/ai';
 import { RiParkingBoxLine } from 'react-icons/ri'

@@ -8,7 +8,7 @@ const hike_dao = require('../modules/dao/hikedao.js');
 const user_dao = require("../modules/dao/userdao.js");
 const bcrypt = require("bcrypt");
 const { app } = require('../index');
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 
 const fileName="new (7).gpx";
 

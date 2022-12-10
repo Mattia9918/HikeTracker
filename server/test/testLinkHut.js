@@ -7,8 +7,7 @@ const hike_dao = require("../modules/dao/hikedao.js");
 const user_dao = require("../modules/dao/userdao.js");
 const hut_dao = require("../modules/dao/hutdao.js");
 const { app } = require("../index");
-const { postHut } = require("../modules/dao/hutdao.js");
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
 
 
@@ -473,32 +472,6 @@ async function logUser(email, password) {
     .send({ username: email, password: password });
 }
 
-const logoutUser = async()=> await agent.delete("/api/sessions/current"); 
-   
-function getHuts(expectedHTTPStatus, hut1, hut2) {
-	it("test getHuts", async () => {
-		let hutID1, hutID2;
-		await agent
-			.post("/api/hut")
-			.send(hut1)
-			.then(function (res) {
-				hutID1 = res.body.id;
-			});
-		await agent
-			.post("/api/hut")
-			.send(hut2)
-			.then(function (res) {
-				hutID2 = res.body.id;
-			});
-
-		await agent.get("/api/huts").then(function (res) {
-			res.should.have.status(expectedHTTPStatus);
-			res.body.length.should.equal(2);
-			res.body[0].name.should.equal("Dollo Zone");
-		});
-	});
-}
-
 function linkHuts(expectedHTTPStatus, hike , hut) {
     it('test post /api/hutLinkHike', async () => {
         await agent.post('/api/hutLinkHike')
@@ -512,9 +485,6 @@ function linkHuts(expectedHTTPStatus, hike , hut) {
 //API POST NEW HIKE
 async function postHike(fname,hikes) {
   // Insert hike to Rifugio Bertorello
-  console.log("---------------------");
-  console.log(hikes);
-  console.log("---------------------");
   await agent.post("/api/hiking").send(hikes);
 
   const gpx = {
@@ -538,7 +508,6 @@ describe('test api/hutLinkHike', () => {
       await logUser("mario.rossi@mail.it", "password");
       await postHike("Bertorello.gpx",hike);
       await agent.post("/api/hut").send({ hut: hut, point: point });
-      //await agent.post("/api/hut").send({ hut: hut2, point: point2 });
       
     }); 
 

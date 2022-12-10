@@ -6,7 +6,7 @@ chai.should();
 const hike_dao = require('../modules/dao/hikedao.js');
 const user_dao = require('../modules/dao/userdao.js');
 const { app } = require('../index');
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
 
 const localGuide = {
@@ -854,13 +854,8 @@ describe('test Get Hikes', () => {
 
 function getHikes(expectedHTTPStatus, hike1, hike2) {
   it('test getHikes', async () => {
-      let hike1ID, hike2ID;
-      await agent.post('/api/hiking').send(hike1).then(function (res) {
-          hike1ID = res.body.id;
-      });
-      await agent.post('/api/hiking').send(hike2).then(function (res) {
-          hike2ID = res.body.id;
-      });
+      await agent.post('/api/hiking').send(hike1)
+      await agent.post('/api/hiking').send(hike2)
 
       await agent.get('/api/hikes').then( function (res) {
           res.should.have.status(expectedHTTPStatus);

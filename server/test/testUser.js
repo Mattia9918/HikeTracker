@@ -5,7 +5,7 @@ chai.use(chaiHttp);
 chai.should();
 const dao = require('../modules/dao/userdao.js');
 const { app } = require('../index');
-var agent = chai.request.agent(app);
+let agent = chai.request.agent(app);
 
 
 

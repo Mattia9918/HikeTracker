@@ -125,7 +125,7 @@ async function linkHut(hutInfo, type) {
     const url = APIURL + `hutLinkHike`; 
     
     try {
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'POST',
             credentials: 'include',
             headers: {
