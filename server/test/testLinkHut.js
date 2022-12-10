@@ -212,189 +212,9 @@ const hike = {
   },
 };
 
-const hike2 = {
-  title: "Rifugio Bertorello",
-  length: 2.81,
-  description: "desc",
-  difficulty: "Easy",
-  estimatedTime: 0.5,
-  ascent: 198.0,
-  localguideID: 2,
-  startingPoint: {
-    latitude: 44.645612034,
-    longitude: 7.256143788,
-    continent: "Europe",
-    lookupSource: "coordinates",
-    continentCode: "EU",
-    localityLanguageRequested: "en",
-    city: "Paesana",
-    countryName: "Italy",
-    countryCode: "IT",
-    postcode: "",
-    principalSubdivision: "Piemonte",
-    principalSubdivisionCode: "IT-21",
-    plusCode: "8FP9J7W4+6F",
-    locality: "Paesana",
-    localityInfo: {
-      administrative: [
-        {
-          name: "Italy",
-          description: "republic in Southern Europe",
-          order: 2,
-          adminLevel: 2,
-          isoCode: "IT",
-          wikidataId: "Q38",
-          geonameId: 3175395,
-        },
-        {
-          name: "Piemonte",
-          description: "region in North-West Italy",
-          order: 5,
-          adminLevel: 4,
-          isoCode: "IT-21",
-          wikidataId: "Q1216",
-          geonameId: 3170831,
-        },
-        {
-          name: "Provincia di Cuneo",
-          description: "province in Italy",
-          order: 6,
-          adminLevel: 6,
-          isoCode: "IT-CN",
-          wikidataId: "Q15091",
-          geonameId: 3177699,
-        },
-        {
-          name: "Paesana",
-          description: "Italian comune",
-          order: 8,
-          adminLevel: 8,
-          wikidataId: "Q20284",
-          geonameId: 6536421,
-        },
-      ],
-      informative: [
-        {
-          name: "Europe",
-          description: "continent",
-          order: 1,
-          isoCode: "EU",
-          wikidataId: "Q46",
-          geonameId: 6255148,
-        },
-        {
-          name: "Italian Peninsula",
-          description: "peninsula of southern Europe",
-          order: 3,
-          wikidataId: "Q145694",
-        },
-        {
-          name: "Alps",
-          description: "European mountain range",
-          order: 4,
-          wikidataId: "Q1286",
-          geonameId: 2661786,
-        },
-        {
-          name: "Cottian Alps",
-          description: "mountain range in the South-Western part of the Alps",
-          order: 7,
-          wikidataId: "Q1251",
-          geonameId: 3023403,
-        },
-      ],
-    },
-  },
-  endingPoint: {
-    latitude: 44.636650121,
-    longitude: 7.245265664,
-    continent: "Europe",
-    lookupSource: "coordinates",
-    continentCode: "EU",
-    localityLanguageRequested: "en",
-    city: "Paesana",
-    countryName: "Italy",
-    countryCode: "IT",
-    postcode: "",
-    principalSubdivision: "Piemonte",
-    principalSubdivisionCode: "IT-21",
-    plusCode: "8FP9J6PW+M4",
-    locality: "Paesana",
-    localityInfo: {
-      administrative: [
-        {
-          name: "Italy",
-          description: "republic in Southern Europe",
-          order: 2,
-          adminLevel: 2,
-          isoCode: "IT",
-          wikidataId: "Q38",
-          geonameId: 3175395,
-        },
-        {
-          name: "Piemonte",
-          description: "region in North-West Italy",
-          order: 5,
-          adminLevel: 4,
-          isoCode: "IT-21",
-          wikidataId: "Q1216",
-          geonameId: 3170831,
-        },
-        {
-          name: "Provincia di Cuneo",
-          description: "province in Italy",
-          order: 6,
-          adminLevel: 6,
-          isoCode: "IT-CN",
-          wikidataId: "Q15091",
-          geonameId: 3177699,
-        },
-        {
-          name: "Paesana",
-          description: "Italian comune",
-          order: 8,
-          adminLevel: 8,
-          wikidataId: "Q20284",
-          geonameId: 6536421,
-        },
-      ],
-      informative: [
-        {
-          name: "Europe",
-          description: "continent",
-          order: 1,
-          isoCode: "EU",
-          wikidataId: "Q46",
-          geonameId: 6255148,
-        },
-        {
-          name: "Italian Peninsula",
-          description: "peninsula of southern Europe",
-          order: 3,
-          wikidataId: "Q145694",
-        },
-        {
-          name: "Alps",
-          description: "European mountain range",
-          order: 4,
-          wikidataId: "Q1286",
-          geonameId: 2661786,
-        },
-        {
-          name: "Cottian Alps",
-          description: "mountain range in the South-Western part of the Alps",
-          order: 7,
-          wikidataId: "Q1251",
-          geonameId: 3023403,
-        },
-      ],
-    },
-  },
-};
-
 // create hut to set as arrive point
 const hut = {
-  name: "Rifugio Bertorello endingPoint",
+  name: "Rifugio Bertorello",
   address: "12034 Paesana CN",
   phone_number: "3892119067",
   email: "bertorello@mail.it",
@@ -415,32 +235,7 @@ const point = {
   province: "Cuneo",
   latitude: 44.640565841321729,
   longitude: 7.251212596893311,
-};
-
-const hut2 = {
-  name: "Dollo Zone",
-  address: "33333 Dollo Zone ",
-  phone_number: "3892119067",
-  email: "dollozone@mail.it",
-  website: "www.dollozone.it",
-  description: "Hut in Dollo Zone",
-  altitude: 650,
-  languages: "french",
-  bike_friendly: 1,
-  reachability: "normal",
-  disabled_services: 0,
-  rooms: 25,
-  bathrooms: 30,
-  beds: 50,
-  restaurant_service: 1,
-};
-
-const point2 = {
-  city: "Dollo Zone",
-  province: "Dollo Zone",
-  latitude: 7.429607,
-  longitude: 46.003288,
-};
+}
 
 async function deleteTables() {
   await hike_dao.deleteHike_Point();
@@ -473,11 +268,18 @@ async function logUser(email, password) {
     .send({ username: email, password: password });
 }
 
-function linkHuts(expectedHTTPStatus, hike , hut) {
+function linkHuts(expectedHTTPStatus) {
     it('test post /api/hutLinkHike', async () => {
         await agent.post('/api/hutLinkHike')
-        .send({hikeid : 1 , hutId : 1})
+        .send({
+          hikeid : 1, 
+          hutId : 1,
+          pointid: 3,
+          latitude: point.latitude,
+          longitude: point.longitude
+      })
         .then(function(res) {
+            console.log(res)
             res.should.have.status(expectedHTTPStatus); 
         })
     })
