@@ -34,7 +34,11 @@ router.get("/api/parking/:id", checkAuth.isLoggedIn, async (req, res) => {
 router.post('/api/parking', checkAuth.isLocalGuide, 
 [
     check('guarded').isNumeric(),
-    check('parking_spaces').isNumeric()
+    check('parking_spaces').isInt(),
+    check('name').notEmpty(),
+    check('price_per_hour').isNumeric(),
+    check('disabled_parkings').isNumeric(),
+    check('timetable').notEmpty(),
 ]
 , async (req, res) => {
 
