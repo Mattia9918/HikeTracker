@@ -3,427 +3,457 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 chai.should();
-const dao = require('../modules/dao/hikedao.js');
+const hike_dao = require('../modules/dao/hikedao.js');
+const user_dao = require('../modules/dao/userdao.js');
 const { app } = require('../index');
 var agent = chai.request.agent(app);
+const bcrypt = require("bcrypt");
 
+const localGuide = {
+  name: "Mario",
+  surname: "Rossi",
+  username: "mariorossi1",
+  email: "mario.rossi@mail.it",
+  hash: "",
+  salt: "",
+  password: "password",
+  role: "localGuide",
+};
 
+async function deleteTables() {
+  await hike_dao.deleteHike_Point();
+  await hike_dao.deleteHikes();
+  await hike_dao.deletePoint();
+  await user_dao.deleteUser();
+}
 
-describe('test api/hiking (case success 200)', () => {
+async function insertUser() {
+ 
+  localGuide.salt = await bcrypt.genSalt(10);
+  localGuide.hash = await bcrypt.hash(localGuide.password, localGuide.salt);
+
+  await user_dao.insertUser(localGuide);
+  await user_dao.activateUser(localGuide.email);
+}
+
+async function logUser(email, password) {
+  await agent
+    .post("/api/sessions")
+    .send({ username: email, password: password });
+}
+
+const logoutUser = async()=> await agent.delete("/api/sessions/current");
+
+const hikeOK = {
+  title: "Rifugio Bertorello",
+  length: 2.81,
+  description: "desc",
+  difficulty: "Easy",
+  estimatedTime: 0.5,
+  ascent: 198.0,
+  localguideID: 1,
+  startingPoint: {
+    latitude: 44.645612034,
+    longitude: 7.256143788,
+    continent: "Europe",
+    lookupSource: "coordinates",
+    continentCode: "EU",
+    localityLanguageRequested: "en",
+    city: "Paesana",
+    countryName: "Italy",
+    countryCode: "IT",
+    postcode: "",
+    principalSubdivision: "Piemonte",
+    principalSubdivisionCode: "IT-21",
+    plusCode: "8FP9J7W4+6F",
+    locality: "Paesana",
+    localityInfo: {
+      administrative: [
+        {
+          name: "Italy",
+          description: "republic in Southern Europe",
+          order: 2,
+          adminLevel: 2,
+          isoCode: "IT",
+          wikidataId: "Q38",
+          geonameId: 3175395,
+        },
+        {
+          name: "Piemonte",
+          description: "region in North-West Italy",
+          order: 5,
+          adminLevel: 4,
+          isoCode: "IT-21",
+          wikidataId: "Q1216",
+          geonameId: 3170831,
+        },
+        {
+          name: "Provincia di Cuneo",
+          description: "province in Italy",
+          order: 6,
+          adminLevel: 6,
+          isoCode: "IT-CN",
+          wikidataId: "Q15091",
+          geonameId: 3177699,
+        },
+        {
+          name: "Paesana",
+          description: "Italian comune",
+          order: 8,
+          adminLevel: 8,
+          wikidataId: "Q20284",
+          geonameId: 6536421,
+        },
+      ],
+      informative: [
+        {
+          name: "Europe",
+          description: "continent",
+          order: 1,
+          isoCode: "EU",
+          wikidataId: "Q46",
+          geonameId: 6255148,
+        },
+        {
+          name: "Italian Peninsula",
+          description: "peninsula of southern Europe",
+          order: 3,
+          wikidataId: "Q145694",
+        },
+        {
+          name: "Alps",
+          description: "European mountain range",
+          order: 4,
+          wikidataId: "Q1286",
+          geonameId: 2661786,
+        },
+        {
+          name: "Cottian Alps",
+          description: "mountain range in the South-Western part of the Alps",
+          order: 7,
+          wikidataId: "Q1251",
+          geonameId: 3023403,
+        },
+      ],
+    },
+  },
+  endingPoint: {
+    latitude: 44.636650121,
+    longitude: 7.245265664,
+    continent: "Europe",
+    lookupSource: "coordinates",
+    continentCode: "EU",
+    localityLanguageRequested: "en",
+    city: "Paesana",
+    countryName: "Italy",
+    countryCode: "IT",
+    postcode: "",
+    principalSubdivision: "Piemonte",
+    principalSubdivisionCode: "IT-21",
+    plusCode: "8FP9J6PW+M4",
+    locality: "Paesana",
+    localityInfo: {
+      administrative: [
+        {
+          name: "Italy",
+          description: "republic in Southern Europe",
+          order: 2,
+          adminLevel: 2,
+          isoCode: "IT",
+          wikidataId: "Q38",
+          geonameId: 3175395,
+        },
+        {
+          name: "Piemonte",
+          description: "region in North-West Italy",
+          order: 5,
+          adminLevel: 4,
+          isoCode: "IT-21",
+          wikidataId: "Q1216",
+          geonameId: 3170831,
+        },
+        {
+          name: "Provincia di Cuneo",
+          description: "province in Italy",
+          order: 6,
+          adminLevel: 6,
+          isoCode: "IT-CN",
+          wikidataId: "Q15091",
+          geonameId: 3177699,
+        },
+        {
+          name: "Paesana",
+          description: "Italian comune",
+          order: 8,
+          adminLevel: 8,
+          wikidataId: "Q20284",
+          geonameId: 6536421,
+        },
+      ],
+      informative: [
+        {
+          name: "Europe",
+          description: "continent",
+          order: 1,
+          isoCode: "EU",
+          wikidataId: "Q46",
+          geonameId: 6255148,
+        },
+        {
+          name: "Italian Peninsula",
+          description: "peninsula of southern Europe",
+          order: 3,
+          wikidataId: "Q145694",
+        },
+        {
+          name: "Alps",
+          description: "European mountain range",
+          order: 4,
+          wikidataId: "Q1286",
+          geonameId: 2661786,
+        },
+        {
+          name: "Cottian Alps",
+          description: "mountain range in the South-Western part of the Alps",
+          order: 7,
+          wikidataId: "Q1251",
+          geonameId: 3023403,
+        },
+      ],
+    },
+  },
+};
+
+const hikeMalformed = {
+  title: "Rifugio Bertorello",
+  length: 2.81,
+  description: "desc",
+  difficulty: "Easy",
+  estimatedTime: "blaaa",
+  ascent: 198.0,
+  localguideID: 1,
+  startingPoint: {
+    latitude: 44.645612034,
+    longitude: 7.256143788,
+    continent: "Europe",
+    lookupSource: "coordinates",
+    continentCode: "EU",
+    localityLanguageRequested: "en",
+    city: "Paesana",
+    countryName: "Italy",
+    countryCode: "IT",
+    postcode: "",
+    principalSubdivision: "Piemonte",
+    principalSubdivisionCode: "IT-21",
+    plusCode: "8FP9J7W4+6F",
+    locality: "Paesana",
+    localityInfo: {
+      administrative: [
+        {
+          name: "Italy",
+          description: "republic in Southern Europe",
+          order: 2,
+          adminLevel: 2,
+          isoCode: "IT",
+          wikidataId: "Q38",
+          geonameId: 3175395,
+        },
+        {
+          name: "Piemonte",
+          description: "region in North-West Italy",
+          order: 5,
+          adminLevel: 4,
+          isoCode: "IT-21",
+          wikidataId: "Q1216",
+          geonameId: 3170831,
+        },
+        {
+          name: "Provincia di Cuneo",
+          description: "province in Italy",
+          order: 6,
+          adminLevel: 6,
+          isoCode: "IT-CN",
+          wikidataId: "Q15091",
+          geonameId: 3177699,
+        },
+        {
+          name: "Paesana",
+          description: "Italian comune",
+          order: 8,
+          adminLevel: 8,
+          wikidataId: "Q20284",
+          geonameId: 6536421,
+        },
+      ],
+      informative: [
+        {
+          name: "Europe",
+          description: "continent",
+          order: 1,
+          isoCode: "EU",
+          wikidataId: "Q46",
+          geonameId: 6255148,
+        },
+        {
+          name: "Italian Peninsula",
+          description: "peninsula of southern Europe",
+          order: 3,
+          wikidataId: "Q145694",
+        },
+        {
+          name: "Alps",
+          description: "European mountain range",
+          order: 4,
+          wikidataId: "Q1286",
+          geonameId: 2661786,
+        },
+        {
+          name: "Cottian Alps",
+          description: "mountain range in the South-Western part of the Alps",
+          order: 7,
+          wikidataId: "Q1251",
+          geonameId: 3023403,
+        },
+      ],
+    },
+  },
+  endingPoint: {
+    latitude: 44.636650121,
+    longitude: 7.245265664,
+    continent: "Europe",
+    lookupSource: "coordinates",
+    continentCode: "EU",
+    localityLanguageRequested: "en",
+    city: "Paesana",
+    countryName: "Italy",
+    countryCode: "IT",
+    postcode: "",
+    principalSubdivision: "Piemonte",
+    principalSubdivisionCode: "IT-21",
+    plusCode: "8FP9J6PW+M4",
+    locality: "Paesana",
+    localityInfo: {
+      administrative: [
+        {
+          name: "Italy",
+          description: "republic in Southern Europe",
+          order: 2,
+          adminLevel: 2,
+          isoCode: "IT",
+          wikidataId: "Q38",
+          geonameId: 3175395,
+        },
+        {
+          name: "Piemonte",
+          description: "region in North-West Italy",
+          order: 5,
+          adminLevel: 4,
+          isoCode: "IT-21",
+          wikidataId: "Q1216",
+          geonameId: 3170831,
+        },
+        {
+          name: "Provincia di Cuneo",
+          description: "province in Italy",
+          order: 6,
+          adminLevel: 6,
+          isoCode: "IT-CN",
+          wikidataId: "Q15091",
+          geonameId: 3177699,
+        },
+        {
+          name: "Paesana",
+          description: "Italian comune",
+          order: 8,
+          adminLevel: 8,
+          wikidataId: "Q20284",
+          geonameId: 6536421,
+        },
+      ],
+      informative: [
+        {
+          name: "Europe",
+          description: "continent",
+          order: 1,
+          isoCode: "EU",
+          wikidataId: "Q46",
+          geonameId: 6255148,
+        },
+        {
+          name: "Italian Peninsula",
+          description: "peninsula of southern Europe",
+          order: 3,
+          wikidataId: "Q145694",
+        },
+        {
+          name: "Alps",
+          description: "European mountain range",
+          order: 4,
+          wikidataId: "Q1286",
+          geonameId: 2661786,
+        },
+        {
+          name: "Cottian Alps",
+          description: "mountain range in the South-Western part of the Alps",
+          order: 7,
+          wikidataId: "Q1251",
+          geonameId: 3023403,
+        },
+      ],
+    },
+  },
+};
+
+describe('test post api/hiking (case success 200)', () => {
 
 
     before(async ()=>{
-        await dao.deleteHikes(); 
-        await dao.deleteHike_Point();
-        await dao.deletePoint(); 
-    }); 
+        // delete tables hike, point, hike_point and user
+        await deleteTables();
 
-    const hike = {
-        "title":"Titolo",
-        "length":10,
-        "description":"desc",
-        "difficulty":"hard",
-        "estimatedTime":12,
-        "ascent":"ascent",
-        "localguideID":12,
-        "startingPoint":{
-            "latitude": 32.14,
-            "longitude": 22.6,
-            "continent": "Africa",
-            "lookupSource": "coordinates",
-            "continentCode": "AF",
-            "localityLanguageRequested": "en');",
-            "city": "",
-            "countryName": "Libya",
-            "countryCode": "LY",
-            "postcode": "",
-            "principalSubdivision": "Derna District",
-            "principalSubdivisionCode": "LY-DR",
-            "plusCode": "8G444JR2+22",
-            "locality": "Derna District",
-            "localityInfo": {
-              "administrative": [
-                {
-                  "name": "Libya",
-                  "description": "sovereign state in north Africa",
-                  "isoName": "Libya",
-                  "order": 4,
-                  "adminLevel": 2,
-                  "isoCode": "LY",
-                  "wikidataId": "Q1016",
-                  "geonameId": 2215636
-                },
-                {
-                  "name": "Derna District",
-                  "description": "district of Libya",
-                  "isoName": "Darnah",
-                  "order": 6,
-                  "adminLevel": 4,
-                  "isoCode": "LY-DR",
-                  "wikidataId": "Q26124",
-                  "geonameId": 87204
-                }
-              ],
-              "informative": [
-                {
-                  "name": "Africa",
-                  "description": "continent on the Earth's northern and southern hemispheres",
-                  "order": 1,
-                  "isoCode": "AF",
-                  "wikidataId": "Q15",
-                  "geonameId": 6255146
-                },
-                {
-                  "name": "Maghreb",
-                  "description": "region",
-                  "order": 2
-                },
-                {
-                  "name": "Libyan Desert",
-                  "description": "North-eastern part of the Sahara comprising desert areas in Egypt, Libya and Sudan",
-                  "order": 3,
-                  "wikidataId": "Q181528",
-                  "geonameId": 353306
-                },
-                {
-                  "name": "Libyan Plateau",
-                  "description": "plateau in Libya",
-                  "order": 5,
-                  "wikidataId": "Q27489229",
-                  "geonameId": 85417
-                }
-              ]
-            }
-        },
-        "endingPoint": {
-            "latitude": 32.14,
-            "longitude": 22.3,
-            "continent": "Africa",
-            "lookupSource": "coordinates",
-            "continentCode": "AF",
-            "localityLanguageRequested": "en');",
-            "city": "",
-            "countryName": "Libya",
-            "countryCode": "LY",
-            "postcode": "",
-            "principalSubdivision": "Derna District",
-            "principalSubdivisionCode": "LY-DR",
-            "plusCode": "8G4448R2+22",
-            "locality": "Derna District",
-            "localityInfo": {
-              "administrative": [
-                {
-                  "name": "Libya",
-                  "description": "sovereign state in north Africa",
-                  "isoName": "Libya",
-                  "order": 4,
-                  "adminLevel": 2,
-                  "isoCode": "LY",
-                  "wikidataId": "Q1016",
-                  "geonameId": 2215636
-                },
-                {
-                  "name": "Derna District",
-                  "description": "district of Libya",
-                  "isoName": "Darnah",
-                  "order": 6,
-                  "adminLevel": 4,
-                  "isoCode": "LY-DR",
-                  "wikidataId": "Q26124",
-                  "geonameId": 87204
-                }
-              ],
-              "informative": [
-                {
-                  "name": "Africa",
-                  "description": "continent on the Earth's northern and southern hemispheres",
-                  "order": 1,
-                  "isoCode": "AF",
-                  "wikidataId": "Q15",
-                  "geonameId": 6255146
-                },
-                {
-                  "name": "Maghreb",
-                  "description": "region",
-                  "order": 2
-                },
-                {
-                  "name": "Libyan Desert",
-                  "description": "North-eastern part of the Sahara comprising desert areas in Egypt, Libya and Sudan",
-                  "order": 3,
-                  "wikidataId": "Q181528",
-                  "geonameId": 353306
-                },
-                {
-                  "name": "Libyan Plateau",
-                  "description": "plateau in Libya",
-                  "order": 5,
-                  "wikidataId": "Q27489229",
-                  "geonameId": 85417
-                }
-              ]
-            }
-        }
+        // create user
+        await insertUser();
+
+        // log local guide
+        await logUser("mario.rossi@mail.it", "password");
+    }); 
     
-    }
-    
-    postHike(201,hike); 
+    postHike(201, hikeOK); 
     
 });
-describe('test api/hiking (case success 422)', () => {
+
+describe('test api/hiking (case error 422)', () => {
 
 
-    before(async ()=>{
-        await dao.deleteHikes(); 
-        await dao.deleteHike_Point();
-        await dao.deletePoint(); 
-    }); 
+  before(async ()=>{
+    // delete tables hike, point, hike_point and user
+    await deleteTables();
 
-    const hike = {
-        "title":"Titolo",
-        "length":"length",
-        "description":"desc",
-        "difficulty":"hard",
-        "estimatedTime":"time",
-        "ascent":"ascent",
-        "localguideID":12,
-        "startingPoint":{
-            "latitude": 32.14,
-            "longitude": 22.6,
-            "continent": "Africa",
-            "lookupSource": "coordinates",
-            "continentCode": "AF",
-            "localityLanguageRequested": "en');",
-            "city": "",
-            "countryName": "Libya",
-            "countryCode": "LY",
-            "postcode": "",
-            "principalSubdivision": "Derna District",
-            "principalSubdivisionCode": "LY-DR",
-            "plusCode": "8G444JR2+22",
-            "locality": "Derna District",
-            "localityInfo": {
-              "administrative": [
-                {
-                  "name": "Libya",
-                  "description": "sovereign state in north Africa",
-                  "isoName": "Libya",
-                  "order": 4,
-                  "adminLevel": 2,
-                  "isoCode": "LY",
-                  "wikidataId": "Q1016",
-                  "geonameId": 2215636
-                },
-                {
-                  "name": "Derna District",
-                  "description": "district of Libya",
-                  "isoName": "Darnah",
-                  "order": 6,
-                  "adminLevel": 4,
-                  "isoCode": "LY-DR",
-                  "wikidataId": "Q26124",
-                  "geonameId": 87204
-                }
-              ],
-              "informative": [
-                {
-                  "name": "Africa",
-                  "description": "continent on the Earth's northern and southern hemispheres",
-                  "order": 1,
-                  "isoCode": "AF",
-                  "wikidataId": "Q15",
-                  "geonameId": 6255146
-                },
-                {
-                  "name": "Maghreb",
-                  "description": "region",
-                  "order": 2
-                },
-                {
-                  "name": "Libyan Desert",
-                  "description": "North-eastern part of the Sahara comprising desert areas in Egypt, Libya and Sudan",
-                  "order": 3,
-                  "wikidataId": "Q181528",
-                  "geonameId": 353306
-                },
-                {
-                  "name": "Libyan Plateau",
-                  "description": "plateau in Libya",
-                  "order": 5,
-                  "wikidataId": "Q27489229",
-                  "geonameId": 85417
-                }
-              ]
-            }
-        },
-        "endingPoint": {
-            "latitude": 32.14,
-            "longitude": 22.3,
-            "continent": "Africa",
-            "lookupSource": "coordinates",
-            "continentCode": "AF",
-            "localityLanguageRequested": "en');",
-            "city": "",
-            "countryName": "Libya",
-            "countryCode": "LY",
-            "postcode": "",
-            "principalSubdivision": "Derna District",
-            "principalSubdivisionCode": "LY-DR",
-            "plusCode": "8G4448R2+22",
-            "locality": "Derna District",
-            "localityInfo": {
-              "administrative": [
-                {
-                  "name": "Libya",
-                  "description": "sovereign state in north Africa",
-                  "isoName": "Libya",
-                  "order": 4,
-                  "adminLevel": 2,
-                  "isoCode": "LY",
-                  "wikidataId": "Q1016",
-                  "geonameId": 2215636
-                },
-                {
-                  "name": "Derna District",
-                  "description": "district of Libya",
-                  "isoName": "Darnah",
-                  "order": 6,
-                  "adminLevel": 4,
-                  "isoCode": "LY-DR",
-                  "wikidataId": "Q26124",
-                  "geonameId": 87204
-                }
-              ],
-              "informative": [
-                {
-                  "name": "Africa",
-                  "description": "continent on the Earth's northern and southern hemispheres",
-                  "order": 1,
-                  "isoCode": "AF",
-                  "wikidataId": "Q15",
-                  "geonameId": 6255146
-                },
-                {
-                  "name": "Maghreb",
-                  "description": "region",
-                  "order": 2
-                },
-                {
-                  "name": "Libyan Desert",
-                  "description": "North-eastern part of the Sahara comprising desert areas in Egypt, Libya and Sudan",
-                  "order": 3,
-                  "wikidataId": "Q181528",
-                  "geonameId": 353306
-                },
-                {
-                  "name": "Libyan Plateau",
-                  "description": "plateau in Libya",
-                  "order": 5,
-                  "wikidataId": "Q27489229",
-                  "geonameId": 85417
-                }
-              ]
-            }
-        }
+    // create user
+    await insertUser();
+
+    // log local guide
+    await logUser("mario.rossi@mail.it", "password");
+  }); 
     
-    }
-    
-    postHike(422,hike); 
-    
+    postHike(422, hikeMalformed);  
 });
 
-describe('test api/hiking (case success 500)', () => {
+describe('test api/hiking (case error 401)', () => {
+  before(async ()=>{
+    // delete tables hike, point, hike_point and user
+    await deleteTables();
+    // create user
+    await insertUser();
 
+    // log local guide
+    await logUser("mario.rossi@mail.it", "password");
 
-    before(async ()=>{
-        await dao.deleteHikes(); 
-        await dao.deleteHike_Point();
-        await dao.deletePoint(); 
-    }); 
+    // logout
+    await logoutUser();
+});  
 
-    const hike = {
-        "title":"Titolo",
-        "length":10,
-        "description":"desc",
-        "difficulty":"hard",
-        "estimatedTime":10,
-        "ascent":"ascent",
-        "localguideID":12,
-        "startingPoint":{
-            "latitude": 32.14,
-            "longitude": 22.6,
-            "continent": "Africa",
-            "lookupSource": "coordinates",
-            "continentCode": "AF",
-            "localityLanguageRequested": "en');",
-            "city": "",
-            "countryName": "Libya",
-            "countryCode": "LY",
-            "postcode": "",
-            "principalSubdivision": "Derna District",
-            "principalSubdivisionCode": "LY-DR",
-            "plusCode": "8G444JR2+22",
-            "locality": "Derna District",
-            "localityInfo": {
-              "administrative": [
-                {
-                  "name": "Libya",
-                  "description": "sovereign state in north Africa",
-                  "isoName": "Libya",
-                  "order": 4,
-                  "adminLevel": 2,
-                  "isoCode": "LY",
-                  "wikidataId": "Q1016",
-                  "geonameId": 2215636
-                },
-                {
-                  "name": "Derna District",
-                  "description": "district of Libya",
-                  "isoName": "Darnah",
-                  "order": 6,
-                  "adminLevel": 4,
-                  "isoCode": "LY-DR",
-                  "wikidataId": "Q26124",
-                  "geonameId": 87204
-                }
-              ],
-              "informative": [
-                {
-                  "name": "Africa",
-                  "description": "continent on the Earth's northern and southern hemispheres",
-                  "order": 1,
-                  "isoCode": "AF",
-                  "wikidataId": "Q15",
-                  "geonameId": 6255146
-                },
-                {
-                  "name": "Maghreb",
-                  "description": "region",
-                  "order": 2
-                },
-                {
-                  "name": "Libyan Desert",
-                  "description": "North-eastern part of the Sahara comprising desert areas in Egypt, Libya and Sudan",
-                  "order": 3,
-                  "wikidataId": "Q181528",
-                  "geonameId": 353306
-                },
-                {
-                  "name": "Libyan Plateau",
-                  "description": "plateau in Libya",
-                  "order": 5,
-                  "wikidataId": "Q27489229",
-                  "geonameId": 85417
-                }
-              ]
-            }
-        }
-        
-    
-    }
-    
-    postHike(500,hike); 
-    
+    postHike(401, hikeOK);   
 });
 
 //API POST NEW HIKE
@@ -432,8 +462,7 @@ function postHike(expectedHTTPStatus, hike) {
         await agent.post('/api/hiking')
             .send(hike)
             .then(function (res) {
-                res.should.have.status(expectedHTTPStatus);
-                
+                res.should.have.status(expectedHTTPStatus);  
             }); 
 
     })
@@ -443,8 +472,13 @@ function postHike(expectedHTTPStatus, hike) {
 
 describe('test Get Hikes', () => {
   beforeEach(async () => {
-      await agent.delete('/api/points');
-      await agent.delete('/api/hiking/delete');
+      // delete tables hike, point, hike_point and user
+    await deleteTables();
+    // create user
+    await insertUser();
+
+    // log local guide
+    await logUser("mario.rossi@mail.it", "password");
   });
 
   const hike1 = {
@@ -456,39 +490,175 @@ describe('test Get Hikes', () => {
       "ascent": 800,
       "localguideID": 1,
       "startingPoint": {
-          "latitude": 54,
-          "longitude": 90,
-          "type": "fdsfds",
-          "description": "suer",
-          "city": "nonBiella",
-          "province": "noBiella"
+        latitude: 44.645612034,
+        longitude: 7.256143788,
+        continent: "Europe",
+        lookupSource: "coordinates",
+        continentCode: "EU",
+        localityLanguageRequested: "en",
+        city: "Paesana",
+        countryName: "Italy",
+        countryCode: "IT",
+        postcode: "",
+        principalSubdivision: "Piemonte",
+        principalSubdivisionCode: "IT-21",
+        plusCode: "8FP9J7W4+6F",
+        locality: "Paesana",
+        localityInfo: {
+          administrative: [
+            {
+              name: "Italy",
+              description: "republic in Southern Europe",
+              order: 2,
+              adminLevel: 2,
+              isoCode: "IT",
+              wikidataId: "Q38",
+              geonameId: 3175395,
+            },
+            {
+              name: "Piemonte",
+              description: "region in North-West Italy",
+              order: 5,
+              adminLevel: 4,
+              isoCode: "IT-21",
+              wikidataId: "Q1216",
+              geonameId: 3170831,
+            },
+            {
+              name: "Provincia di Cuneo",
+              description: "province in Italy",
+              order: 6,
+              adminLevel: 6,
+              isoCode: "IT-CN",
+              wikidataId: "Q15091",
+              geonameId: 3177699,
+            },
+            {
+              name: "Paesana",
+              description: "Italian comune",
+              order: 8,
+              adminLevel: 8,
+              wikidataId: "Q20284",
+              geonameId: 6536421,
+            },
+          ],
+          informative: [
+            {
+              name: "Europe",
+              description: "continent",
+              order: 1,
+              isoCode: "EU",
+              wikidataId: "Q46",
+              geonameId: 6255148,
+            },
+            {
+              name: "Italian Peninsula",
+              description: "peninsula of southern Europe",
+              order: 3,
+              wikidataId: "Q145694",
+            },
+            {
+              name: "Alps",
+              description: "European mountain range",
+              order: 4,
+              wikidataId: "Q1286",
+              geonameId: 2661786,
+            },
+            {
+              name: "Cottian Alps",
+              description: "mountain range in the South-Western part of the Alps",
+              order: 7,
+              wikidataId: "Q1251",
+              geonameId: 3023403,
+            },
+          ],
+        },
       },
       "endingPoint": {
-          "latitude": 23,
-          "longitude": 754,
-          "type": "hut",
-          "description": "hut located in a sure place",
-          "city": "Ivrea",
-          "province": "Torino"
+        latitude: 44.636650121,
+        longitude: 7.245265664,
+        continent: "Europe",
+        lookupSource: "coordinates",
+        continentCode: "EU",
+        localityLanguageRequested: "en",
+        city: "Paesana",
+        countryName: "Italy",
+        countryCode: "IT",
+        postcode: "",
+        principalSubdivision: "Piemonte",
+        principalSubdivisionCode: "IT-21",
+        plusCode: "8FP9J6PW+M4",
+        locality: "Paesana",
+        localityInfo: {
+          administrative: [
+            {
+              name: "Italy",
+              description: "republic in Southern Europe",
+              order: 2,
+              adminLevel: 2,
+              isoCode: "IT",
+              wikidataId: "Q38",
+              geonameId: 3175395,
+            },
+            {
+              name: "Piemonte",
+              description: "region in North-West Italy",
+              order: 5,
+              adminLevel: 4,
+              isoCode: "IT-21",
+              wikidataId: "Q1216",
+              geonameId: 3170831,
+            },
+            {
+              name: "Provincia di Cuneo",
+              description: "province in Italy",
+              order: 6,
+              adminLevel: 6,
+              isoCode: "IT-CN",
+              wikidataId: "Q15091",
+              geonameId: 3177699,
+            },
+            {
+              name: "Paesana",
+              description: "Italian comune",
+              order: 8,
+              adminLevel: 8,
+              wikidataId: "Q20284",
+              geonameId: 6536421,
+            },
+          ],
+          informative: [
+            {
+              name: "Europe",
+              description: "continent",
+              order: 1,
+              isoCode: "EU",
+              wikidataId: "Q46",
+              geonameId: 6255148,
+            },
+            {
+              name: "Italian Peninsula",
+              description: "peninsula of southern Europe",
+              order: 3,
+              wikidataId: "Q145694",
+            },
+            {
+              name: "Alps",
+              description: "European mountain range",
+              order: 4,
+              wikidataId: "Q1286",
+              geonameId: 2661786,
+            },
+            {
+              name: "Cottian Alps",
+              description: "mountain range in the South-Western part of the Alps",
+              order: 7,
+              wikidataId: "Q1251",
+              geonameId: 3023403,
+            },
+          ],
+        },
       },
-      "pointsOfInterest": [
-          {
-              "latitude": 5432,
-              "longitude": 343,
-              "type": "hut",
-              "description": "well, hut",
-              "city": "Alba",
-              "province": "Cuneo"
-          },
-          {
-              "latitude": 63,
-              "longitude": 36,
-              "type": "hut",
-              "description": "warm hut where to drink something",
-              "city": "Cuneo",
-              "province": "Cuneo"
-          }
-      ]
   }
 
   const hike2 = {
@@ -500,39 +670,175 @@ describe('test Get Hikes', () => {
       "ascent": 300,
       "localguideID": 1,
       "startingPoint": {
-          "latitude": 43,
-          "longitude": 10,
-          "type": "fdsfds",
-          "description": "suer",
-          "city": "nonBiella",
-          "province": "noBiella"
+        latitude: 44.645612034,
+        longitude: 7.256143788,
+        continent: "Europe",
+        lookupSource: "coordinates",
+        continentCode: "EU",
+        localityLanguageRequested: "en",
+        city: "Paesana",
+        countryName: "Italy",
+        countryCode: "IT",
+        postcode: "",
+        principalSubdivision: "Piemonte",
+        principalSubdivisionCode: "IT-21",
+        plusCode: "8FP9J7W4+6F",
+        locality: "Paesana",
+        localityInfo: {
+          administrative: [
+            {
+              name: "Italy",
+              description: "republic in Southern Europe",
+              order: 2,
+              adminLevel: 2,
+              isoCode: "IT",
+              wikidataId: "Q38",
+              geonameId: 3175395,
+            },
+            {
+              name: "Piemonte",
+              description: "region in North-West Italy",
+              order: 5,
+              adminLevel: 4,
+              isoCode: "IT-21",
+              wikidataId: "Q1216",
+              geonameId: 3170831,
+            },
+            {
+              name: "Provincia di Cuneo",
+              description: "province in Italy",
+              order: 6,
+              adminLevel: 6,
+              isoCode: "IT-CN",
+              wikidataId: "Q15091",
+              geonameId: 3177699,
+            },
+            {
+              name: "Paesana",
+              description: "Italian comune",
+              order: 8,
+              adminLevel: 8,
+              wikidataId: "Q20284",
+              geonameId: 6536421,
+            },
+          ],
+          informative: [
+            {
+              name: "Europe",
+              description: "continent",
+              order: 1,
+              isoCode: "EU",
+              wikidataId: "Q46",
+              geonameId: 6255148,
+            },
+            {
+              name: "Italian Peninsula",
+              description: "peninsula of southern Europe",
+              order: 3,
+              wikidataId: "Q145694",
+            },
+            {
+              name: "Alps",
+              description: "European mountain range",
+              order: 4,
+              wikidataId: "Q1286",
+              geonameId: 2661786,
+            },
+            {
+              name: "Cottian Alps",
+              description: "mountain range in the South-Western part of the Alps",
+              order: 7,
+              wikidataId: "Q1251",
+              geonameId: 3023403,
+            },
+          ],
+        },
       },
       "endingPoint": {
-          "latitude": 543,
-          "longitude": 4343,
-          "type": "hut",
-          "description": "hut located in a sus place",
-          "city": "NANANANA",
-          "province": "sus"
+        latitude: 44.636650121,
+        longitude: 7.245265664,
+        continent: "Europe",
+        lookupSource: "coordinates",
+        continentCode: "EU",
+        localityLanguageRequested: "en",
+        city: "Paesana",
+        countryName: "Italy",
+        countryCode: "IT",
+        postcode: "",
+        principalSubdivision: "Piemonte",
+        principalSubdivisionCode: "IT-21",
+        plusCode: "8FP9J6PW+M4",
+        locality: "Paesana",
+        localityInfo: {
+          administrative: [
+            {
+              name: "Italy",
+              description: "republic in Southern Europe",
+              order: 2,
+              adminLevel: 2,
+              isoCode: "IT",
+              wikidataId: "Q38",
+              geonameId: 3175395,
+            },
+            {
+              name: "Piemonte",
+              description: "region in North-West Italy",
+              order: 5,
+              adminLevel: 4,
+              isoCode: "IT-21",
+              wikidataId: "Q1216",
+              geonameId: 3170831,
+            },
+            {
+              name: "Provincia di Cuneo",
+              description: "province in Italy",
+              order: 6,
+              adminLevel: 6,
+              isoCode: "IT-CN",
+              wikidataId: "Q15091",
+              geonameId: 3177699,
+            },
+            {
+              name: "Paesana",
+              description: "Italian comune",
+              order: 8,
+              adminLevel: 8,
+              wikidataId: "Q20284",
+              geonameId: 6536421,
+            },
+          ],
+          informative: [
+            {
+              name: "Europe",
+              description: "continent",
+              order: 1,
+              isoCode: "EU",
+              wikidataId: "Q46",
+              geonameId: 6255148,
+            },
+            {
+              name: "Italian Peninsula",
+              description: "peninsula of southern Europe",
+              order: 3,
+              wikidataId: "Q145694",
+            },
+            {
+              name: "Alps",
+              description: "European mountain range",
+              order: 4,
+              wikidataId: "Q1286",
+              geonameId: 2661786,
+            },
+            {
+              name: "Cottian Alps",
+              description: "mountain range in the South-Western part of the Alps",
+              order: 7,
+              wikidataId: "Q1251",
+              geonameId: 3023403,
+            },
+          ],
+        },
       },
-      "pointsOfInterest": [
-          {
-              "latitude": 53223,
-              "longitude": 6545,
-              "type": "hut",
-              "description": "well, hut",
-              "city": "Alba",
-              "province": "Cuneo"
-          },
-          {
-              "latitude": 4354,
-              "longitude": 4534,
-              "type": "hut",
-              "description": "warm huh where to drink something",
-              "city": "Cuneo",
-              "province": "Cuneo"
-          }
-      ]
   }
 
   getHikes(200, hike1, hike2);
@@ -553,13 +859,12 @@ function getHikes(expectedHTTPStatus, hike1, hike2) {
           hike1ID = res.body.id;
       });
       await agent.post('/api/hiking').send(hike2).then(function (res) {
-          hike1ID = res.body.id;
+          hike2ID = res.body.id;
       });
 
       await agent.get('/api/hikes').then( function (res) {
           res.should.have.status(expectedHTTPStatus);
           res.body.length.should.equal(2);
-          res.body[0].title.should.equal("hikone1");
       });
   });
 }
@@ -568,9 +873,8 @@ function getHikeById(expectedHTTPStatus, hike1) {
   it('test getHikes', async () => {
       await agent.post('/api/hiking').send(hike1);
 
-      await agent.get('/api/hike/'+`${hike1.id}`).then( function (res) {
+      await agent.get('/api/hike/1').then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          res.body.length.should.equal(1);
       });
   });
 }
@@ -594,7 +898,6 @@ function getHikesByExpectedTime(expectedHTTPStatus, hike1, hike2, minTime, maxTi
 
       await agent.get(`/api/hikes?filter=expectedTime&value1=${minTime}&value2=${maxTime}`).then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          // res.body.should.eql([]);
       });
   });
 }
