@@ -159,23 +159,3 @@ function getGpx(expectedHTTPStatus,id) {
         ; 
     })
 } 
-
-/*
-//500 = campo gpxfile unique
-//POST GPX (500)
-describe('test api/gpx (case gpx already defined 500 SQLITE_CONSTRAINT)', () => {
-
-
-    before(async ()=>{
-        await dao.deleteGpx();
-    }); 
-
-    
-    const gpx = {
-        "path":`/uploads/${fileName}` 
-    }; 
-    addGpx(201, gpx);
-    addGpx(500, gpx);
-    
-});
-*/

@@ -45,7 +45,7 @@ router.get('/current', (req, res) => {
         res.status(200).json(req.user);
     }
     else
-        res.status(401).json({ error: 'Unauthenticated user!' });;
+        res.status(401).json({ error: 'Unauthenticated user!' });
 });
 
 module.exports = router;
