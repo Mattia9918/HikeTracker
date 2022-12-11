@@ -26,7 +26,7 @@ const MapItem = (props)=>{
                     const startHikePoint = point.filter(p=>p.type==="start")[0];
                     const endHikePoint = point.filter(p=>p.type==="arrive")[0]; 
                     const others = point.filter(p=>p.type!=="start" && p.type!=="arrive")
-                                   .map(p=>[p.latitude,p.longitude]);
+                                   .map(p=>[p.latitude,p.longitude, p.type]);
                     
                     const c = json.features;
                     
@@ -89,9 +89,11 @@ const MapItem = (props)=>{
                     {/*Point of Interest*/}
                     {
                       interest.map(p=>{
-                        return <Marker key={interest.indexOf(p)} position={p}>
-
-                              </Marker>
+                        if(p[2] === "hut")
+                          return <Marker key={interest.indexOf(p)} position={p} icon={GetCustomIcon("hut")}
+                        />
+                        else
+                        return <Marker key={interest.indexOf(p)} position={p}/>       
                       })
                     }
                     
