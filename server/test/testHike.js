@@ -901,7 +901,6 @@ function getHikesByLength(expectedHTTPStatus, hike1, hike2, minLen, maxLen) {
 
       await agent.get(`/api/hikes?filter=length&value1=${minLen}&value2=${maxLen}`).then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          // res.body.should.eql([]);
       });
   });
 }
@@ -913,7 +912,6 @@ function getHikesByDifficulty(expectedHTTPStatus, hike1, hike2, difficulty) {
 
       await agent.get(`/api/hikes?filter=difficulty&value1=${difficulty}`).then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          // res.body.should.eql([]);
       });
   });
 }
@@ -925,7 +923,6 @@ function getHikesByCity(expectedHTTPStatus, hike1, hike2, city) {
 
       await agent.get(`/api/hikes?filter=city&value1=${city}`).then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          // res.body.should.eql([]);
       });
   });
 }
@@ -937,7 +934,6 @@ function getHikesByProvince(expectedHTTPStatus, hike1, hike2, province) {
 
       await agent.get(`/api/hikes?filter=ascent&province=${province}`).then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          // res.body.should.eql([]);
       });
   });
 }
@@ -949,7 +945,6 @@ function getHikesByDistance(expectedHTTPStatus, hike1, hike2, latitude, longitud
 
       await agent.get(`/api/hikes?filter=distance&longitude=${longitude}&latitude=${latitude}&maxDist=${maxDist}`).then( function (res) {
           res.should.have.status(expectedHTTPStatus);
-          // res.body.should.eql([]);
       });
   });
 }

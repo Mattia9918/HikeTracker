@@ -17,13 +17,13 @@ router.post(
 		check("hut.website").isURL(),
 		check("hut.description").notEmpty(),
 		check("hut.altitude").isNumeric(),
-		check("hut.languages").isIn(["french", "english", "german"]),
-		check("hut.reachability").isIn(["foot", "cable", "normal", "offroad"]),
+		check("hut.languages").isIn(["French", "English", "German"]),
+		check("hut.reachability").isIn(["With normal car","With off-road car","On foot","Cableway"]),
 		check("hut.rooms").isNumeric(),
 		check("hut.bathrooms").isNumeric(),
 		check("hut.beds").isNumeric(),
-		check("hut.bike_friendly").isIn([0, 1]),
-		check("hut.disabled_services").isIn([0, 1]),
+		check("hut.bike_friendly").isIn([true, false]),
+		check("hut.disabled_services").isIn([true, false]),
 	],
 	async (req, res) => {
 		const errors = validationResult(req);
@@ -66,7 +66,7 @@ router.post(
 				return res
 					.status(422)
 					.json(
-						"Selected interest point not within ${maxRadius}km from any point of the hike"
+						`Selected interest point not within ${maxRadius} km from any point of the hike`
 					);
 			const hikeID = await hike_dao.postHike_Point(
 				req.body.hikeid,

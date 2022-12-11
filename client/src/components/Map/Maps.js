@@ -15,6 +15,7 @@ const MapItem = (props)=>{
     const [start,setStart] = useState([]); 
     const [arrive,setArrive] = useState([]); 
     
+    const [interest,setInterest] = useState([]); 
  
 
     useEffect(() => {
@@ -22,7 +23,11 @@ const MapItem = (props)=>{
             try {
                     const json = await APIGpx.getFileById(props.hikeid);
                     const point = await APIGpx.getPointByHikeId(props.hikeid); 
-                  
+                    const startHikePoint = point.filter(p=>p.type==="start")[0];
+                    const endHikePoint = point.filter(p=>p.type==="arrive")[0]; 
+                    const others = point.filter(p=>p.type!=="start" && p.type!=="arrive")
+                                   .map(p=>[p.latitude,p.longitude]);
+                    
                     const c = json.features;
                     
                     setCoordinates(c);
@@ -32,6 +37,8 @@ const MapItem = (props)=>{
                     const middle = Math.round(last / 2);
 
                     const firstPoint = [arrayCoordinates[0][1], arrayCoordinates[0][0]];
+                    console.log([arrayCoordinates[50][1], arrayCoordinates[50][0]]);
+              
                     const center = [arrayCoordinates[middle][1], arrayCoordinates[middle][0]];
                     const lastPoint = [arrayCoordinates[last][1], arrayCoordinates[last][0]];
 
@@ -39,9 +46,9 @@ const MapItem = (props)=>{
                     setCenter(center);
                     setLastPoint(lastPoint);
 
-                    setStart([point[1].latitude,point[1].longitude]); 
-                    setArrive([point[0].latitude,point[0].longitude]);
-
+                    setStart([startHikePoint.latitude,startHikePoint.longitude]); 
+                    setArrive([endHikePoint.latitude,endHikePoint.longitude]); 
+                    setInterest(others); 
 
             } catch (err) { }
         };
@@ -57,24 +64,35 @@ const MapItem = (props)=>{
                     <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                     <GeoJSON data={coordinates} />
                     
-                    
+                    {/*Starting Point Hike*/}
                     <Marker position={start} icon={GetCustomIcon("starting")} >
                       <Popup>Starting Point</Popup>
                     </Marker>
 
+                    {/*Ending Point Hike*/}
                     <Marker position={arrive} icon={GetCustomIcon("ending")} >
                       <Popup>Starting Point</Popup>
                     </Marker>
                     
-                    
+                    {/*Starting Point Path*/}
                     { (start[0]!==firstPoint[0] && start[1]!==firstPoint[1]) && 
                       <Marker position={firstPoint}  >
                       </Marker>
                     }
 
+                    {/*Ending Point Path*/}
                     { (arrive[0]!==lastPoint[0] && arrive[1]!==lastPoint[1]) && 
                       <Marker position={lastPoint}>
                       </Marker>
+                    }
+
+                    {/*Point of Interest*/}
+                    {
+                      interest.map(p=>{
+                        return <Marker key={interest.indexOf(p)} position={p}>
+
+                              </Marker>
+                      })
                     }
                     
                 </MapContainer>
@@ -97,7 +115,7 @@ const MarkerMap = (props)=>{
 
 function CustomMarker(props) {
   
-  const markerMap = useMapEvents({
+  useMapEvents({
     click:(ev)=>{
       const coord = ev.latlng;
       props.setLatlng(coord); 

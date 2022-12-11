@@ -82,7 +82,7 @@ router.get("/api/point/:id", async (req, res) => {
         const id = req.params.id;
 
         const coord = await point.getPointByHikeId(id);
-        if(coord)
+        if(coord.length>0)
             res.status(200).json(coord);
         else 
             res.status(404).json({err:"Not Found"}); 

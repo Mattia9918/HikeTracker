@@ -12,18 +12,18 @@ import APIHutForm from '../../API/APIHutForm';
 
 function HutForm(props) {
 
-    const [hutname, setHutname] = useState("hut1"); 
-    const [address, setAddress] = useState("Corso Luigi Einaudi"); 
-    const [phonenumber, setPhonenumber] = useState("393333333333"); 
-    const [email, setEmail] = useState("email@email.it"); 
-    const [website, setWebsite] = useState("https://www.test.it"); 
-    const [description, setDescription] = useState("description"); 
+    const [hutname, setHutname] = useState(""); 
+    const [address, setAddress] = useState(""); 
+    const [phonenumber, setPhonenumber] = useState(""); 
+    const [email, setEmail] = useState(""); 
+    const [website, setWebsite] = useState(""); 
+    const [description, setDescription] = useState(""); 
     const [latitude, setLatitude] = useState(""); 
     const [longitude, setLongitude] = useState("");
-    const [altitude, setAltitude] = useState("120"); 
-    const [rooms, setRooms] = useState("12");
-    const [bathrooms, setBathrooms] = useState("4"); 
-    const [beds, setBeds] = useState("20");     
+    const [altitude, setAltitude] = useState(""); 
+    const [rooms, setRooms] = useState("");
+    const [bathrooms, setBathrooms] = useState(""); 
+    const [beds, setBeds] = useState("");     
     const [city, setCity] = useState(""); 
     const [province, setProvince] = useState(""); 
     const [language, setLanguage] = useState(""); 

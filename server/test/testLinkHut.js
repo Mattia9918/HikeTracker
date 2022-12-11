@@ -222,7 +222,7 @@ const hut = {
   altitude: 650,
   languages: "french",
   bike_friendly: 1,
-  reachability: "normal",
+  reachability: "With normal car",
   disabled_services: 0,
   rooms: 25,
   bathrooms: 30,
