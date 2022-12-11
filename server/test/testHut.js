@@ -31,7 +31,7 @@ const hut1 = {
 	altitude: 400,
 	languages: "english",
 	bike_friendly: 0,
-	reachability: "normal",
+	reachability: "With normal car",
 	disabled_services: 1,
 	rooms: 10,
 	bathrooms: 10,
@@ -54,7 +54,7 @@ const hut2 = {
 	altitude: 300,
 	languages: "french",
 	bike_friendly: 1,
-	reachability: "foot",
+	reachability: "On foot",
 	disabled_services: 1,
 	rooms: 10,
 	bathrooms: 10,
@@ -109,7 +109,7 @@ describe("test api/huts (case success 200)", () => {
 	getHutsByCity(200, "Bra");
 	getHutsByProvince(200, "Cuneo");
 	getHutsByBeds(200, 2);
-	getHutsByReachability(200, "normal");
+	getHutsByReachability(200, "With normal car");
 });
 
 function getHuts(expectedHTTPStatus) {

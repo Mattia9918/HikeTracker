@@ -26,10 +26,10 @@ const CardImg = (props)=>{
 		className="mt-2"
 		variant="top"
 		src={
-			(reachability === "normal" && normal) ||
-			(reachability === "offroad" && offroad) ||
-			(reachability === "foot" && foot) ||
-			(reachability === "cable" && cable) ||
+			(reachability === "With normal car" && normal) ||
+			(reachability === "With off-road car" && offroad) ||
+			(reachability === "On foot" && foot) ||
+			(reachability === "Cableway" && cable) ||
 			hutbike
 		}
 	/>

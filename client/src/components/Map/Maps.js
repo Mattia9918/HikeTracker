@@ -115,7 +115,7 @@ const MarkerMap = (props)=>{
 
 function CustomMarker(props) {
   
-  const markerMap = useMapEvents({
+  useMapEvents({
     click:(ev)=>{
       const coord = ev.latlng;
       props.setLatlng(coord); 

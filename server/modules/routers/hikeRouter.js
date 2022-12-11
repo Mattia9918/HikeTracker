@@ -184,7 +184,7 @@ async function checkConstraints(req) {
 
     const maxRadius = 5;
     if (await functions.checkRadiusDistance(req.params.id, req.body, maxRadius)) return { status: 200, err: "" };
-    return { status: 422, err: `Selected interest point not within ${maxRadius}km from any point of the hike` }
+    return { status: 422, err: `Selected interest point not within ${maxRadius} km from any point of the hike` }
 };
 
 /** APIs to update starting and arrival point of a hut */
