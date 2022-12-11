@@ -52,8 +52,8 @@ function LinkingModal(props) {
 
     async function loadParkingLots() {
         try {
-            const list = await APIParkingGet.getParkingLots();
-            const parkingLotList = list.filter((parking) =>
+            let parkingLotList = await APIParkingGet.getParkingLots();
+            parkingLotList = parkingLotList.filter((parking) =>
                 !(parking.latitude === props.hike.startingPoint.latitude && parking.longitude === props.hike.startingPoint.longitude || parking.latitude === props.hike.endingPoint.latitude && parking.longitude === props.hike.endingPoint.longitude)
             );
             setParkingLotList(parkingLotList);
@@ -64,10 +64,19 @@ function LinkingModal(props) {
 
     async function loadHuts() {
         try {
-            const list = await APIHuts.getHuts();
-            const hutList = list.filter((hut) => 
+            let hutList = await APIHuts.getHuts();
+            hutList = hutList.filter((hut) => 
                 !(hut.latitude === props.hike.startingPoint.latitude && hut.longitude === props.hike.startingPoint.longitude || hut.latitude === props.hike.endingPoint.latitude && hut.longitude === props.hike.endingPoint.longitude)
             );
+            hutList = hutList.filter((hut) => {
+                let found = true;
+                props.hike.pointsOfInterest.forEach((poi) => {
+                    if (poi.latitude === hut.latitude && poi.longitude === hut.longitude) {
+                        return found = false;
+                    }
+                })
+                return found;
+            })
             setHutList(hutList);
         } catch (err) { 
             console.log(err);
