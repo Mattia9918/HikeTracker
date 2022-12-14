@@ -31,8 +31,8 @@ TEMPLATE FOR RETROSPECTIVE (Team 7)
 - Hours per task (average, standard deviation):
 
   - Average
-    - estimated: **~ 2h 29m**
-    - actual: **~ 2h 30m**
+    - estimated: ** ~ 2h 29m**
+    - actual: ** ~ 2h 30m**
   - Standard Deviation
     - estimated: **~ 1.03**
     - actual: **~ 1.29**
