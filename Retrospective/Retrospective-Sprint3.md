@@ -13,7 +13,7 @@ TEMPLATE FOR RETROSPECTIVE (Team 7)
 - Total points committed vs done: **13/13**
 - Nr of hours planned vs spent (as a team): **72h / 72h 45m**
 
-**Remember**  a story is done ONLY if it fits the Definition of Done:
+**Definition of Done:**
 
 - Unit Tests passing: **yes**
 - Code review completed: **yes**
