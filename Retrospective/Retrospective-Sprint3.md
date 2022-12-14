@@ -61,7 +61,9 @@ TEMPLATE FOR RETROSPECTIVE (Team 7)
   - Hours estimated for remediation by SonarQube: **31h**
   - Hours estimated for remediation by SonarQube only for the selected and planned issues: **31h** 
   - Hours spent on remediation: **8h 25m** 
-  - debt ratio (as reported by SonarQube under "Measures-Maintainability"): **0.0 %**
+  - debt ratio (as reported by SonarQube under "Measures-Maintainability"):
+    - hikedao.js: 0.1%
+    - Linking.js: 0.1%
   - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability):
     - Reliability: **A**
     - Security: **A**
@@ -89,7 +91,7 @@ TEMPLATE FOR RETROSPECTIVE (Team 7)
 
 - Which ones you were not able to achieve? Why?
 
-  -
+  - None
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
 
