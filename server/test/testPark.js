@@ -99,9 +99,7 @@ function getParks(expectedHTTPStatus, park1, park2) {
 			.send(park2)
 
 		await agent.get("/api/parking").then(function (res) {
-            console.log(res.body);
 			res.should.have.status(expectedHTTPStatus);
-		
 		});
 	});
 }

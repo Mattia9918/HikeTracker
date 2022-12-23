@@ -2,6 +2,7 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
+const point_dao = require("../dao/point");
 const { check, validationResult } = require("express-validator");
 const checkAuth = require("../../authMiddleware");
 const functions = require("../functions/functions")
@@ -182,8 +183,15 @@ async function checkConstraints(req) {
         return { status: 403, err: "Operation forbidden: you must be creator of the hike" }
     }
 
+    const point = await point_dao.getPointById(req.body.id)
+
+    // Check if point exists and coordinates are correct
+    if (point === undefined) {
+        return { status: 404, err: "point not found" }
+    }
+
     const maxRadius = 5;
-    if (await functions.checkRadiusDistance(req.params.id, req.body, maxRadius)) return { status: 200, err: "" };
+    if (await functions.checkRadiusDistance(req.params.id, point, maxRadius)) return { status: 200, err: "" };
     return { status: 422, err: `Selected interest point not within ${maxRadius} km from any point of the hike` }
 };
 
@@ -191,9 +199,7 @@ async function checkConstraints(req) {
 
 router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
     [
-        check('id').isNumeric(),
-        check('latitude').isNumeric(),
-        check('longitude').isNumeric(),
+        check('id').isNumeric()
     ],
     async (req, res) => {
         try {
@@ -211,9 +217,7 @@ router.put('/api/hike/:id/startingPoint', checkAuth.isLocalGuide,
 
 router.put('/api/hike/:id/arrivalPoint', checkAuth.isLocalGuide,
     [
-        check('id').isNumeric(),
-        check('latitude').isNumeric(),
-        check('longitude').isNumeric(),
+        check('id').isNumeric()
     ],
     async (req, res) => {
         try {

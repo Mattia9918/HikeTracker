@@ -220,14 +220,14 @@ const hut = {
   website: "www.rifugiobertorello.it",
   description: "Hut in Paesana",
   altitude: 650,
-  languages: "french",
-  bike_friendly: 1,
+  languages: "French",
+  bike_friendly: true,
   reachability: "With normal car",
-  disabled_services: 0,
+  disabled_services: false,
   rooms: 25,
   bathrooms: 30,
   beds: 50,
-  restaurant_service: 1,
+  restaurant_service: true,
 };
 const point = {
   city: "Paesana",
@@ -278,7 +278,6 @@ function linkHuts(expectedHTTPStatus) {
           longitude: point.longitude
       })
         .then(function(res) {
-            console.log(res)
             res.should.have.status(expectedHTTPStatus); 
         })
     })

@@ -169,9 +169,7 @@ async function getHikes() {
             },
             body: JSON.stringify(
                 { 
-                    id: obj.pointid, 
-                    latitude: obj.latitude,
-                    longitude: obj.longitude
+                    id: obj.pointid
                 }
             )
         });

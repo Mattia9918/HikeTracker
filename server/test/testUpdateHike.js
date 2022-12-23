@@ -399,14 +399,14 @@ const hut = {
   website: "www.rifugiobertorello.it",
   description: "Hut in Paesana",
   altitude: 650,
-  languages: "french",
-  bike_friendly: 1,
+  languages: "French",
+  bike_friendly: true,
   reachability: "With normal car",
-  disabled_services: 0,
+  disabled_services: false,
   rooms: 25,
   bathrooms: 30,
   beds: 50,
-  restaurant_service: 1,
+  restaurant_service: true,
 };
 const point = {
   city: "Paesana",
@@ -423,14 +423,14 @@ const hut2 = {
   website: "www.dollozone.it",
   description: "Hut in Dollo Zone",
   altitude: 650,
-  languages: "french",
-  bike_friendly: 1,
+  languages: "French",
+  bike_friendly: true,
   reachability: "With normal car",
-  disabled_services: 0,
+  disabled_services: false,
   rooms: 25,
   bathrooms: 30,
   beds: 50,
-  restaurant_service: 1,
+  restaurant_service: true,
 };
 
 const point2 = {
@@ -512,37 +512,32 @@ describe("test update hike starting point", () => {
 
   // success
   updateHike(200, 2, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude
+    id: 5
   }, "startingPoint");
 
   //hut troppo distante
   updateHike(422, 2, {
-    id: 6,
-    latitude: point2.latitude,
-    longitude: point2.longitude,
+    id: 6
   }, "startingPoint");  
 
   //hike o gpx non esistente (tutti e 2 usano l'id della hike, quindi basta un test)
   updateHike(404, 1000, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: 5
+  }, "startingPoint"); 
+
+  //point inesistente
+  updateHike(404, 2, {
+    id: 13
   }, "startingPoint"); 
 
   //modifica di un hike di un'altra localGuide
   updateHike(403, 1, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: 5
   }, "startingPoint");  
 
   //campi errati
   updateHike(422, 2, {
-    id: "null",
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: "null"
   }, "startingPoint");
 });
 
@@ -551,9 +546,7 @@ function updateHike(expectedHTTPStatus, hikeID, point, type) {
     await agent
       .put(`/api/hike/${hikeID}/${type}`)
       .send({
-        id: point.id,
-        latitude: point.latitude,
-        longitude: point.longitude,
+        id: point.id
       })
       .then(function (res) {
         res.should.have.status(expectedHTTPStatus);
@@ -587,36 +580,31 @@ describe("test update hike arrival point", () => {
 
   //success
   updateHike(200, 2, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: 5
   }, "arrivalPoint"); 
 
    //hut troppo distante
    updateHike(422, 2, {
-    id: 6,
-    latitude: point2.latitude,
-    longitude: point2.longitude,
+    id: 6
   }, "arrivalPoint");  
+
+  //point inesistente
+  updateHike(404, 2, {
+    id: 13
+  }, "arrivalPoint"); 
 
   //hike o gpx non esistente (tutti e 2 usano l'id della hike, quindi basta un test)
   updateHike(404, 1000, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: 5
   }, "arrivalPoint"); 
 
   //modifica di un hike di un'altra localGuide
   updateHike(403, 1, {
-    id: 5,
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: 5
   }, "arrivalPoint");  
 
   //campi errati
   updateHike(422, 2, {
-    id: "null",
-    latitude: point.latitude,
-    longitude: point.longitude,
+    id: "null"
   }, "arrivalPoint");
 });
