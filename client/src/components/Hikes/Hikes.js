@@ -36,6 +36,16 @@ import {
 	HiddenItem,
 } from "./HikeCardComp";
 import { LinkingModal } from "../Linking/Linking";
+import { HikeStatusModal } from "../HikeStatus/HikeStatus";
+
+import {
+	CardImg,
+	AlertUser,
+	CardHeader,
+	VisibleItem,
+	HiddenItem,
+} from "./HikeCardComp";
+import { LinkingModal } from "../Linking/Linking";
 
 function FilterMenu(props) {
 	const [cities, setCities] = useState();
@@ -188,6 +198,7 @@ function FilterMenu(props) {
 
 function Hikes(props) {
 	const [hikes, setHikes] = useState([]);
+	const [started, setStarted] = useState();
 
 	async function loadFilter(filterObj) {
 		try {
@@ -246,6 +257,7 @@ function Hikes(props) {
 													hike={hike}
 													user={props.user}
 													setHikes={setHikes}
+													started={started}
 												/>
 											))}
 										</Col>
@@ -257,6 +269,7 @@ function Hikes(props) {
 													hike={hike}
 													user={props.user}
 													setHikes={setHikes}
+													started={started}
 												/>
 											))}
 										</Col>
@@ -275,12 +288,12 @@ function HikeCard(props) {
 	const [open, setOpen] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [showLinkingModal, setShowLinkingModal] = useState(false);
+	const [showStatusModal, setShowStatusModal] = useState(false);
 
 	return (
 		<Container className="mt-3 mb-3">
 			<Card className="shadow-sm p-2">
 				{/* -- CARD HEADER -- */}
-
 				<CardHeader
 					obj={{
 						user: props.hike.localguideUsername,
@@ -301,7 +314,13 @@ function HikeCard(props) {
 
 					<VisibleItem hike={props.hike} open={open} />
 
-					{open && <HiddenItem hike={props.hike} />}
+					{open && (
+						<HiddenItem
+							hike={props.hike}
+							started={props.started}
+							setShowStatusModal={setShowStatusModal}
+						/>
+					)}
 				</Card.Body>
 				<Row align="right">
 					<Col className="mb-1 mx-2">
@@ -352,6 +371,15 @@ function HikeCard(props) {
 					showLinkingModal={showLinkingModal}
 					setShowLinkingModal={setShowLinkingModal}
 					setHikes={props.setHikes}
+				/>
+			)}
+
+			{showStatusModal.isVisible && (
+				<HikeStatusModal
+					hike={props.hike}
+					type={showStatusModal.type}
+					showStatusModal={showStatusModal}
+					setShowStatusModal={setShowStatusModal}
 				/>
 			)}
 		</Container>

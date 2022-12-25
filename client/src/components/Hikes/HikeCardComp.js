@@ -1,4 +1,4 @@
-import {  Card,Col,Row, Badge, Alert,ListGroup,ListGroupItem } from 'react-bootstrap';
+import {  Card,Col,Row, Badge, Alert,ListGroup,ListGroupItem, Button, ButtonGroup } from 'react-bootstrap';
 import {  useState } from 'react';
 
 import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
@@ -120,12 +120,36 @@ const HiddenItem = (props)=>{
                 
             </ListGroupItem>
         </ListGroup>
-        
-        </>
-    
-    
+
+        <StatusButton started = {props.started} hike = {props.hike} setShowStatusModal = {props.setShowStatusModal}/>
+    </>
     
 }
+
+const StatusButton = (props) => {
+    return (
+        <ButtonGroup size="lg" className="mb-2">
+            <Button 
+                onClick = {() => props.setShowStatusModal({
+                    isVisible: true,
+                    type: "stats"
+                })}> My stats
+            </Button>
+            <Button 
+                variant = {props.started !== props.hike.id? "success" : "danger"} 
+                disabled = {props.started && props.started !== props.hike.id}
+                onClick = {() => props.setShowStatusModal({
+                    isVisible: true,
+                    type: props.started !== props.hike.id? "start" : "terminate"
+                })}>
+                    {props.started !== props.hike.id? "Start hike" : "Terminate hike"}
+            </Button>
+        </ButtonGroup>
+        
+    );
+}
+
+
 
 
 const CardImg = (props)=>{

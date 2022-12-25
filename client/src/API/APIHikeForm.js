@@ -35,11 +35,16 @@ async function postHike(Hike) {
 }
 
 async function getInfo(info) {
-
-    const url = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+info.lat+'&longitude='+info.long+'&localityLanguage=en';
-
-
-
+    let latitude;
+    let longitude;
+    if (info === undefined){
+        latitude = undefined;
+        longitude = undefined;
+    } else {
+        latitude = info.lat;
+        longitude = info.long;
+    }
+    const url = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+latitude+'&longitude='+longitude+'&localityLanguage=en';
     try {
         const response = await fetch(url);
         if (response.ok) {
