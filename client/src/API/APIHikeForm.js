@@ -42,7 +42,7 @@ async function getInfo(info) {
         longitude = undefined;
     } else {
         latitude = info.lat;
-        longitude = info.lat;
+        longitude = info.long;
     }
     const url = 'https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+latitude+'&longitude='+longitude+'&localityLanguage=en';
     try {
