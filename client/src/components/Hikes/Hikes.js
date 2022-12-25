@@ -15,6 +15,7 @@ import { RiMindMap } from 'react-icons/ri'
 
 import  {CardImg,AlertUser,CardHeader, VisibleItem, HiddenItem} from './HikeCardComp'; 
 import { LinkingModal } from '../Linking/Linking';
+import { HikeStatusModal } from '../HikeStatus/HikeStatus'
 
 
 function FilterMenu(props) {
@@ -97,6 +98,7 @@ function FilterMenu(props) {
 function Hikes(props) {
 
     const [hikes, setHikes] = useState([]);    
+    const [started, setStarted] = useState();
 
     async function loadFilter(filter, value) {
         try {
@@ -140,11 +142,11 @@ function Hikes(props) {
                             {(hikes.length === 1 && hikes[0].id === undefined) ||
                                 <>
                                     <Col lg = {6} xs = {12}>
-                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  setHikes = {setHikes}/>)}
+                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  setHikes = {setHikes} started = {started}/>)}
                                     </Col>
                                     
                                     <Col>
-                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} setHikes = {setHikes}/>)}
+                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} setHikes = {setHikes} started = {started}/>)}
                                     </Col>
                                 </>
                             }
@@ -165,6 +167,7 @@ function HikeCard(props) {
     const [open, setOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showLinkingModal, setShowLinkingModal] = useState(false);
+    const [showStatusModal, setShowStatusModal] = useState(false);
 
     return (
         <Container className="mt-3 mb-3">
@@ -185,7 +188,7 @@ function HikeCard(props) {
                    
                         <VisibleItem hike={props.hike} open={open}/>
                    
-                        {open && <HiddenItem hike={props.hike}/>}
+                        {open && <HiddenItem hike={props.hike} started = {props.started} setShowStatusModal = {setShowStatusModal}/>}
                 
                 </Card.Body>
                 <Row align = "right">
@@ -217,6 +220,12 @@ function HikeCard(props) {
              />}
 
             {showLinkingModal && <LinkingModal hike = {props.hike} showLinkingModal = {showLinkingModal} setShowLinkingModal = {setShowLinkingModal} setHikes = {props.setHikes}/>}
+
+            {showStatusModal.isVisible && <HikeStatusModal 
+                                    hike = {props.hike}
+                                    type = {showStatusModal.type}
+                                    showStatusModal = {showStatusModal} 
+                                    setShowStatusModal = {setShowStatusModal}/>}
 
         </Container>
     );
