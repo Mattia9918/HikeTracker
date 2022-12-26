@@ -357,4 +357,84 @@ router.put(
 	}
 );
 
+/** 
+ * Start to record a hike
+ */
+router.post(
+	"/api/hike/:id/record",
+	checkAuth.isHiker,
+	[
+        check("time").notEmpty().isDate()
+    ],
+	async (req, res) => {
+
+        // Check validation constraints
+        const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
+		try {
+            // Check if hike exists
+            const hike = await hike_dao.getHikeById(req.params.id);
+            if(hike === undefined) {
+                return res.status(404).json({error: "hike not found"})
+            }
+            
+            // Check if user has ongoing hikes
+            const ongoing_hikes = await hike_dao.getOngoingHikesRecordedByUser(req.user.id)
+            if(ongoing_hikes.length !== 0) {
+                return res.status(403)
+                .json({error: "you must terminate all ongoing hikes before starting a new one"})
+            }
+
+            // Start new recorded hike
+            const id = await hike_dao.startHikeByUser(
+                req.user.id,
+                req.params.id,
+                req.body.time
+            )
+            return res.status(201).json({msg: "Record hike's start with id = " + id})
+		} catch (err) {
+			console.log(err);
+			return res.status(500).json({ error: err });
+		}
+	}
+);
+
+router.put(
+    "/api/hike/:id/record",
+	checkAuth.isHiker,
+	[
+        check("time").notEmpty().isDate()
+    ],
+    async (req, res) => {
+
+        // Check validation constraints
+        const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).json({ errors: errors.array() });
+		}
+
+		try {
+             // Check if record of hike exists and it's still ongoing
+             const hike = await hike_dao.getHikeRecordedById(req.params.id);
+             if(hike === undefined) {
+                 return res.status(404).json({error: "hike record not found"})
+             }
+             if(hike.end_time !== null) {
+                 return res.status(403)
+                 .json({error: "you cannot end if you don't start"})
+             }
+
+             // Update recorded hike
+             const id = await hike_dao.endHikeByUser(req.params.id, req.body.time);
+             return res.status(200).json({msg: "Record hike's end with id = " + id})
+		} catch (err) {
+			console.log(err);
+			return res.status(500).json({ error: err });
+		}
+	}
+)
+
 module.exports = router;

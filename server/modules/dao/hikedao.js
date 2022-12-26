@@ -572,4 +572,66 @@ exports.updateHikePoint = (hikeID, pointID, type) => {
 	})
 }
 
+/** TABLE hike_user */
+
+exports.startHikeByUser = (userID, hikeID, time) => {
+	return new Promise((resolve, reject) => {
+		const sql = "INSERT INTO hike_user(hikeID, userID, start_time) VALUES (?, ?, ?)";
+		db.run(sql, [hikeID, userID, time], function(err) {
+			if(err) reject(err)
+			else {
+				resolve(this.lastID)
+			}
+		})
+	})
+}
+
+exports.endHikeByUser = (id, time) => {
+	return new Promise((resolve, reject) => {
+		const sql = "UPDATE hike_user SET end_time = ? WHERE id = ?"
+		db.run(sql, [time, id], function(err) {
+			if(err) reject(err)
+			else {
+				resolve(this.lastID)
+			}
+		})
+	})
+}
+
+exports.getAllHikesRecordedByUser = (userID) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT id, hikeID, start_time, end_time FROM hike_user WHERE userID = ?"
+		db.all(sql, [userID], function (err, rows) {
+			if(err) reject(err)
+			else {
+				resolve(rows)
+			}
+		})
+	})
+}
+
+exports.getOngoingHikesRecordedByUser = (userID) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT id, hikeID, start_time FROM hike_user WHERE userID = ? AND end_time IS NULL"
+		db.all(sql, [userID], function (err, rows) {
+			if(err) reject(err)
+			else {
+				resolve(rows)
+			}
+		})
+	})
+}
+
+exports.getHikeRecordedById = (id) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT id, hikeID, start_time, end_time FROM hike_user WHERE id = ?"
+		db.get(sql, [id], function (err, row) {
+			if(err) reject(err)
+			else {
+				resolve(row)
+			}
+		})
+	})
+}
+
 
