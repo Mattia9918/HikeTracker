@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Form, Table } from 'react-bootstrap';
 import APIHikeForm from '../../API/APIHikeForm';
+import APIHikes from '../../API/APIHikes';
 import {Number} from '../Form'; 
 
 function HikeStatusModal(props){
     const type = props.type;
     return (
-        type !== "stats" ?  <StartOrTerminateModal showStatusModal = {props.showStatusModal} setShowStatusModal = {props.setShowStatusModal} hike = {props.hike} type = {type}/> :
+        type !== "stats" ?  <StartOrTerminateModal showStatusModal = {props.showStatusModal} setShowStatusModal = {props.setShowStatusModal} hike = {props.hike} type = {type} setStarted = {props.setStarted}/> :
         <StatsModal showStatusModal = {props.showStatusModal} setShowStatusModal = {props.setShowStatusModal} hike = {props.hike} />
     )
 }
@@ -33,29 +34,41 @@ function StartOrTerminateModal(props) {
         }
     }
 
+    async function manageHikeStatus(dateTime, type) {
+        try {
+            switch(type){
+                case 0:
+                    //APIHikes.startHike(dateTime);
+                    props.setStarted(props.hike.id);
+                    props.setShowStatusModal({
+                        isVisible: false,
+                        type: undefined
+                    })
+                    break;
+                
+                case 1:
+                    //APIHikes.terminateHike(dateTime);
+                    props.setStarted();
+                    props.setShowStatusModal({
+                        isVisible: false,
+                        type: undefined
+                    })
+                    break;
+    
+                default:
+                    console.log("Default case HikeStatus, StartOrTerminateModal")
+                    break;
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     useEffect(() => {
         positionInfo();
     },
         []
     )
-
-   // async function putHikePoint(point, type) {
-   //     try {
-   //         const obj = {
-   //             hikeid: props.hike.id,
-   //             pointid: point.point_id,
-   //             latitude: point.latitude,
-   //             longitude: point.longitude,
-   //         }
-   //         await APIHikes.putHikePoint(obj, type);
-   //         const updatedHikeInfo = await APIHikes.getHikes();
-   //         props.setHikes(updatedHikeInfo);
-   //         setMessage({variant: "info", msg: `Your point has been set as ${type} for ${props.hike.title}`});
-   //     }
-   //     catch(err) {
-   //         setMessage({variant: "danger", msg: err.message});
-   //     }
-   // };
 
     /* -- RENDERING -- */
     return (
@@ -82,12 +95,17 @@ function StartOrTerminateModal(props) {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button variant = {type === "start"? "success" : "danger"}>{type === "start"? "Start hike" : "Terminate hike"}</Button>
+                <Button 
+                    variant = {type === "start"? "success" : "danger"}
+                    onClick = {() => manageHikeStatus(dateTime, type === "start"? 0 : 1)
+                    }>
+                        {type === "start"? "Start hike" : "Terminate hike"}
+                </Button>
                 <Button variant = "secondary" onClick = {() => props.setShowStatusModal({
                     isVisible: false,
                     type: undefined
-                 }
-                )}>Close</Button>
+                 })}>
+                Close</Button>
             </Modal.Footer>
 
         </Modal>
@@ -207,13 +225,13 @@ function TerminateModalBody(props) {
 
 function StatsModal (props) {
 
-    const hikeId = props.hike.id;
     let count = 0;
     const [myStats, setMyStats] = useState([]);
 
     async function getMyStats(hikeId) {
         try {
             
+            //const statsArray = await APIHikes.getStats(hikeId);
             const statsArray = [
             //*********** HARDCODED **************
                 {
@@ -243,7 +261,7 @@ function StatsModal (props) {
     };
 
     useEffect(() => {
-        getMyStats(1)
+        getMyStats(props.hike.id)
     }, [])
 
     return (

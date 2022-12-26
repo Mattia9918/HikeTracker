@@ -118,9 +118,22 @@ function Hikes(props) {
             console.log(err);
         }
     };
+
+    async function loadStarted(){
+        try {
+            //const startedHike = await APIHikes.getStartedHike();
+            /* ******** HARDCODED ********** */
+            const startedHike = 1;
+            /* **************************** */
+            setStarted(startedHike)
+        } catch (err) {
+            console.log(err);
+        }
+    }
     
     useEffect(() => {
         loadHikes();
+        loadStarted();
     }, []);
 
 
@@ -142,11 +155,11 @@ function Hikes(props) {
                             {(hikes.length === 1 && hikes[0].id === undefined) ||
                                 <>
                                     <Col lg = {6} xs = {12}>
-                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  setHikes = {setHikes} started = {started}/>)}
+                                        {leftHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user}  setHikes = {setHikes} started = {started} setStarted = {setStarted}/>)}
                                     </Col>
                                     
                                     <Col>
-                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} setHikes = {setHikes} started = {started}/>)}
+                                        {rightHikes.map(hike=><HikeCard key={"cardHike_"+hike.id} hike={hike} user={props.user} setHikes = {setHikes} started = {started} setStarted = {setStarted}/>)}
                                     </Col>
                                 </>
                             }
@@ -171,14 +184,14 @@ function HikeCard(props) {
 
     return (
         <Container className="mt-3 mb-3">
-            <Card className="shadow-sm p-2">
+            <Card className="shadow-sm p-2" id = {props.started === props.hike.id ? "startedHikeCard" : undefined}>
                 {/* -- CARD HEADER -- */}
                 
                 <CardHeader obj={{user:props.hike.localguideUsername,
                                 level:props.hike.difficulty}}/>
 
 
-                <CardImg difficulty={props.hike.difficulty}/>
+                <CardImg imgPath = {props.hike.imgPath}/>
 
                 
                 {/* -- CARD BODY -- */}
@@ -188,7 +201,7 @@ function HikeCard(props) {
                    
                         <VisibleItem hike={props.hike} open={open}/>
                    
-                        {open && <HiddenItem hike={props.hike} started = {props.started} setShowStatusModal = {setShowStatusModal}/>}
+                        {open && <HiddenItem hike={props.hike} started = {props.started} setShowStatusModal = {setShowStatusModal} user = {props.user}/>}
                 
                 </Card.Body>
                 <Row align = "right">
@@ -225,7 +238,8 @@ function HikeCard(props) {
                                     hike = {props.hike}
                                     type = {showStatusModal.type}
                                     showStatusModal = {showStatusModal} 
-                                    setShowStatusModal = {setShowStatusModal}/>}
+                                    setShowStatusModal = {setShowStatusModal}
+                                    setStarted = {props.setStarted}/>}
 
         </Container>
     );

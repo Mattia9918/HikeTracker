@@ -23,12 +23,36 @@ async function getHikes() {
                     hike.localguideUsername,
                     hike.startingPoint,
                     hike.pointsOfInterest,
-                    hike.endingPoint
+                    hike.endingPoint,
+                    hike.imgPath
                  ]
                  return new Hike(params);
              }       
          );
              return hikeList;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
+
+ async function getStartedHike() {
+    /* definire URL */
+    let url;
+    //const url = APIURL + `hikes`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const startedHikeId = await response.json();
+             return startedHikeId;
          } else {
              /* Application error */
              const appErrText = await response.text();
@@ -77,7 +101,8 @@ async function getHikes() {
                     hike.localguideUsername,
                     hike.startingPoint,
                     hike.pointsOfInterest,
-                    hike.endingPoint
+                    hike.endingPoint,
+                    hike.imgPath
                  ]
                  return new Hike(params);
               });
@@ -188,9 +213,32 @@ async function getHikes() {
         throw (error);
     }
 }
+
+async function getStats(hikeId) {
+    /** definire URL */
+    let url;
+    //const url = APIURL + `provinces`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const statsArray = await response.json();
+             return statsArray;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
  
 
 
 
-  const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint}; 
+  const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint, getStartedHike, getStats}; 
   export default APIHikes; 
