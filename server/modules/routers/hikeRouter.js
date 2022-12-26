@@ -44,22 +44,22 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 				case "ascent":
 					hikes = hikes.filter(
 						(hike) =>
-							hike.ascent > filter.value1 &&
-							hike.ascent < filter.value2
+							hike.ascent >= filter.value1 &&
+							hike.ascent <= filter.value2
 					);
 					break;
 				case "expectedTime":
 					hikes = hikes.filter(
 						(hike) =>
-							hike.estimatedTime > filter.value1 &&
-							hike.estimatedTime < filter.value2
+							Number(hike.estimatedTime) >= filter.value1 &&
+							Number(hike.estimatedTime) <= filter.value2
 					);
 					break;
 				case "length":
 					hikes = hikes.filter(
 						(hike) =>
-							hike.length > filter.value1 &&
-							hike.length < filter.value2
+							hike.length >= filter.value1 &&
+							hike.length <= filter.value2
 					);
 					break;
 				case "difficulty":
