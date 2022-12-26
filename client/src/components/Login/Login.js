@@ -1,7 +1,7 @@
 
 import '../../css/App.css'; 
 
-import {Form,Button,Alert,Container} from 'react-bootstrap';
+import {Form,Button,Alert,Container,Row, Col} from 'react-bootstrap';
 import {BsBoxArrowInRight } from "react-icons/bs";
 import {useState,useEffect} from 'react';
 
@@ -47,8 +47,12 @@ function LoginForm(props) {
 
     <Container className="shadow-sm p-5 w-50 mt-5" id = "cardscontainer">
       <center className="mb-3 fs-2">
+        <Row>
+          <Col className="d-none d-md-block">
         <img src = "http://localhost:3000/brand.svg" style = {{'height': '70px', 'marginLeft': '20px', 'marginTop': '-10px'}}
           alt = "navicon"/>
+          </Col>
+          </Row>
       </center>
     <Form onSubmit={signInHandler}>
     

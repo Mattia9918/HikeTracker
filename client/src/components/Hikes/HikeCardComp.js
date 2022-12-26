@@ -157,10 +157,10 @@ const CardImg = (props)=>{
 	return (
     <>
         <Card.Img
+            id="cardImg"
             className="mt-2"
             variant="top"
             src={"http://localhost:3001/"+props.imgPath}
-            style = {{"width": "564px", "height": "260px"}}
         />
 	</>
     )

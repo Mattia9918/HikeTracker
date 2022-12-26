@@ -64,3 +64,11 @@
 #startedHikeCard {
     background-color: #3b88fc34;
 }
+
+#cardImg {
+    width:100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: 20% 50%;
+    border-radius: 7px;
+}
