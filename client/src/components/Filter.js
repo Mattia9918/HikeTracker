@@ -43,15 +43,22 @@ const ListGroupItem = (props) => {
 				if (!clicked) {
 					setClicked(true);
 					console.log("PUSHING");
-					const [fv1, fv2] = props.option.filterOption.split(",");
-					const newElement = {
-						filterName: props.filter,
-						value1: fv1,
-						value2: fv2,
-					};
-					// props.filterVector = props.filterVector.filter(
-					// 	(filt) => filt.filterName !== props.filter
-					// );
+					let newElement;
+					let fv = [];
+
+					if (props.isGeo === true) {
+						newElement = {
+							filterName: props.filter,
+							value1: props.filterValue,
+						};
+					} else {
+						fv = props.option.filterOption.split(",");
+						newElement = {
+							filterName: props.filter,
+							value1: fv[0],
+							value2: fv[1],
+						};
+					}
 					props.removeElementFilterVector(props.filter);
 					props.filterVector.push(newElement);
 					console.log(props.filterVector);
@@ -62,9 +69,9 @@ const ListGroupItem = (props) => {
 				}
 				props.loadFilter(props.filterVector);
 				console.log(props.filterVector);
-			}}
-		>
-			{props.option.label}
+			}}>
+			{!props.isGeo && props.option.label}
+			{props.isGeo && props.filterValue}
 		</ListGroup.Item>
 	);
 };
@@ -82,18 +89,16 @@ const AccordionGeo = (props) => {
 					<Accordion.Body>
 						<ListGroup variant="flush">
 							{props.cities &&
-								props.cities.map(({ province }) => {
-									return (
-										<ListGroup.Item
-											key={label + province}
-											action={true}
-											onClick={() =>
-												loadFilter(filter, province)
-											}
-										>
-											{province}
-										</ListGroup.Item>
-									);
+								props.cities.map((province) => {
+									return <ListGroupItem
+										key={label + province.province}
+										filterValue={province.province}
+										filterVector={props.filterVector}
+										filter={filter}
+										loadFilter={loadFilter}
+										removeElementFilterVector={props.removeElementFilterVector}
+										isGeo={true}
+									/>;
 								})}
 						</ListGroup>
 					</Accordion.Body>
@@ -105,18 +110,16 @@ const AccordionGeo = (props) => {
 					<Accordion.Body>
 						<ListGroup variant="flush">
 							{props.cities &&
-								props.cities.map(({ city }) => {
-									return (
-										<ListGroup.Item
-											key={label + city}
-											action={true}
-											onClick={() =>
-												loadFilter(filter, city)
-											}
-										>
-											{city}
-										</ListGroup.Item>
-									);
+								props.cities.map((city) => {
+									return <ListGroupItem
+										key={label + city.city}
+										filterValue={city.city}
+										filterVector={props.filterVector}
+										filter={filter}
+										loadFilter={loadFilter}
+										removeElementFilterVector={props.removeElementFilterVector}
+										isGeo={true}
+									/>;
 								})}
 						</ListGroup>
 					</Accordion.Body>
