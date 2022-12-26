@@ -346,7 +346,7 @@ router.put(
  */
 router.post(
 	"/api/hike/:id/record",
-	checkAuth.isLoggedIn,
+	checkAuth.isHiker,
 	[
         check("time").notEmpty().isDate()
     ],
@@ -388,7 +388,7 @@ router.post(
 
 router.put(
     "/api/hike/:id/record",
-	checkAuth.isLoggedIn,
+	checkAuth.isHiker,
 	[
         check("time").notEmpty().isDate()
     ],
