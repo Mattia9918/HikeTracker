@@ -157,6 +157,12 @@ const UploadSection = (props)=>{
             </Col>
         </Row>
 
+        <Row className='r' style = {{"marginBottom":"-30px"}}>
+            <Col className = 'c' style = {{"marginBottom":"0px"}}>
+                Select and upload a GPX to load your hike location and estimations
+            </Col>
+        </Row>
+
         <Row className='r'>
             <Col className = 'c'>
 
@@ -180,6 +186,31 @@ const UploadSection = (props)=>{
     </>
 }
 
+/*File Part = Alert + BtnFile + BtnUpload*/
+const UploadPicture = (props)=>{
+
+    return <>
+    
+        <Row className='r' style = {{"marginBottom":"-30px"}}>
+            <Col className = 'c' style = {{"marginBottom":"0px"}}>
+                Select an image for your hike
+            </Col>
+        </Row>
+
+        <Row className='r'>
+            <Col className = 'c'>
+
+                <Form.Group controlId="formFile" className="mb-3">
+                    <Form.Control 
+                     type="file"
+                     onChange={(e) => props.setImage(e.target.files[0])}/>
+                </Form.Group>
+               
+            </Col>
+        </Row>
+    </>
+}
+
 function HikeForm(props) {
 
     const [title, setTitle] = useState("");
@@ -189,6 +220,7 @@ function HikeForm(props) {
     const [epoint, setEpoint] = useState();
     const [file, setFile] = useState();
     const [uploadedFile, setUploadedFile] = useState({});
+    const [image, setImage] = useState();
     const [message, setMessage] = useState('');
 
 
@@ -209,8 +241,14 @@ function HikeForm(props) {
 
         event.preventDefault();
         
-        await APIHikeForm.postHike(info);
+        const result = await APIHikeForm.postHike(info);
+        console.log("risultato: ", result)
         await APIGpx.postGpx(uploadedFile.filePath);
+
+        /* Hike image loading */
+        const imgData = new FormData();
+        imgData.append('image', image);
+        await APIHikeForm.addImage(imgData, result.id);
  
 
         navigate("/");
@@ -272,6 +310,8 @@ function HikeForm(props) {
                     
 
                     {/*File Part = Alert + BtnFile + BtnUpload*/}
+
+                    <UploadPicture setImage = {setImage} />
 
                     <UploadSection obj={{
                         message,

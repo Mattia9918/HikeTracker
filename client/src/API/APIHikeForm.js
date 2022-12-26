@@ -19,7 +19,8 @@ async function postHike(Hike) {
                  startingPoint : Hike.spoint, endingPoint: Hike.epoint })
         });
         if (response.ok) {
-            return true;
+            const newHikeId = await response.json();
+            return newHikeId;
         } else {
             /* Application error */
             const appErrText = await response.text();
@@ -60,12 +61,35 @@ async function getInfo(info) {
         console.log(err);
         throw (err);
     }
+}
 
+async function addImage(imgData, hikeId){
+    const url = APIURL + `image/${hikeId}`;
 
+    try {
 
+        const response = await fetch(url, {
+            method: 'PUT',
+            credentials: 'include',
+            body: imgData
+        });
+        if (response.ok) {
+            return true;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            console.log(response); 
+            throw new TypeError(appErrText);
+
+        }
+    } catch (error) {
+
+        console.log(error); 
+        throw (error);
+    }
 }
 
 
 
-const APIHikeForm = {postHike, getInfo}; 
+const APIHikeForm = {postHike, getInfo, addImage}; 
 export default APIHikeForm; 

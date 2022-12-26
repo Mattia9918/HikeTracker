@@ -8,6 +8,7 @@ const checkAuth = require("../../authMiddleware");
 const functions = require("../functions/functions")
 
 const router = express.Router();
+var storage = require('../../storage');
 
 /* -- API -- */
 
@@ -100,7 +101,7 @@ router.post('/api/hiking',
                 req.body.difficulty, 
                 req.body.estimatedTime, 
                 req.body.ascent, 
-                req.user.id
+                req.user.id,
             );
 
             const startingPointID = await hike_dao.postPoint(req.body.startingPoint);
@@ -119,6 +120,19 @@ router.post('/api/hiking',
             res.status(500).json({ error: `Generic error` }).end();
         }
     })
+
+router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
+    try {
+        console.log("Informazioni sull'immagine inserita:");
+        console.log(req.file);
+        await hike_dao.insertImg(req.params.hikeId, req.file.filename);
+        res.status(201).end()
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
+
 
 router.get("/api/cities", async (req, res) => {
     try {
