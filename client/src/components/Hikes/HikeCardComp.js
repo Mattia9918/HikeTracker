@@ -1,8 +1,6 @@
 import {  Card,Col,Row, Badge, Alert,ListGroup,ListGroupItem, Button, ButtonGroup } from 'react-bootstrap';
 import {  useState } from 'react';
 
-import {easyHikeImg,avgHikeImg,diffHikeImg} from './HikesObjInfo'; 
-
 import {FiMapPin} from 'react-icons/fi';
 import {BiChevronDown,BiChevronUp} from 'react-icons/bi';
 import { AiOutlineHome } from 'react-icons/ai';
@@ -121,7 +119,10 @@ const HiddenItem = (props)=>{
             </ListGroupItem>
         </ListGroup>
 
-        <StatusButton started = {props.started} hike = {props.hike} setShowStatusModal = {props.setShowStatusModal}/>
+        {
+            props.user && props.user.role === "hiker" && 
+            <StatusButton started = {props.started} hike = {props.hike} setShowStatusModal = {props.setShowStatusModal}/>
+        }
     </>
     
 }
@@ -153,20 +154,16 @@ const StatusButton = (props) => {
 
 
 const CardImg = (props)=>{
-	
-	const difficulty = props.difficulty; 
-
-	return <>
+	return (
+    <>
         <Card.Img
             className="mt-2"
             variant="top"
-            src={
-                (difficulty === "Easy" && easyHikeImg) ||
-                (difficulty === "Average" && avgHikeImg) ||
-                (difficulty === "Difficult" && diffHikeImg) 	
-            }
+            src={"http://localhost:3001/"+props.imgPath}
+            style = {{"width": "564px", "height": "260px"}}
         />
 	</>
+    )
 }
 
 

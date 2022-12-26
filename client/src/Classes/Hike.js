@@ -11,6 +11,7 @@ function Hike(params)
     this.startingPoint = params[8];
     this.pointsOfInterest = params[9];
     this.endingPoint = params[10];
+    this.imgPath = params[11];
 
 }
 

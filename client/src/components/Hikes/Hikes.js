@@ -38,14 +38,6 @@ import {
 import { LinkingModal } from "../Linking/Linking";
 import { HikeStatusModal } from "../HikeStatus/HikeStatus";
 
-import {
-	CardImg,
-	AlertUser,
-	CardHeader,
-	VisibleItem,
-	HiddenItem,
-} from "./HikeCardComp";
-import { LinkingModal } from "../Linking/Linking";
 
 function FilterMenu(props) {
 	const [cities, setCities] = useState();
@@ -213,6 +205,19 @@ function Hikes(props) {
 		try {
 			const hikeList = await APIHikes.getHikes();
 			setHikes(hikeList);
+		}
+		catch (err) {
+			console.log(err);
+		}
+	};
+
+	async function loadStarted() {
+		try {
+			//const startedHike = await APIHikes.getStartedHike();
+			/* ******** HARDCODED ********** */
+			const startedHike = 1;
+			/* **************************** */
+			setStarted(startedHike)
 		} catch (err) {
 			console.log(err);
 		}
@@ -220,69 +225,47 @@ function Hikes(props) {
 
 	useEffect(() => {
 		loadHikes();
+		loadStarted();
 	}, []);
 
-	const leftHikes = hikes.filter((v) => hikes.indexOf(v) < hikes.length / 2);
-	const rightHikes = hikes.filter(
-		(v) => hikes.indexOf(v) >= hikes.length / 2
-	);
+
+	const leftHikes = hikes.filter(v => hikes.indexOf(v) < hikes.length / 2);
+	const rightHikes = hikes.filter(v => hikes.indexOf(v) >= hikes.length / 2);
 
 	return (
 		<>
 			<Row>
 				<center>
 					<Col lg={8} xs={12}>
-						<AlertUser
-							obj={{
-								msg: props.msg,
-								user: props.user,
-								setMsg: props.setMsg,
-							}}
-						/>
 
-						<Container
-							className="mt-3 mb-3 shadow-sm p-2"
-							id="cardscontainer"
-						>
+						<AlertUser obj={{ msg: props.msg, user: props.user, setMsg: props.setMsg }} />
+
+						<Container className="mt-3 mb-3 shadow-sm p-2" id="cardscontainer">
 							<FilterMenu loadFilter={loadFilter} />
 
 							<Row>
-								{(hikes.length === 1 &&
-									hikes[0].id === undefined) || (
+								{(hikes.length === 1 && hikes[0].id === undefined) ||
 									<>
 										<Col lg={6} xs={12}>
-											{leftHikes.map((hike) => (
-												<HikeCard
-													key={"cardHike_" + hike.id}
-													hike={hike}
-													user={props.user}
-													setHikes={setHikes}
-													started={started}
-												/>
-											))}
+											{leftHikes.map(hike => <HikeCard key={"cardHike_" + hike.id} hike={hike} user={props.user} setHikes={setHikes} started={started} setStarted={setStarted} />)}
 										</Col>
 
 										<Col>
-											{rightHikes.map((hike) => (
-												<HikeCard
-													key={"cardHike_" + hike.id}
-													hike={hike}
-													user={props.user}
-													setHikes={setHikes}
-													started={started}
-												/>
-											))}
+											{rightHikes.map(hike => <HikeCard key={"cardHike_" + hike.id} hike={hike} user={props.user} setHikes={setHikes} started={started} setStarted={setStarted} />)}
 										</Col>
 									</>
-								)}
+								}
 							</Row>
+
 						</Container>
+
 					</Col>
 				</center>
 			</Row>
 		</>
-	);
-}
+	)
+};
+
 
 function HikeCard(props) {
 	const [open, setOpen] = useState(false);
@@ -292,64 +275,47 @@ function HikeCard(props) {
 
 	return (
 		<Container className="mt-3 mb-3">
-			<Card className="shadow-sm p-2">
+			<Card className="shadow-sm p-2" id={props.started === props.hike.id ? "startedHikeCard" : undefined}>
 				{/* -- CARD HEADER -- */}
-				<CardHeader
-					obj={{
-						user: props.hike.localguideUsername,
-						level: props.hike.difficulty,
-					}}
-				/>
 
-				<CardImg difficulty={props.hike.difficulty} />
+				<CardHeader obj={{
+					user: props.hike.localguideUsername,
+					level: props.hike.difficulty
+				}} />
+
+
+				<CardImg imgPath={props.hike.imgPath} />
+
 
 				{/* -- CARD BODY -- */}
-				<Card.Body
-					className="pb-0"
-					id="cardbody"
-					style={{ cursor: "pointer" }}
-					onClick={() => setOpen((prev) => !prev)}
-				>
+				<Card.Body className="pb-0" id="cardbody" style={{ 'cursor': 'pointer' }} onClick={() => setOpen((prev) => !prev)}>
+
 					<Card.Title align="center">{props.hike.title}</Card.Title>
 
 					<VisibleItem hike={props.hike} open={open} />
 
-					{open && (
-						<HiddenItem
-							hike={props.hike}
-							started={props.started}
-							setShowStatusModal={setShowStatusModal}
-						/>
-					)}
+					{open && <HiddenItem hike={props.hike} started={props.started} setShowStatusModal={setShowStatusModal} user={props.user} />}
+
 				</Card.Body>
 				<Row align="right">
 					<Col className="mb-1 mx-2">
-						{props.user && (
-							<Button
-								variant="link"
-								style={{
-									padding: "0",
-									margin: "0",
-									marginRight: "10px",
-								}}
-								onClick={() => setShowModal(true)}
-							>
+						{props.user &&
+
+							<Button variant="link" style={{ padding: "0", margin: "0", "marginRight": "10px" }}
+								onClick={() => setShowModal(true)}>
 								<BsMap />
 							</Button>
-						)}
+						}
 
-						{props.user &&
-							props.user.role === "localGuide" &&
-							props.user.username ===
-								props.hike.localguideUsername && (
-								<Button
-									variant="link"
-									style={{ padding: "0", margin: "0" }}
-									onClick={() => setShowLinkingModal(true)}
-								>
-									<RiMindMap />
-								</Button>
-							)}
+						{props.user && props.user.role === "localGuide" && props.user.username === props.hike.localguideUsername && (
+							<Button
+								variant="link"
+								style={{ padding: "0", margin: "0" }}
+								onClick={() => setShowLinkingModal(true)}
+							>
+								<RiMindMap />
+							</Button>
+						)}
 					</Col>
 				</Row>
 			</Card>
@@ -374,16 +340,16 @@ function HikeCard(props) {
 				/>
 			)}
 
-			{showStatusModal.isVisible && (
-				<HikeStatusModal
-					hike={props.hike}
-					type={showStatusModal.type}
-					showStatusModal={showStatusModal}
-					setShowStatusModal={setShowStatusModal}
-				/>
-			)}
+			{showStatusModal.isVisible && <HikeStatusModal
+				hike={props.hike}
+				type={showStatusModal.type}
+				showStatusModal={showStatusModal}
+				setShowStatusModal={setShowStatusModal}
+				setStarted={props.setStarted} />}
+
 		</Container>
 	);
-}
+};
+
 
 export default Hikes;

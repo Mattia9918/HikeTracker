@@ -3,99 +3,109 @@ import { Hike } from "../Classes/Hike";
 const APIURL = "http://localhost:3001/api/";
 
 async function getHikes() {
-	const url = APIURL + `hikes`;
-	try {
-		const response = await fetch(url, {
-			credentials: "include",
-		});
-		if (response.ok) {
-			const list = await response.json();
-			const hikeList = list.map((hike) => {
-				const params = [
-					hike.id,
-					hike.title,
-					hike.length,
-					hike.description,
-					hike.difficulty,
-					hike.ascent,
-					hike.estimatedTime,
-					hike.localguideUsername,
-					hike.startingPoint,
-					hike.pointsOfInterest,
-					hike.endingPoint,
-				];
-				return new Hike(params);
-			});
-			return hikeList;
-		} else {
-			/* Application error */
-			const appErrText = await response.text();
-			throw new TypeError(appErrText);
-		}
-	} catch (err) {
-		/* Network error */
-		console.log(err);
-		throw err;
-	}
-}
+    const url = APIURL + `hikes`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const list = await response.json();
+             const hikeList = list.map((hike) => {
+                const params = [
+                    hike.id,
+                    hike.title,
+                    hike.length,
+                    hike.description,
+                    hike.difficulty,
+                    hike.ascent,
+                    hike.estimatedTime,
+                    hike.localguideUsername,
+                    hike.startingPoint,
+                    hike.pointsOfInterest,
+                    hike.endingPoint,
+                    hike.imgPath
+                 ];
+                 return new Hike(params);
+             }       
+         );
+             return hikeList;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
 
-async function getFilter(filterObj) {
-	console.log(filterObj);
-	// let couple;
-
-	//  if (value !== undefined && typeof value !== "object") {
-	//      couple = value.split(',')
-	//  } else if (typeof value === "object") {
-	//     let northEastLimit = value._northEast;
-	//     let southWestLimit = value._southWest;
-	//     let neLat = northEastLimit.lat;
-	//     let neLng = northEastLimit.lng;
-	//     let swLat = southWestLimit.lat;
-	//     let swLng = southWestLimit.lng;
-	//     couple = [[neLat, neLng], [swLat, swLng]]
-	//  } else {
-	//      couple = [undefined, undefined]
-	//  }
-	const url = APIURL + `hikes/filter`;
-	try {
-		const response = await fetch(url, {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(filterObj),
-		});
-		if (response.ok) {
-			const list = await response.json();
-			console.log(list);
-			const filteredHikeList = list.map((hike) => {
-				const params = [
-					hike.id,
-					hike.title,
-					hike.length,
-					hike.description,
-					hike.difficulty,
-					hike.ascent,
-					hike.estimatedTime,
-					hike.localguideUsername,
-					hike.startingPoint,
-					hike.pointsOfInterest,
-					hike.endingPoint,
-				];
-				return new Hike(params);
-			});
-			return filteredHikeList;
-		} else {
-			/* Application error */
-			const appErrText = await response.text();
-			throw new TypeError(appErrText);
-		}
-	} catch (err) {
-		/* Network error */
-		console.log(err);
-		throw err;
-	}
+ async function getStartedHike() {
+    /* definire URL */
+    let url;
+    //const url = APIURL + `hikes`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const startedHikeId = await response.json();
+             return startedHikeId;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
+ 
+ async function getFilter(filterObj) {
+    console.log(filterObj);
+    const url = APIURL + 'hikes/filter';
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(filterObj),
+        });
+        if (response.ok) {
+            const list = await response.json();
+            console.log(list);
+            const filteredHikeList = list.map((hike) => {
+                const params = [
+                    hike.id,
+                    hike.title,
+                    hike.length,
+                    hike.description,
+                    hike.difficulty,
+                    hike.ascent,
+                    hike.estimatedTime,
+                    hike.localguideUsername,
+                    hike.startingPoint,
+                    hike.pointsOfInterest,
+                    hike.endingPoint,
+                ];
+                return new Hike(params);
+            });
+            return filteredHikeList;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        console.log(err);
+        throw err;
+    }
 }
 
 async function getHikeCities() {
@@ -187,12 +197,31 @@ async function putHikePoint(obj, type) {
 		throw error;
 	}
 }
+async function getStats(hikeId) {
+    /** definire URL */
+    let url;
+    //const url = APIURL + `provinces`;
+     try {
+         const response = await fetch(url, {
+             credentials: 'include',
+         });
+         if (response.ok) {
+             const statsArray = await response.json();
+             return statsArray;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
+ 
 
-const APIHikes = {
-	getFilter,
-	getHikes,
-	getHikeCities,
-	getHikeProvinces,
-	putHikePoint,
-};
-export default APIHikes;
+
+
+ const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint, getStartedHike, getStats}; 
+  export default APIHikes; 

@@ -79,12 +79,7 @@ const objCity = {
     eventKey:"6"
 };
 
-const url = "http://localhost:3000/images/"; 
-const easyHikeImg = url+"easyhike.jpg"; 
-const avgHikeImg = url+"averagehike.jpg"; 
-const diffHikeImg = url+"difficulthike.jpg"; 
 
 
 export {length,time,difficulty,ascent,objProv,objCity,
-        easyHikeImg,avgHikeImg,diffHikeImg
 }; 

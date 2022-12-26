@@ -34,12 +34,6 @@ function LinkingModal(props) {
                     console.log("LinkingModal, putHikePoint default case");
                     break;
             }
-            
-            props.hike.pointsOfInterest.forEach((poi) => {
-                if (poi.latitude === point.latitude && poi.longitude === point.longitude) {
-                    throw Error("This point has already been set as intermediate for this hike!");
-                }
-            });
 
             const obj = {
                 hikeid: props.hike.id,
@@ -58,10 +52,6 @@ function LinkingModal(props) {
     };
     async function linkHut(point, type) {
         try {
-
-            if (point.latitude === props.hike.startingPoint.latitude && point.longitude === props.hike.startingPoint.longitude || point.latitude === props.hike.endingPoint.latitude && point.longitude === props.hike.endingPoint.longitude){
-                throw new Error("This point has already been set as starting or ending point for this hike!");
-            }
             
             props.hike.pointsOfInterest.forEach((poi) => {
                 if (poi.latitude === point.latitude && poi.longitude === point.longitude) {

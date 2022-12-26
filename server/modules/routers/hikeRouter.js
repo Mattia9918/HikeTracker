@@ -8,6 +8,7 @@ const checkAuth = require("../../authMiddleware");
 const functions = require("../functions/functions");
 
 const router = express.Router();
+var storage = require('../../storage');
 
 /* -- API -- */
 
@@ -31,6 +32,7 @@ router.get("/api/hike/:id", async (req, res) => {
 });
 
 router.post(`/api/hikes/filter`, async (req, res) => {
+	let errFlag = false;
 	const filters = req.body;
 	console.log(filters);
 	try {
@@ -46,7 +48,7 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 							hike.ascent < filter.value2
 					);
 					break;
-				case "estimatedTime":
+				case "expectedTime":
 					hikes = hikes.filter(
 						(hike) =>
 							hike.estimatedTime > filter.value1 &&
@@ -90,12 +92,13 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 					break;
 				default:
 					console.log("wrong filter error");
-					res.status(422)
-						.json({ error: `Validation of request body failed` })
-						.end();
+					errFlag = true;
 					break;
 			}
 		});
+		if (errFlag) {
+			return res.status(422).json({ error: `Validation of request body failed` });
+		}
 		console.log(hikes);
 		return res.status(200).json(hikes);
 	} catch (error) {
@@ -162,34 +165,34 @@ router.get(`/api/hike*`, async (req, res) => {
 });
 
 //hiking post
-router.post(
-	"/api/hiking",
-	[
-		check("length").isNumeric(),
-		check("estimatedTime").isNumeric(),
-		check("title").notEmpty(),
-		check("description").notEmpty(),
-		check("difficulty").isIn(["Easy", "Average", "Difficult"]),
-		check("ascent").isNumeric(),
-		check("startingPoint").notEmpty(),
-		check("endingPoint").notEmpty(),
-	],
-	checkAuth.isLocalGuide,
-	async (req, res) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(422).json({ errors: errors.array() });
-		}
-		try {
-			const hikeID = await hike_dao.createHiking(
-				req.body.title,
-				req.body.length,
-				req.body.description,
-				req.body.difficulty,
-				req.body.estimatedTime,
-				req.body.ascent,
-				req.user.id
-			);
+router.post('/api/hiking',
+    [
+        check('length').isNumeric(),
+        check('estimatedTime').isNumeric(),
+        check('title').notEmpty(),
+        check('description').notEmpty(),
+        check('difficulty').isIn(["Easy", "Average", "Difficult"]),
+        check('ascent').isNumeric(),
+        check('startingPoint').notEmpty(),
+        check('endingPoint').notEmpty()
+    ], 
+    checkAuth.isLocalGuide,
+    async (req, res) => {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+        try {
+            const hikeID = await hike_dao.createHiking(
+                req.body.title,
+                req.body.length, 
+                req.body.description, 
+                req.body.difficulty, 
+                req.body.estimatedTime, 
+                req.body.ascent, 
+                req.user.id
+            );
 
 			const startingPointID = await hike_dao.postPoint(
 				req.body.startingPoint
@@ -214,6 +217,19 @@ router.post(
 		}
 	}
 );
+
+router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
+    try {
+        console.log("Informazioni sull'immagine inserita:");
+        console.log(req.file);
+        await hike_dao.insertImg(req.params.hikeId, req.file.filename);
+        res.status(201).end()
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
+
 
 router.get("/api/cities", async (req, res) => {
 	try {
