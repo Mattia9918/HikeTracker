@@ -107,63 +107,6 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 	}
 });
 
-router.get(`/api/hike*`, async (req, res) => {
-	try {
-		let hikes;
-		const filter = req.query.filter;
-		switch (filter) {
-			case "none":
-				hikes = await hike_dao.getHikes();
-				break;
-			case "ascent":
-				hikes = await hike_dao.getHikeByAscent(
-					req.query.value1,
-					req.query.value2
-				);
-				break;
-			case "expectedTime":
-				hikes = await hike_dao.getHikeByExpectedTime(
-					req.query.value1,
-					req.query.value2
-				);
-				break;
-			case "length":
-				hikes = await hike_dao.getHikeByLength(
-					req.query.value1,
-					req.query.value2
-				);
-				break;
-			case "difficulty":
-				hikes = await hike_dao.getHikeByDiffculty(req.query.value1);
-				break;
-			case "city":
-				hikes = await hike_dao.getHikeByCity(req.query.value1);
-
-				break;
-			case "province":
-				hikes = await hike_dao.getHikeByProvince(req.query.value1);
-
-				break;
-			case "area":
-				hikes = await hike_dao.getHikesByArea(
-					req.query.value1,
-					req.query.value2
-				);
-				break;
-			default:
-				console.log("wrong filter error");
-				res.status(422)
-					.json({ error: `Validation of request body failed` })
-					.end();
-				break;
-		}
-		return res.status(200).json(hikes);
-	} catch (err) {
-		console.log(err);
-		return res.status(500).json({ error: err });
-	}
-});
-
 //hiking post
 router.post('/api/hiking',
     [
@@ -364,7 +307,7 @@ router.post(
 	"/api/hike/:id/record",
 	checkAuth.isHiker,
 	[
-        check("time").notEmpty().isDate()
+        check("time").notEmpty()
     ],
 	async (req, res) => {
 
@@ -382,8 +325,8 @@ router.post(
             }
             
             // Check if user has ongoing hikes
-            const ongoing_hikes = await hike_dao.getOngoingHikesRecordedByUser(req.user.id)
-            if(ongoing_hikes.length !== 0) {
+            const ongoing_hikes = await hike_dao.getOngoingHikeRecordedByUser(req.user.id)
+            if(ongoing_hikes !== undefined) {
                 return res.status(403)
                 .json({error: "you must terminate all ongoing hikes before starting a new one"})
             }
@@ -406,7 +349,7 @@ router.put(
     "/api/hike/:id/record",
 	checkAuth.isHiker,
 	[
-        check("time").notEmpty().isDate()
+        check("time").notEmpty()
     ],
     async (req, res) => {
 
@@ -436,5 +379,24 @@ router.put(
 		}
 	}
 )
+
+router.get("/api/hike/:id/stats", checkAuth.isHiker, async (req, res) => {
+	try {
+		const hikes = await hike_dao.getHikeStatsById(req.user.id, req.params.id);
+		return res.status(200).json(hikes);
+	} catch (err) {
+		return res.status(500).json({ error: err });
+	}
+});
+
+router.get("/api/ongoingHike", checkAuth.isHiker, async (req, res) => {
+	try {
+		const hike = await hike_dao.getOngoingHikeRecordedByUser(req.user.id);
+		return res.status(200).json(hike);
+	} catch (err) {
+        console.log(err)
+		return res.status(500).json({ error: err });
+	}
+});
 
 module.exports = router;

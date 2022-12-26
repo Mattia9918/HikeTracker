@@ -38,7 +38,7 @@ function StartOrTerminateModal(props) {
         try {
             switch(type){
                 case 0:
-                    //APIHikes.startHike(dateTime);
+                    await APIHikes.startHike(dateTime.replace('T', " "), props.hike.id);
                     props.setStarted(props.hike.id);
                     props.setShowStatusModal({
                         isVisible: false,
@@ -47,7 +47,8 @@ function StartOrTerminateModal(props) {
                     break;
                 
                 case 1:
-                    //APIHikes.terminateHike(dateTime);
+                    const hike = await APIHikes.getStartedHike()
+                    await APIHikes.terminateHike(dateTime.replace('T', " "), hike.id);
                     props.setStarted();
                     props.setShowStatusModal({
                         isVisible: false,
@@ -227,31 +228,12 @@ function StatsModal (props) {
 
     let count = 0;
     const [myStats, setMyStats] = useState([]);
+    console.log(myStats)
 
     async function getMyStats(hikeId) {
         try {
             
-            //const statsArray = await APIHikes.getStats(hikeId);
-            const statsArray = [
-            //*********** HARDCODED **************
-                {
-                    start_time: "25-12-2022 13:39:42",
-                    end_time: "25-12-2022 14:15:23"
-                },
-                {
-                    start_time: "28-12-2022 13:39:42",
-                    end_time: "28-12-2022 14:15:23"
-                },
-                {
-                    start_time: "31-12-2022 13:39:42",
-                    end_time: "31-12-2022 14:15:23"
-                },
-                {
-                    start_time: "25-01-2023 13:39:42",
-                    end_time: "25-01-2023 14:15:23"
-                }
-            /* *********************************** */
-            ]
+            const statsArray = await APIHikes.getStats(hikeId);
 
             setMyStats(statsArray);
         }

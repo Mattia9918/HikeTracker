@@ -213,11 +213,9 @@ function Hikes(props) {
 
 	async function loadStarted() {
 		try {
-			//const startedHike = await APIHikes.getStartedHike();
-			/* ******** HARDCODED ********** */
-			const startedHike = 1;
-			/* **************************** */
-			setStarted(startedHike)
+			const startedHike = await APIHikes.getStartedHike();
+			const startedHikeId = startedHike ? startedHike.hikeID : undefined;
+			setStarted(startedHikeId)
 		} catch (err) {
 			console.log(err);
 		}

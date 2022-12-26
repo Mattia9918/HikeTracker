@@ -42,16 +42,14 @@ async function getHikes() {
  };
 
  async function getStartedHike() {
-    /* definire URL */
-    let url;
-    //const url = APIURL + `hikes`;
+    const url = APIURL + `ongoingHike`;
      try {
          const response = await fetch(url, {
              credentials: 'include',
          });
          if (response.ok) {
-             const startedHikeId = await response.json();
-             return startedHikeId;
+             const startedHike = await response.json();
+             return startedHike;
          } else {
              /* Application error */
              const appErrText = await response.text();
@@ -198,9 +196,7 @@ async function putHikePoint(obj, type) {
 	}
 }
 async function getStats(hikeId) {
-    /** definire URL */
-    let url;
-    //const url = APIURL + `provinces`;
+    const url = APIURL + `hike/${hikeId}/stats`;
      try {
          const response = await fetch(url, {
              credentials: 'include',
@@ -219,9 +215,63 @@ async function getStats(hikeId) {
          throw (err);
      }
  };
+
+ async function startHike(dateTime, hikeId) {
+    const url = APIURL + `hike/${hikeId}/record`;
+     try {
+         const response = await fetch(url, {
+            method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				time: dateTime,
+			}),
+         });
+         if (response.ok) {
+             const id = await response.json();
+             return id;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
+
+ async function terminateHike(dateTime, hikeID) {
+    const url = APIURL + `hike/${hikeID}/record`;
+     try {
+         const response = await fetch(url, {
+            method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				time: dateTime,
+			}),
+         });
+         if (response.ok) {
+             const id = await response.json();
+             return id;
+         } else {
+             /* Application error */
+             const appErrText = await response.text();
+             throw new TypeError(appErrText);
+         }
+     } catch (err) {
+         /* Network error */
+         console.log(err);
+         throw (err);
+     }
+ };
  
 
-
-
- const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint, getStartedHike, getStats}; 
+ const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint, getStartedHike, getStats, startHike, terminateHike}; 
   export default APIHikes; 

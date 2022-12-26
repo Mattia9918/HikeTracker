@@ -610,13 +610,13 @@ exports.getAllHikesRecordedByUser = (userID) => {
 	})
 }
 
-exports.getOngoingHikesRecordedByUser = (userID) => {
+exports.getOngoingHikeRecordedByUser = (userID) => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT id, hikeID, start_time FROM hike_user WHERE userID = ? AND end_time IS NULL"
-		db.all(sql, [userID], function (err, rows) {
+		db.get(sql, [userID], function (err, row) {
 			if(err) reject(err)
 			else {
-				resolve(rows)
+				resolve(row)
 			}
 		})
 	})
@@ -626,6 +626,18 @@ exports.getHikeRecordedById = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT id, hikeID, start_time, end_time FROM hike_user WHERE id = ?"
 		db.get(sql, [id], function (err, row) {
+			if(err) reject(err)
+			else {
+				resolve(row)
+			}
+		})
+	})
+}
+
+exports.getHikeStatsById = (userID, hikeID) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT id, hikeID, start_time, end_time FROM hike_user WHERE userID = ? AND hikeID = ?"
+		db.all(sql, [userID, hikeID], function (err, row) {
 			if(err) reject(err)
 			else {
 				resolve(row)
