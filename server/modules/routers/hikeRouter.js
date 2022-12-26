@@ -32,6 +32,7 @@ router.get("/api/hike/:id", async (req, res) => {
 });
 
 router.post(`/api/hikes/filter`, async (req, res) => {
+	let errFlag = false;
 	const filters = req.body;
 	console.log(filters);
 	try {
@@ -47,7 +48,7 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 							hike.ascent < filter.value2
 					);
 					break;
-				case "estimatedTime":
+				case "expectedTime":
 					hikes = hikes.filter(
 						(hike) =>
 							hike.estimatedTime > filter.value1 &&
@@ -91,12 +92,13 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 					break;
 				default:
 					console.log("wrong filter error");
-					res.status(422)
-						.json({ error: `Validation of request body failed` })
-						.end();
+					errFlag = true;
 					break;
 			}
 		});
+		if (errFlag) {
+			return res.status(422).json({ error: `Validation of request body failed` });
+		}
 		console.log(hikes);
 		return res.status(200).json(hikes);
 	} catch (error) {

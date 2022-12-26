@@ -64,31 +64,22 @@ async function getHikes() {
      }
  };
  
- async function getFilter(filter, value) {
-    let couple;
-
-     if (value !== undefined && typeof value !== "object") {
-         couple = value.split(',')
-     } else if (typeof value === "object") {
-        let northEastLimit = value._northEast;
-        let southWestLimit = value._southWest;
-        let neLat = northEastLimit.lat;
-        let neLng = northEastLimit.lng;
-        let swLat = southWestLimit.lat;
-        let swLng = southWestLimit.lng;
-        couple = [[neLat, neLng], [swLat, swLng]]
-     } else {
-         couple = [undefined, undefined]
-     }
-     const url = APIURL + `hike?filter=${filter}&value1=${couple[0]}&value2=${couple[1]}`;
-      try {
-          const response = await fetch(url, {
-              credentials: 'include',
-          });
-          if (response.ok) {
-              const list = await response.json();
-              console.log(list)
-              const filteredHikeList = list.map((hike) => {
+ async function getFilter(filterObj) {
+    console.log(filterObj);
+    const url = APIURL + 'hikes/filter';
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(filterObj),
+        });
+        if (response.ok) {
+            const list = await response.json();
+            console.log(list);
+            const filteredHikeList = list.map((hike) => {
                 const params = [
                     hike.id,
                     hike.title,
@@ -101,22 +92,21 @@ async function getHikes() {
                     hike.startingPoint,
                     hike.pointsOfInterest,
                     hike.endingPoint,
-                    hike.imgPath
-                 ];
-                 return new Hike(params);
-              });
-              return filteredHikeList;
-          } else {
-              /* Application error */
-              const appErrText = await response.text();
-              throw new TypeError(appErrText);
-          }
-      } catch (err) {
-          /* Network error */
-          console.log(err);
-          throw (err);
-      }
-  };
+                ];
+                return new Hike(params);
+            });
+            return filteredHikeList;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        console.log(err);
+        throw err;
+    }
+}
 
 async function getHikeCities() {
 	const url = APIURL + `cities`;

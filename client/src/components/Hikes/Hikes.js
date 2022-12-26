@@ -38,14 +38,6 @@ import {
 import { LinkingModal } from "../Linking/Linking";
 import { HikeStatusModal } from "../HikeStatus/HikeStatus";
 
-import {
-	CardImg,
-	AlertUser,
-	CardHeader,
-	VisibleItem,
-	HiddenItem,
-} from "./HikeCardComp";
-import { LinkingModal } from "../Linking/Linking";
 
 function FilterMenu(props) {
 	const [cities, setCities] = useState();
