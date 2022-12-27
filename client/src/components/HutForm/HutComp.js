@@ -193,4 +193,27 @@ const Accomodation = (props)=>{
     </>; 
 }
 
-export {HutInfo,HutGeo,Services,Accomodation}; 
+const Picture = (props)=>{
+
+    return <>
+        <Row className='r' style = {{"marginBottom":"-30px"}}>
+            <Col className = 'c' style = {{"marginBottom":"0px"}}>
+                Select an image for your hut
+            </Col>
+        </Row>
+
+        <Row className='r'>
+            <Col className = 'c'>
+
+                <Form.Group controlId="formFile" className="mb-3">
+                    <Form.Control 
+                        type="file"
+                        onChange={(e) => props.setImage(e.target.files[0])}/>
+                </Form.Group>
+                
+            </Col>
+        </Row>
+    </>
+}
+
+export {HutInfo,HutGeo,Services,Accomodation, Picture}; 

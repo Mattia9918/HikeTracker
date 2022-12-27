@@ -93,17 +93,7 @@ app.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`);
 });
 
-const isLoggedIn = (req, res, next) => {
-	if(req.isAuthenticated()) {
-	    return next();
-	}
-	return res.status(401).json({error: 'Not authorized'});
-}
-
-
 /* Objects to export */
 module.exports = {
 	app: app
 };
-
-exports.isLoggedIn = isLoggedIn

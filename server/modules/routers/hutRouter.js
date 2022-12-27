@@ -8,6 +8,7 @@ const checkAuth = require("../../authMiddleware");
 const functions = require("../functions/functions");
 
 const router = express.Router();
+var storage = require('../../storage');
 
 router.post(
 	"/api/hut",
@@ -42,6 +43,19 @@ router.post(
 		}
 	}
 );
+
+router.put("/api/hut/:id/image", storage.uploadImg, async (req, res) => {
+	console.log("ciao sono nella put")
+    try {
+        console.log("Informazioni sull'immagine inserita:");
+        console.log(req.file);
+        await hut_dao.insertHutImg(req.params.id, req.file.filename);
+        res.status(201).end()
+    } catch (err) {
+        console.log(err);
+        res.status(500).end();
+    }
+});
 
 // Post the Hike_Point linked with Hut
 router.post(

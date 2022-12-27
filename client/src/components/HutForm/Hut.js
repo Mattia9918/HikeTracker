@@ -5,10 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { MapModal } from '../Map/Maps';
 
 
-import {HutInfo,HutGeo,Services,Accomodation} from "./HutComp"; 
+import {HutInfo,HutGeo,Services,Accomodation, Picture} from "./HutComp"; 
 
 import APIHikeForm from '../../API/APIHikeForm';
 import APIHutForm from '../../API/APIHutForm';
+
 
 function HutForm(props) {
 
@@ -30,7 +31,8 @@ function HutForm(props) {
     const [restservice, setRestservice] = useState(false); 
     const [disable, setDisable] = useState(false); 
     const [bikefriendly, setBikefriendly] = useState(false);
-    const [reachability, setReachability] = useState("Cableway");  
+    const [reachability, setReachability] = useState("Cableway");
+    const [image, setImage] = useState();  
     const [showModal, setShowModal] = useState(false);
 
     const navigate = useNavigate();
@@ -41,7 +43,12 @@ function HutForm(props) {
 
         event.preventDefault();
         
-        await APIHutForm.postHut(hut); 
+        const result = await APIHutForm.postHut(hut); 
+
+        /* Hut image loading */
+        const imgData = new FormData();
+        imgData.append('image', image);
+        await APIHutForm.addHutImage(imgData, result.id);
           
         navigate("/huts");
     }
@@ -78,7 +85,8 @@ function HutForm(props) {
 
     const objAcc = {rooms,setRooms,
         beds,setBeds,
-        bathrooms,setBathrooms}; 
+        bathrooms,setBathrooms};
+    
 
     return (
         <Container >
@@ -92,6 +100,8 @@ function HutForm(props) {
                         <HutInfo obj={objInfo}/>
 
                         <HutGeo obj={objGeo}/>
+
+                        <Picture setImage = {setImage} />
                         
                         <Services obj={objServ}/>
 

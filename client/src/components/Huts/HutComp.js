@@ -11,29 +11,22 @@ import {GrLanguage,GrWheelchair} from 'react-icons/gr';
 import {IoMdRestaurant} from 'react-icons/io'; 
 import {MdOutlineBathtub,MdDirectionsBike} from 'react-icons/md';
 import {BiChevronDown,BiChevronUp, BiCurrentLocation} from 'react-icons/bi';
-import { normal,offroad,foot,cable,hutbike} from './HutsFilterOption'; 
 
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 const CardImg = (props)=>{
-	
-	const reachability = props.reachability; 
-
-	return <>
-	<Card.Img
-		className="mt-2"
-		variant="top"
-		src={
-			(reachability === "With normal car" && normal) ||
-			(reachability === "With off-road car" && offroad) ||
-			(reachability === "On foot" && foot) ||
-			(reachability === "Cableway" && cable) ||
-			hutbike
-		}
-	/>
+	return (
+    <>
+        <Card.Img
+            id="cardImg"
+            className="mt-2"
+            variant="top"
+            src={"http://localhost:3001/"+props.imgPath}
+        />
 	</>
+    )
 }
 
 const CardHeader = (props)=>{
