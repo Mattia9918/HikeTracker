@@ -161,17 +161,17 @@ router.post('/api/hiking',
 	}
 );
 
-router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
-    try {
-        console.log("Informazioni sull'immagine inserita:");
-        console.log(req.file);
-        await hike_dao.insertImg(req.params.hikeId, req.file.filename);
-        res.status(201).end()
-    } catch (err) {
-        console.log(err);
-        res.status(500).end();
-    }
-});
+ router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
+     try {
+         console.log("Informazioni sull'immagine inserita:");
+         console.log(req.file);
+         await hike_dao.insertImg(req.params.hikeId, req.file.filename);
+         res.status(201).end()
+     } catch (err) {
+         console.log(err);
+         res.status(500).end();
+     }
+ });
 
 
 router.get("/api/cities", async (req, res) => {
@@ -392,6 +392,16 @@ router.get("/api/hike/:id/stats", checkAuth.isHiker, async (req, res) => {
 router.get("/api/ongoingHike", checkAuth.isHiker, async (req, res) => {
 	try {
 		const hike = await hike_dao.getOngoingHikeRecordedByUser(req.user.id);
+		return res.status(200).json(hike);
+	} catch (err) {
+        console.log(err)
+		return res.status(500).json({ error: err });
+	}
+});
+
+router.get("/api/complitedHikes",  checkAuth.isHiker,async (req, res) => {
+	try {
+		const hike = await hike_dao.getComplitedHikesOfHiker(req.user.id);
 		return res.status(200).json(hike);
 	} catch (err) {
         console.log(err)
