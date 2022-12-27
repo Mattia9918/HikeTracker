@@ -399,14 +399,14 @@ router.get("/api/ongoingHike", checkAuth.isHiker, async (req, res) => {
 	}
 });
 
-// router.get("/api/complitedHikes",  checkAuth.isHiker,async (req, res) => {
-// 	try {
-// 		const hike = await hike_dao.getComplitedHikesOfHiker(req.user.id);
-// 		return res.status(200).json(hike);
-// 	} catch (err) {
-//         console.log(err)
-// 		return res.status(500).json({ error: err });
-// 	}
-// });
+router.get("/api/complitedHikes",  checkAuth.isHiker,async (req, res) => {
+	try {
+		const hike = await hike_dao.getComplitedHikesOfHiker(req.user.id);
+		return res.status(200).json(hike);
+	} catch (err) {
+        console.log(err)
+		return res.status(500).json({ error: err });
+	}
+});
 
 module.exports = router;
