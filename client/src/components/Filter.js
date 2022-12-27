@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Accordion, ListGroup } from "react-bootstrap";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 //Filter for length/time/difficulty/ascent | filter for altitude/reachability
 const AccordionFilter = (props) => {
@@ -23,6 +24,7 @@ const AccordionFilter = (props) => {
 								removeElementFilterVector={
 									props.removeElementFilterVector
 								}
+								insertElementFilterVector={props.insertElementFilterVector}
 							/>
 						))}
 					</ListGroup>
@@ -34,11 +36,33 @@ const AccordionFilter = (props) => {
 
 const ListGroupItem = (props) => {
 	const [clicked, setClicked] = useState(false);
+
+	if(clicked) {
+		let found = false;
+		let filVet = [...props.filterVector];
+		filVet = filVet.filter((fil) => fil.filterName === props.filter)
+		filVet.forEach((filt) => {
+			console.log(props.filterValue);
+			console.log(filt.value1);
+			let fv = [];
+			if(props.option !== undefined)
+				fv = props.option.filterOption.split(",");
+			if(filt.value1 === fv[0])
+				found = true;
+			if(filt.value1 == props.filterValue) {
+				console.log("TROVATO");
+				found = true
+			}
+		})
+		if(!found)
+			setClicked(false);
+	}
 	return (
 		<ListGroup.Item
 			action={true}
+			style={{background: clicked && "AntiqueWhite"}}
 			onClick={() => {
-				console.log(props.filterVector);
+				props.removeElementFilterVector(props.filter);
 				console.log(clicked);
 				if (!clicked) {
 					setClicked(true);
@@ -59,16 +83,11 @@ const ListGroupItem = (props) => {
 							value2: fv[1],
 						};
 					}
-					props.removeElementFilterVector(props.filter);
-					props.filterVector.push(newElement);
-					console.log(props.filterVector);
+					props.insertElementFilterVector(newElement);
 				} else {
 					setClicked(false);
-
-					props.removeElementFilterVector(props.filter);
 				}
 				props.loadFilter(props.filterVector);
-				console.log(props.filterVector);
 			}}>
 			{!props.isGeo && props.option.label}
 			{props.isGeo && props.filterValue}
@@ -98,6 +117,7 @@ const AccordionGeo = (props) => {
 										loadFilter={loadFilter}
 										removeElementFilterVector={props.removeElementFilterVector}
 										isGeo={true}
+										insertElementFilterVector={props.insertElementFilterVector}
 									/>;
 								})}
 						</ListGroup>
@@ -119,6 +139,7 @@ const AccordionGeo = (props) => {
 										loadFilter={loadFilter}
 										removeElementFilterVector={props.removeElementFilterVector}
 										isGeo={true}
+										insertElementFilterVector={props.insertElementFilterVector}
 									/>;
 								})}
 						</ListGroup>

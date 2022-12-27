@@ -43,13 +43,29 @@ function FilterMenu(props) {
 	const [cities, setCities] = useState();
 	const [provinces, setProvinces] = useState();
 	const [showModal, setShowModal] = useState(false);
-	let filterVector = [];
+	const [filterVector, setFilterVector] = useState([]);
 
 	function removeElementFilterVector(filterName) {
-		filterVector = filterVector.filter(
+		let vect = [...filterVector]
+		vect = vect.filter(
 			(filt) => filt.filterName !== filterName
 		);
+		setFilterVector([...vect]);
 	}
+
+	function loadNewFilter() {
+		props.loadFilter(filterVector);
+	}
+
+	function insertElementFilterVector(elem) {
+		let vett = filterVector;
+		vett = vett.filter((filt) => filt.filterName !== elem.filterName);
+		setFilterVector([...vett, elem ]);
+	}
+
+	useEffect(() => {
+		loadNewFilter();
+	}, [filterVector]);
 
 	useEffect(() => {
 		async function loadList() {
@@ -79,6 +95,7 @@ function FilterMenu(props) {
 											removeElementFilterVector={
 												removeElementFilterVector
 											}
+											insertElementFilterVector={insertElementFilterVector}
 										/>
 
 										<AccordionFilter
@@ -88,6 +105,7 @@ function FilterMenu(props) {
 											removeElementFilterVector={
 												removeElementFilterVector
 											}
+											insertElementFilterVector={insertElementFilterVector}
 										/>
 
 										<AccordionFilter
@@ -97,6 +115,7 @@ function FilterMenu(props) {
 											removeElementFilterVector={
 												removeElementFilterVector
 											}
+											insertElementFilterVector={insertElementFilterVector}
 										/>
 									</Col>
 
@@ -108,6 +127,7 @@ function FilterMenu(props) {
 											removeElementFilterVector={
 												removeElementFilterVector
 											}
+											insertElementFilterVector={insertElementFilterVector}
 										/>
 
 										<AccordionGeo
@@ -118,6 +138,7 @@ function FilterMenu(props) {
 											removeElementFilterVector={
 												removeElementFilterVector
 											}
+											insertElementFilterVector={insertElementFilterVector}
 										/>
 
 										<AccordionGeo
@@ -128,6 +149,7 @@ function FilterMenu(props) {
 											removeElementFilterVector={
 												removeElementFilterVector
 											}
+											insertElementFilterVector={insertElementFilterVector}
 										/>
 									</Col>
 
@@ -153,7 +175,7 @@ function FilterMenu(props) {
 													const newElement = {
 														filterName: "none",
 													};
-													filterVector = [];
+													// filterVector = [];
 													filterVector.push(
 														newElement
 													);
