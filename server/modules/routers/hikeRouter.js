@@ -34,7 +34,6 @@ router.get("/api/hike/:id", async (req, res) => {
 router.post(`/api/hikes/filter`, async (req, res) => {
 	let errFlag = false;
 	const filters = req.body;
-	console.log(filters);
 	try {
 		let hikes = await hike_dao.getHikes();
 		filters.forEach(async (filter) => {
@@ -99,7 +98,6 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 		if (errFlag) {
 			return res.status(422).json({ error: `Validation of request body failed` });
 		}
-		console.log(hikes);
 		return res.status(200).json(hikes);
 	} catch (error) {
 		console.log(error);
@@ -164,6 +162,7 @@ router.post('/api/hiking',
  router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
      try {
          console.log("Informazioni sull'immagine inserita:");
+		 console.log(req)
          console.log(req.file);
          await hike_dao.insertImg(req.params.hikeId, req.file.filename);
          res.status(201).end()

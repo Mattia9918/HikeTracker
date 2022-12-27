@@ -39,7 +39,8 @@ async function postHut(Hut) {
         });
 
         if (response.ok) {
-            return true;
+            const newHutId = await response.json();
+            return newHutId;
         } else {
             /* Application error */
             const appErrText = await response.text(); 
@@ -52,5 +53,30 @@ async function postHut(Hut) {
     }
 }
 
-const APIHutForm = {postHut};
+async function addHutImage(imgData, id){
+    const url = APIURL + `hut/${id}/image`;
+
+    try {
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            credentials: 'include',
+            body: imgData
+        });
+        if (response.ok) {
+            return true;
+        } else {
+            /* Application error */
+            const appErrText = await response.text(); 
+            throw new TypeError(appErrText);
+
+        }
+    } catch (error) {
+
+        console.log(error); 
+        throw (error);
+    }
+}
+
+const APIHutForm = {postHut, addHutImage};
 export default APIHutForm; 

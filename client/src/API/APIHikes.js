@@ -63,7 +63,6 @@ async function getHikes() {
  };
  
  async function getFilter(filterObj) {
-    console.log(filterObj);
     const url = APIURL + 'hikes/filter';
     try {
         const response = await fetch(url, {
@@ -76,7 +75,6 @@ async function getHikes() {
         });
         if (response.ok) {
             const list = await response.json();
-            console.log(list);
             const filteredHikeList = list.map((hike) => {
                 const params = [
                     hike.id,
