@@ -119,6 +119,93 @@ router.get("/api/hut/:id", checkAuth.isLoggedIn, async (req, res) => {
 	}
 });
 
+router.post(`/api/huts/filter`, async (req, res) => {
+	let errFlag = false;
+	const filters = req.body;
+	try {
+		let huts = await hut_dao.getHuts()
+		filters.forEach(async (filter) => {
+			switch (filter.filterName) {
+				case "none":
+					break;
+				case "altitude":
+					huts = huts.filter(
+						(hut) =>
+							hut.altitude >= filter.value1 &&
+							hut.altitude <= filter.value2
+					)
+					break;
+
+				case "restaurant_service":
+					huts = huts.filter(
+						(hut) =>
+							hut.restaurant_service == 1
+					)
+					break;
+				case "disabled_services":
+					huts = huts.filter(
+						(hut) =>
+							hut.disabled_services == 1
+					)
+					break;
+				case "bike_friendly":
+					huts = huts.filter(
+						(hut) =>
+							hut.bike_friendly == 1
+					)
+					break;
+				case "city":
+					huts = huts.filter(
+						(hut) =>
+							hut.city == filter.value1
+					)
+					break;
+				case "province":
+					huts = huts.filter(
+						(hut) =>
+							hut.province == filter.value1
+					)
+					break;
+				case "beds":
+					huts = huts.filter(
+						(hut) =>
+							hut.beds > 0
+					)
+					break;
+				case "reachability":
+					huts = huts.filter(
+						(hut) =>
+							hut.reachability == filter.value1
+					)
+					break;
+				case "area":
+					const neCoordinates = filter.value1.split(",");
+					const swCoordinates = filter.value2.split(",");
+
+					huts = huts.filter(
+						(hut) =>
+							hut.latitude > swCoordinates[0] &&
+							hut.latitude < neCoordinates[0] &&
+							hut.longitude > swCoordinates[1] &&
+							hut.longitude > neCoordinates[1]
+					);
+					break;
+				default:
+					console.log("wrong filter error");
+					errFlag = true;
+					break;
+			}
+		});
+		if (errFlag) {
+			return res.status(422).json({ error: `Validation of request body failed` });
+		}
+		return res.status(200).json(huts);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ error: error });
+	}
+});
+
 /** Get huts with filters **/
 router.get(`/api/hut*`, checkAuth.isLoggedIn, async (req, res) => {
 	try {
