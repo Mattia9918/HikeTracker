@@ -660,7 +660,7 @@ exports.getCompletedHikesOfHiker = (userID) => {
 	});
 };
 
-exports.deleteCompletedHikes = () => {
+exports.deleteHikeUser = () => {
 	return new Promise((resolve, reject) => {
 		const sql1 =
 			"DELETE FROM hike_user" ;

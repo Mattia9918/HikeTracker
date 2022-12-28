@@ -410,13 +410,14 @@ router.get("/api/completedHikes",  checkAuth.isHiker,async (req, res) => {
 
 router.delete("/api/completedHikes", async (req, res) => {
 	try {
-		await hike_dao.deleteCompletedHikes();
+		await hike_dao.deleteHikeUser();
 
 		return res.status(201).end();
 	} catch (err) {
 		res.status(500).end();
 	}
 });
+
 module.exports = router;
 
 
