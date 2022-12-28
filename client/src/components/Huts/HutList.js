@@ -128,7 +128,7 @@ function HutCard(props) {
 	const {name,province,city,address,phone_number,email,web_site, reachability, imgPath} = props.Hut; 
 	const {description,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.Hut
 
-	const objDetails = {description, address, altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service};
+	const objDetails = {description, address, altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service, reachability};
 
 	const header =  `${city}, ${province}` ; 
 

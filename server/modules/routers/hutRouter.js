@@ -8,7 +8,7 @@ const checkAuth = require("../../authMiddleware");
 const functions = require("../functions/functions");
 
 const router = express.Router();
-var storage = require('../../storage');
+const storage = require('../../storage');
 
 router.post(
 	"/api/hut",

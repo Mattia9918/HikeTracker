@@ -11,6 +11,7 @@ import {GrLanguage,GrWheelchair} from 'react-icons/gr';
 import {IoMdRestaurant} from 'react-icons/io'; 
 import {MdOutlineBathtub,MdDirectionsBike} from 'react-icons/md';
 import {BiChevronDown,BiChevronUp, BiCurrentLocation} from 'react-icons/bi';
+import {AiOutlineCar} from 'react-icons/ai'
 
 function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
@@ -79,7 +80,7 @@ const VisibleItem = (props)=>{
 
 const HiddenItem = (props)=>{
 
-	const {description,address,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service} = props.obj; 
+	const {description,address,altitude,languages,bathrooms,beds,bike_friendly,restaurant_service,disabled_service, reachability} = props.obj; 
 
 	return <>
 					
@@ -98,6 +99,11 @@ const HiddenItem = (props)=>{
             <ListGroupItem>
 				<FaMountain/>
                 <b> Altitude: </b>{altitude} m
+            </ListGroupItem>
+
+			<ListGroupItem>
+				<AiOutlineCar/>
+                <b> Reachability: </b>{reachability}
             </ListGroupItem>
             
             <ListGroupItem>
