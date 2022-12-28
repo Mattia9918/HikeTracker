@@ -677,7 +677,7 @@ exports.getComplitedHikesOfHikerById = (userID, hikeID) => {
 exports.cancelComplitedHikes = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"UPDATE hike_user SET end_time = Null;";
+			"UPDATE hike_user SET end_time = NULL;";
 		db.all(sql, [], (err, rows) => {
 			if (err) reject(err);
 			else {
@@ -690,7 +690,7 @@ exports.cancelComplitedHikes = () => {
 exports.deleteComplitedHikes = () => {
 	return new Promise((resolve, reject) => {
 		const sql =
-			"DELETE FROM hike_user WHERE end_time IS NOT NULL";
+			"DELETE FROM hike_user WHERE end_time IS NOT NULL" ;
 		db.run(sql, [], (err, rows) => {
 			if (err) reject(err);
 			else {
