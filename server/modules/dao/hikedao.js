@@ -647,7 +647,7 @@ exports.getHikeStatsById = (userID, hikeID) => {
 }
 
 
-exports.getComplitedHikesOfHiker = (userID) => {
+exports.getCompletedHikesOfHiker = (userID) => {
 	return new Promise((resolve, reject) => {
 		const sql =
 		"SELECT DISTINCT HU.userID, HU.id, P.id AS pointID, HU.hikeID, title, HU.start_time, HU.end_time, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, imgPath, latitude, longitude, P.type AS pointType, city, province, HP.type AS HPtype, U.username  FROM hike_user HU, hike H, user U, point P, hike_point HP INNER JOIN hike_user ON  HU.hikeID= H.id AND HU.hikeID=HP.hikeID AND H.id=HP.hikeID AND U.id = HU.userID  AND P.id = HP.pointID WHERE HU.end_time IS NOT NULL AND  HU.userID = ?  ORDER BY HU.id";
@@ -660,42 +660,22 @@ exports.getComplitedHikesOfHiker = (userID) => {
 	});
 };
 
-exports.getComplitedHikesOfHikerById = (userID, hikeID) => {
+exports.deleteCompletedHikes = () => {
 	return new Promise((resolve, reject) => {
-		const sql =
-			"SELECT DISTINCT HU.userID, HU.id, P.id AS pointID, HU.hikeID, title, HU.start_time, HU.end_time, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, imgPath, latitude, longitude, P.type AS pointType, city, province, HP.type AS HPtype, U.username  FROM hike_user HU, hike H, user U, point P, hike_point HP INNER JOIN hike_user ON  HU.hikeID= H.id AND HU.hikeID=HP.hikeID AND H.id=HP.hikeID AND U.id = HU.userID  AND P.id = HP.pointID WHERE HU.end_time IS NOT NULL AND  HU.userID = ? AND HU.hikeID = ? ORDER BY HU.id";
-		db.all(sql, [userID, hikeID], (err, rows) => {
+		const sql1 =
+			"DELETE FROM hike_user" ;
+		const sql2 = "UPDATE sqlite_sequence SET seq=0 WHERE name='hike_user'"
+		db.run(sql1, [], function (err) {
 			if (err) reject(err);
+			
 			else {
-				resolve(rows);
+				db.run(sql2, [], function (err) {
+					if (err) reject(err)
+					else {
+						resolve()
+					}
+				});
 			}
-		});
-	});
-};
-
-//This is for canceling the complited Hike -> returning them to On going hikes 
-exports.cancelComplitedHikes = () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"UPDATE hike_user SET end_time = NULL;";
-		db.all(sql, [], (err, rows) => {
-			if (err) reject(err);
-			else {
-				resolve(rows);
-			}
-		});
-	});
-};
-
-exports.deleteComplitedHikes = () => {
-	return new Promise((resolve, reject) => {
-		const sql =
-			"DELETE FROM hike_user WHERE end_time IS NOT NULL" ;
-		db.run(sql, [], (err, rows) => {
-			if (err) reject(err);
-			else {
-				resolve(rows);
-			}
-		});
+		})
 	});
 };
