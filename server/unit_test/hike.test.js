@@ -10,6 +10,7 @@ const hike1 = {
 	estimatedTime: "1",
 	ascent: 120,
 	localguideID: 1,
+	imgPath: "hike1.jpg"
 };
 const hike2 = {
 	id: undefined,
@@ -20,6 +21,7 @@ const hike2 = {
 	estimatedTime: "2",
 	ascent: 400,
 	localguideID: 2,
+	imgPath: "hike2.jpg"
 };
 
 const hike3 = {
@@ -31,6 +33,7 @@ const hike3 = {
 	estimatedTime: "3",
 	ascent: 800,
 	localguideID: 1,
+	imgPath: "hike3.jpg"
 };
 
 const hike4 = {
@@ -42,6 +45,7 @@ const hike4 = {
 	estimatedTime: "4",
 	ascent: 1500,
 	localguideID: 2,
+	imgPath: "hike4.jpg"
 };
 
 const point1 = {
@@ -122,7 +126,7 @@ describe("test hikes and filtering", () => {
 		await hike_dao.deleteGpx();
 
 		try {
-			await hike_dao.createHiking(
+			const id1 = await hike_dao.createHiking(
 				hike1.title,
 				hike1.length,
 				hike1.description,
@@ -131,7 +135,8 @@ describe("test hikes and filtering", () => {
 				hike1.ascent,
 				hike1.localguideID
 			);
-			await hike_dao.createHiking(
+			await hike_dao.insertImg(id1, hike1.imgPath);
+			const id2 = await hike_dao.createHiking(
 				hike2.title,
 				hike2.length,
 				hike2.description,
@@ -140,7 +145,8 @@ describe("test hikes and filtering", () => {
 				hike2.ascent,
 				hike2.localguideID
 			);
-			await hike_dao.createHiking(
+			await hike_dao.insertImg(id2, hike2.imgPath);
+			const id3 = await hike_dao.createHiking(
 				hike3.title,
 				hike3.length,
 				hike3.description,
@@ -149,7 +155,8 @@ describe("test hikes and filtering", () => {
 				hike3.ascent,
 				hike3.localguideID
 			);
-			await hike_dao.createHiking(
+			await hike_dao.insertImg(id3, hike3.imgPath);
+			const id4 = await hike_dao.createHiking(
 				hike4.title,
 				hike4.length,
 				hike4.description,
@@ -158,6 +165,7 @@ describe("test hikes and filtering", () => {
 				hike4.ascent,
 				hike4.localguideID
 			);
+			await hike_dao.insertImg(id4, hike4.imgPath);
 			await hike_dao.postPoint(point1);
 			await hike_dao.postPoint(point2);
 			await hike_dao.postPoint(point3);
@@ -179,13 +187,6 @@ describe("test hikes and filtering", () => {
 	});
 
 	testGetHikes();
-	testGetHikeByDiffculty();
-	testGetHikeByExpectedTime();
-	testGetHikeByLength();
-	testGetHikeByAscent();
-	testGetHikeDescById();
-	testGetHikeByCity("Grugliasco");
-	testGetHikeByProvince("Torino");
 	testSaveFile();
 	testGetFileContentById(1);
 	testGetGpxInfo("./unit_test/testfile.gpx");
@@ -193,122 +194,8 @@ describe("test hikes and filtering", () => {
 	testGetHikeProvinces();
 	testGetHikeById();
 	testUpdateHikePoint(1, 1, "start");
-	testGetHikesByArea()
+	testInsertImg(1, "hike5.jpg")
 });
-
-function testGetHikesByArea() {
-	describe("Testing getHikes()", () => {
-		test("4 hikes posted -> get these 4 hikes", async () => {
-			let res = await hike_dao.getHikesByArea("9.0,10.0", "1.0,2.0");
-			expect(res).toEqual([
-				{
-					id: 4,
-					title: "Hike4",
-					length: 40,
-					description: "I'm Hike4!",
-					difficulty: "Easy",
-					estimatedTime: "4",
-					ascent: 1500,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 3,
-					title: "Hike3",
-					length: 30,
-					description: "I'm Hike3!",
-					difficulty: "Difficult",
-					estimatedTime: "3",
-					ascent: 800,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 2,
-					title: "Hike2",
-					length: 20,
-					description: "I'm Hike2!",
-					difficulty: "Average",
-					estimatedTime: "2",
-					ascent: 400,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 1,
-					title: "Hike1",
-					length: 10,
-					description: "I'm Hike1!",
-					difficulty: "Easy",
-					estimatedTime: "1",
-					ascent: 120,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
 
 function testGetHikes() {
 	describe("Testing getHikes()", () => {
@@ -325,6 +212,7 @@ function testGetHikes() {
 					ascent: 1500,
 					localguideID: 2,
 					localguideUsername: "Franceschino",
+					imgPath: "hike4.jpg",
 					startingPoint: {
 						latitude: 5.1,
 						longitude: 6.1,
@@ -351,6 +239,7 @@ function testGetHikes() {
 					ascent: 800,
 					localguideID: 1,
 					localguideUsername: "Francescone",
+					imgPath: "hike3.jpg",
 					startingPoint: {
 						latitude: 1.1,
 						longitude: 2.1,
@@ -377,6 +266,7 @@ function testGetHikes() {
 					ascent: 400,
 					localguideID: 2,
 					localguideUsername: "Franceschino",
+					imgPath: "hike2.jpg",
 					startingPoint: {
 						latitude: 5.1,
 						longitude: 6.1,
@@ -403,467 +293,7 @@ function testGetHikes() {
 					ascent: 120,
 					localguideID: 1,
 					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
-
-function testGetHikeByDiffculty() {
-	describe("Testing getHikeByDifficulty()", () => {
-		test("Getting only 'Easy' hikes", async () => {
-			let res = await hike_dao.getHikeByDiffculty("Easy");
-			expect(res).toEqual([
-				{
-					id: 4,
-					title: "Hike4",
-					length: 40,
-					description: "I'm Hike4!",
-					difficulty: "Easy",
-					estimatedTime: "4",
-					ascent: 1500,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 1,
-					title: "Hike1",
-					length: 10,
-					description: "I'm Hike1!",
-					difficulty: "Easy",
-					estimatedTime: "1",
-					ascent: 120,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
-
-function testGetHikeByExpectedTime() {
-	describe("Testing getHikeByExpectedTime()", () => {
-		test("Getting only hikes with estimatedTime between 1 and 2", async () => {
-			let res = await hike_dao.getHikeByExpectedTime(1, 2);
-			expect(res).toEqual([
-				{
-					id: 2,
-					title: "Hike2",
-					length: 20,
-					description: "I'm Hike2!",
-					difficulty: "Average",
-					estimatedTime: "2",
-					ascent: 400,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 1,
-					title: "Hike1",
-					length: 10,
-					description: "I'm Hike1!",
-					difficulty: "Easy",
-					estimatedTime: "1",
-					ascent: 120,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
-
-function testGetHikeByLength() {
-	describe("Testing getHikeByLength()", () => {
-		test("Getting only hikes with length between 30 km and 40 km", async () => {
-			let res = await hike_dao.getHikeByLength(30, 40);
-			expect(res).toEqual([
-				{
-					id: 4,
-					title: "Hike4",
-					length: 40,
-					description: "I'm Hike4!",
-					difficulty: "Easy",
-					estimatedTime: "4",
-					ascent: 1500,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 3,
-					title: "Hike3",
-					length: 30,
-					description: "I'm Hike3!",
-					difficulty: "Difficult",
-					estimatedTime: "3",
-					ascent: 800,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
-
-function testGetHikeDescById() {
-	describe("Testing getHikeByAscent()", () => {
-		test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
-			let res = await hike_dao.getHikeDesc(2);
-			expect(res).toEqual({
-				description: "I'm Hike2!",
-			});
-		});
-	});
-}
-
-function testGetHikeByAscent() {
-	describe("Testing getHikeByAscent()", () => {
-		test("Getting only hikes with ascent between 400 km and 1500 km", async () => {
-			let res = await hike_dao.getHikeByAscent(400, 1500);
-			expect(res).toEqual([
-				{
-					id: 4,
-					title: "Hike4",
-					length: 40,
-					description: "I'm Hike4!",
-					difficulty: "Easy",
-					estimatedTime: "4",
-					ascent: 1500,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 3,
-					title: "Hike3",
-					length: 30,
-					description: "I'm Hike3!",
-					difficulty: "Difficult",
-					estimatedTime: "3",
-					ascent: 800,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 2,
-					title: "Hike2",
-					length: 20,
-					description: "I'm Hike2!",
-					difficulty: "Average",
-					estimatedTime: "2",
-					ascent: 400,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
-
-function testGetHikeByCity(city) {
-	describe("Testing getHikeByCity(city)", () => {
-		test("Getting only hikes having as starting city the given city", async () => {
-			let res = await hike_dao.getHikeByCity(city);
-			expect(res).toEqual([
-				{
-					id: 4,
-					title: "Hike4",
-					length: 40,
-					description: "I'm Hike4!",
-					difficulty: "Easy",
-					estimatedTime: "4",
-					ascent: 1500,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 2,
-					title: "Hike2",
-					length: 20,
-					description: "I'm Hike2!",
-					difficulty: "Average",
-					estimatedTime: "2",
-					ascent: 400,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-			]);
-		});
-	});
-}
-
-function testGetHikeByProvince(province) {
-	describe("Testing getHikeByProvince(province)", () => {
-		test("Getting only hikes having as starting province the given province", async () => {
-			let res = await hike_dao.getHikeByProvince(province);
-			expect(res).toEqual([
-				{
-					id: 4,
-					title: "Hike4",
-					length: 40,
-					description: "I'm Hike4!",
-					difficulty: "Easy",
-					estimatedTime: "4",
-					ascent: 1500,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 3,
-					title: "Hike3",
-					length: 30,
-					description: "I'm Hike3!",
-					difficulty: "Difficult",
-					estimatedTime: "3",
-					ascent: 800,
-					localguideID: 1,
-					localguideUsername: "Francescone",
-					startingPoint: {
-						latitude: 1.1,
-						longitude: 2.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 3.1,
-						longitude: 4.1,
-						type: "point",
-						city: "Torino",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 2,
-					title: "Hike2",
-					length: 20,
-					description: "I'm Hike2!",
-					difficulty: "Average",
-					estimatedTime: "2",
-					ascent: 400,
-					localguideID: 2,
-					localguideUsername: "Franceschino",
-					startingPoint: {
-						latitude: 5.1,
-						longitude: 6.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					endingPoint: {
-						latitude: 7.1,
-						longitude: 8.1,
-						type: "point",
-						city: "Grugliasco",
-						province: "Torino",
-					},
-					pointsOfInterest: [],
-				},
-				{
-					id: 1,
-					title: "Hike1",
-					length: 10,
-					description: "I'm Hike1!",
-					difficulty: "Easy",
-					estimatedTime: "1",
-					ascent: 120,
-					localguideID: 1,
-					localguideUsername: "Francescone",
+					imgPath: "hike1.jpg",
 					startingPoint: {
 						latitude: 1.1,
 						longitude: 2.1,
@@ -1066,7 +496,18 @@ function testGetHikeById() {
 				estimatedTime: "1",
 				ascent: 120,
 				localguideID: 1,
+				imgPath: "hike1.jpg",
 			});
+		});
+	});
+}
+
+function testInsertImg(hikeId, imgPath) {
+	describe("Testing insertImg()", () => {
+		test("Update hike img", async () => {
+			await hike_dao.insertImg(hikeId, imgPath)
+			const h = await hike_dao.getHikeById(hikeId)
+			expect(h.imgPath).toEqual(imgPath);
 		});
 	});
 }

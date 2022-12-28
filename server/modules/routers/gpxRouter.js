@@ -2,7 +2,7 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
-const point = require("../dao/point");
+const point = require("../dao/pointdao");
 const manageFile = require("../../manageGpx");
 const {resolve} = require("path");
 const fileUpload = require('express-fileupload');

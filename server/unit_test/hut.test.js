@@ -115,18 +115,21 @@ describe("test get huts and add filters", () => {
 		try {
 
 			const point1_id = await hike_dao.postPointHut(point1);
-			await hut_dao.postHut(hut1, point1_id);
+			const hut1_id = await hut_dao.postHut(hut1, point1_id);
+			await hut_dao.insertHutImg(hut1_id, "hut1.jpg");
 
 			const point2_id = await hike_dao.postPointHut(point2);
-			await hut_dao.postHut(hut2, point2_id);
+			const hut2_id = await hut_dao.postHut(hut2, point2_id);
+			await hut_dao.insertHutImg(hut2_id, "hut2.jpg");
 
 			const point3_id = await hike_dao.postPointHut(point3);
-			await hut_dao.postHut(hut3, point3_id);
+			const hut3_id = await hut_dao.postHut(hut3, point3_id);
+			await hut_dao.insertHutImg(hut3_id, "hut3.jpg");
 
 			const point4_id = await hike_dao.postPointHut(point4);
-			await hut_dao.postHut(hut4, point4_id);
+			const hut4_id = await hut_dao.postHut(hut4, point4_id);
+			await hut_dao.insertHutImg(hut4_id, "hut4.jpg");
 
-        
 			await hike_dao.postHike_Point(5,"hut", point2_id);
 
 			await hike_dao.postHike_Point(6,"hut", point4_id);
@@ -138,118 +141,19 @@ describe("test get huts and add filters", () => {
 
 	testGetHuts();
 	testGetHutById();
-	testGetHutsByReachability();
-	testGetHutsBikeFriendly();
-	testGetHutsByProvince();
-	testGetHutsByCity();
-	testGetHutsWithDisabledService();
-	testGetHutsWithRestaurant();
-	testGetHutSByAltitude();
-	testGetHutsWithBeds();
 	testGetHutsLinkedHike();
 	testGetHutsLinkedHikeById();
 	testGetCities();
 	testGetProvinces();
-	testGetHutsByArea();
+	testUpdateHutImg(1, "hut10.jpg")
 });
 
-function testGetHutsByArea() {
-	describe("Testing getHutByArea()", () => {
-		test("4 huts posted -> get 4 huts by area", async () => {
-			let res = await hut_dao.getHutByArea(
-				"46.51855590677033,20.800781026482586",
-				"38.70837508368838,4.101562276482583"
-			);
-			expect(res).toEqual([
-				{
-					id: 4,
-					name: "Hut a Barolo",
-					address: "Via Barolo 2",
-					phone_number: "4444",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Barolo",
-					altitude: 3000,
-					languages: "Inglese",
-					bike_friendly: 1,
-					reachability: "Cableway",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 0,
-					latitude: 44.61666,
-					longitude: 7.933333,
-					province: "Cuneo",
-					city: "Barolo",
-				},
-				{
-					id: 3,
-					name: "Altro Hut a Bra",
-					address: "Via Bra 2",
-					phone_number: "3333",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un altro hut a Bra",
-					altitude: 1500,
-					languages: "Francese",
-					bike_friendly: 0,
-					reachability: "On foot",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 1,
-					name: "Hut a Ivrea",
-					address: "Via Ivrea",
-					phone_number: "1111",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Ivrea",
-					altitude: 400,
-					languages: "Inglese",
-					bike_friendly: 0,
-					reachability: "With normal car",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 45.459,
-					longitude: 7.873,
-					province: "Torino",
-					city: "Ivrea",
-				},
-			]);
+function testUpdateHutImg(id, imgPath) {
+	describe("Testing insertImg()", () => {
+		test("Update hut img", async () => {
+			await hut_dao.insertHutImg(id, imgPath)
+			const h = await hut_dao.getHutById(id)
+			expect(h.imgPath).toEqual(imgPath);
 		});
 	});
 }
@@ -316,6 +220,7 @@ function testGetHuts() {
 					province: "Cuneo",
 					city: "Barolo",
 					point_id: 4,
+					imgPath: "hut4.jpg"
 				},
 				{
 					id: 3,
@@ -339,6 +244,7 @@ function testGetHuts() {
 					province: "Cuneo",
 					city: "Bra",
 					point_id: 3,
+					imgPath: "hut3.jpg"
 				},
 				{
 					id: 2,
@@ -362,6 +268,7 @@ function testGetHuts() {
 					province: "Cuneo",
 					city: "Bra",
 					point_id: 2,
+					imgPath: "hut2.jpg"
 				},
 				{
 					id: 1,
@@ -385,6 +292,7 @@ function testGetHuts() {
 					province: "Torino",
 					city: "Ivrea",
 					point_id: 1,
+					imgPath: "hut1.jpg"
 				},
 			]);
 		});
@@ -417,461 +325,8 @@ function testGetHutById() {
 				province: "Cuneo",
 				city: "Bra",
 				point_id: 2,
+				imgPath: "hut2.jpg"
 			});
-		});
-	});
-}
-
-function testGetHutsByReachability() {
-	describe("Testing getHutsByReachability()", () => {
-		test("4 huts posted -> get 2 huts reachable On foot", async () => {
-			let res = await hut_dao.getHutByReachability("On foot");
-			expect(res).toEqual([
-				{
-					id: 3,
-					name: "Altro Hut a Bra",
-					address: "Via Bra 2",
-					phone_number: "3333",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un altro hut a Bra",
-					altitude: 1500,
-					languages: "Francese",
-					bike_friendly: 0,
-					reachability: "On foot",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutsBikeFriendly() {
-	describe("Testing getHutBikeFriendly()", () => {
-		test("4 huts posted -> get 2 huts bike_friendly", async () => {
-			let res = await hut_dao.getHutBikeFriendly();
-			expect(res).toEqual([
-				{
-					id: 4,
-					name: "Hut a Barolo",
-					address: "Via Barolo 2",
-					phone_number: "4444",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Barolo",
-					altitude: 3000,
-					languages: "Inglese",
-					bike_friendly: 1,
-					reachability: "Cableway",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 0,
-					latitude: 44.61666,
-					longitude: 7.933333,
-					province: "Cuneo",
-					city: "Barolo",
-				},
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutsByProvince() {
-	describe("Testing getHutByProvince()", () => {
-		test("4 huts posted -> get 3 huts with province Cuneo", async () => {
-			let res = await hut_dao.getHutByProvince("Cuneo");
-			expect(res).toEqual([
-				{
-					id: 4,
-					name: "Hut a Barolo",
-					address: "Via Barolo 2",
-					phone_number: "4444",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Barolo",
-					altitude: 3000,
-					languages: "Inglese",
-					bike_friendly: 1,
-					reachability: "Cableway",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 0,
-					latitude: 44.61666,
-					longitude: 7.933333,
-					province: "Cuneo",
-					city: "Barolo",
-				},
-				{
-					id: 3,
-					name: "Altro Hut a Bra",
-					address: "Via Bra 2",
-					phone_number: "3333",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un altro hut a Bra",
-					altitude: 1500,
-					languages: "Francese",
-					bike_friendly: 0,
-					reachability: "On foot",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutsByCity() {
-	describe("Testing getHutByCity()()", () => {
-		test("4 huts posted -> get 1 hut with city Ivrea", async () => {
-			let res = await hut_dao.getHutByCity("Ivrea");
-			expect(res).toEqual([
-				{
-					id: 1,
-					name: "Hut a Ivrea",
-					address: "Via Ivrea",
-					phone_number: "1111",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Ivrea",
-					altitude: 400,
-					languages: "Inglese",
-					bike_friendly: 0,
-					reachability: "With normal car",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 45.459,
-					longitude: 7.873,
-					province: "Torino",
-					city: "Ivrea",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutsWithDisabledService() {
-	describe("Testing getHutWithDisabledService()", () => {
-		test("4 huts posted -> get 2 huts with disabled services", async () => {
-			let res = await hut_dao.getHutWithDisabledServices();
-			expect(res).toEqual([
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 1,
-					name: "Hut a Ivrea",
-					address: "Via Ivrea",
-					phone_number: "1111",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Ivrea",
-					altitude: 400,
-					languages: "Inglese",
-					bike_friendly: 0,
-					reachability: "With normal car",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 45.459,
-					longitude: 7.873,
-					province: "Torino",
-					city: "Ivrea",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutsWithRestaurant() {
-	describe("Testing getHutWithRestaurant()", () => {
-		test("4 huts posted -> get 3 huts with restaurant service", async () => {
-			let res = await hut_dao.getHutWithRestaurant();
-			expect(res).toEqual([
-				{
-					id: 3,
-					name: "Altro Hut a Bra",
-					address: "Via Bra 2",
-					phone_number: "3333",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un altro hut a Bra",
-					altitude: 1500,
-					languages: "Francese",
-					bike_friendly: 0,
-					reachability: "On foot",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 1,
-					name: "Hut a Ivrea",
-					address: "Via Ivrea",
-					phone_number: "1111",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Ivrea",
-					altitude: 400,
-					languages: "Inglese",
-					bike_friendly: 0,
-					reachability: "With normal car",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 45.459,
-					longitude: 7.873,
-					province: "Torino",
-					city: "Ivrea",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutSByAltitude() {
-	describe("Testing getHutByAltitude()", () => {
-		test("4 huts posted -> get 2 huts with altitude between 350 and 2000", async () => {
-			let res = await hut_dao.getHutByAltitude(350, 2000);
-			expect(res).toEqual([
-				{
-					id: 3,
-					name: "Altro Hut a Bra",
-					address: "Via Bra 2",
-					phone_number: "3333",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un altro hut a Bra",
-					altitude: 1500,
-					languages: "Francese",
-					bike_friendly: 0,
-					reachability: "On foot",
-					disabled_services: 0,
-					rooms: 0,
-					bathrooms: 10,
-					beds: 0,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 1,
-					name: "Hut a Ivrea",
-					address: "Via Ivrea",
-					phone_number: "1111",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Ivrea",
-					altitude: 400,
-					languages: "Inglese",
-					bike_friendly: 0,
-					reachability: "With normal car",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 45.459,
-					longitude: 7.873,
-					province: "Torino",
-					city: "Ivrea",
-				},
-			]);
-		});
-	});
-}
-
-function testGetHutsWithBeds() {
-	describe("Testing getHutWithBeds()", () => {
-		test("4 huts posted -> get 2 huts with beds", async () => {
-			let res = await hut_dao.getHutWithBeds();
-			expect(res).toEqual([
-				{
-					id: 2,
-					name: "Hut a Bra",
-					address: "Via Bra",
-					phone_number: "2222",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Bra",
-					altitude: 300,
-					languages: "Francese",
-					bike_friendly: 1,
-					reachability: "On foot",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 44.704,
-					longitude: 7.8567,
-					province: "Cuneo",
-					city: "Bra",
-				},
-				{
-					id: 1,
-					name: "Hut a Ivrea",
-					address: "Via Ivrea",
-					phone_number: "1111",
-					email: "hut@mail.it",
-					web_site: "www.hut.it",
-					description: "un hut a Ivrea",
-					altitude: 400,
-					languages: "Inglese",
-					bike_friendly: 0,
-					reachability: "With normal car",
-					disabled_services: 1,
-					rooms: 10,
-					bathrooms: 10,
-					beds: 15,
-					restaurant_service: 1,
-					latitude: 45.459,
-					longitude: 7.873,
-					province: "Torino",
-					city: "Ivrea",
-				},
-			]);
 		});
 	});
 }
@@ -901,7 +356,8 @@ function testGetHutsLinkedHike() {
 				longitude: 7.8567,
 				province: "Cuneo",
 				city: "Bra",
-				point_id: 2
+				point_id: 2,
+				imgPath: "hut2.jpg"
 			},
 			{
 				id: 4,
@@ -925,6 +381,7 @@ function testGetHutsLinkedHike() {
 				province: "Cuneo",
 				city: "Barolo",
 				point_id: 4,
+				imgPath: "hut4.jpg"
 			}]);
 		});
 	});
@@ -957,7 +414,8 @@ function testGetHutsLinkedHikeById() {
 				longitude: 7.8567,
 				province: "Cuneo",
 				city: "Bra",
-				type: "hut"
+				type: "hut",
+				imgPath: "hut2.jpg"
 			});
 		});
 	});

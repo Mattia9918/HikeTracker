@@ -2,7 +2,7 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
-const point_dao = require("../dao/point");
+const point_dao = require("../dao/pointdao");
 const { check, validationResult } = require("express-validator");
 const checkAuth = require("../../authMiddleware");
 const functions = require("../functions/functions");

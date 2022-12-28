@@ -1,5 +1,5 @@
 const hike_dao = require("../modules/dao/hikedao.js");
-const point = require("../modules/dao/point");
+const point = require("../modules/dao/pointdao.js");
 
 const hike1 = {
 	id: undefined,
@@ -32,7 +32,7 @@ const point2 = {
 	},
 };
 
-describe("test hikes and filtering", () => {
+describe("test point", () => {
 	beforeEach(async () => {
 		await hike_dao.deleteHikes();
 		await hike_dao.deletePoint();
@@ -59,6 +59,7 @@ describe("test hikes and filtering", () => {
 	});
 
 	testGetPointByHikeId(1);
+	testGetPointById(1);
 });
 
 function testGetPointByHikeId(id) {
@@ -82,3 +83,17 @@ function testGetPointByHikeId(id) {
             });
         });
     }
+
+function testGetPointById(id) {
+	describe("Testing getPointById(id)", () => {
+		test("Getting coordinates of point", async () => {
+			let res = await point.getPointById(id);
+			expect(res).toEqual(
+					{
+						latitude:1.1,
+						longitude:2.1
+					}
+				);
+			});
+		});
+	}

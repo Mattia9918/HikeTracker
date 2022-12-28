@@ -206,63 +206,6 @@ router.post(`/api/huts/filter`, async (req, res) => {
 	}
 });
 
-/** Get huts with filters **/
-router.get(`/api/hut*`, checkAuth.isLoggedIn, async (req, res) => {
-	try {
-		let huts;
-		const filter = req.query.filter;
-		switch (filter) {
-			case "none":
-				huts = await hut_dao.getHuts();
-				break;
-			case "altitude":
-				huts = await hut_dao.getHutByAltitude(
-					req.query.value1,
-					req.query.value2
-				);
-				break;
-			case "restaurant_service":
-				huts = await hut_dao.getHutWithRestaurant();
-				break;
-			case "disabled_services":
-				huts = await hut_dao.getHutWithDisabledServices();
-				break;
-			case "bike_friendly":
-				huts = await hut_dao.getHutBikeFriendly();
-				break;
-			case "city":
-				huts = await hut_dao.getHutByCity(req.query.value1);
-				break;
-			case "province":
-				huts = await hut_dao.getHutByProvince(req.query.value1);
-				break;
-			case "beds":
-				huts = await hut_dao.getHutWithBeds();
-				break;
-			case "reach":
-				huts = await hut_dao.getHutByReachability(req.query.value1);
-				break;
-			case "area":
-				/* Gets huts that are in a rectangular area with diagonal from bottom-left to upper right */
-				huts = await hut_dao.getHutByArea(
-					req.query.value1,
-					req.query.value2
-				);
-				break;
-			default:
-				console.log("wrong filter error");
-				return res
-					.status(422)
-					.json({ error: `Validation of request body failed` })
-					.end();
-		}
-		return res.status(200).json(huts);
-	} catch (err) {
-		console.log(err);
-		return res.status(500).json({ error: err });
-	}
-});
-
 router.get("/api/citiesHut", async (req, res) => {
 	try {
 		const cities = await hut_dao.getHutCities();

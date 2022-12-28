@@ -1,7 +1,7 @@
 "use strict";
 
 
-/* Data Access Object (DAO) module for accessing hike table */
+/* Data Access Object (DAO) module for accessing point table */
 
 const sqlite = require("sqlite3");
 
