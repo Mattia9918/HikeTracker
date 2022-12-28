@@ -408,4 +408,36 @@ router.get("/api/complitedHikes",  checkAuth.isHiker,async (req, res) => {
 	}
 });
 
+router.get("/api/complitedHikes/:id",  checkAuth.isHiker,async (req, res) => {
+	try {
+		const hike = await hike_dao.getComplitedHikesOfHikerById(req.user.id, req.params.id);
+		return res.status(200).json(hike);
+	} catch (err) {
+        console.log(err)
+		return res.status(500).json({ error: err });
+	}
+});
+
+router.delete("/api/complitedHike/cancel", async (req, res) => {
+	try {
+		await hike_dao.cancelComplitedHikes();
+		
+
+		return res.status(201).end();
+	} catch (err) {
+		res.status(500).end();
+	}
+});
+
+router.delete("/api/complitedHikes", async (req, res) => {
+	try {
+		await hike_dao.deleteComplitedHikes();
+
+		return res.status(201).end();
+	} catch (err) {
+		res.status(500).end();
+	}
+});
 module.exports = router;
+
+
