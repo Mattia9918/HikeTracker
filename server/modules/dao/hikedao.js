@@ -442,8 +442,8 @@ exports.updateHikePoint = (hikeID, pointID, type) => {
 
 exports.startHikeByUser = (userID, hikeID, time) => {
 	return new Promise((resolve, reject) => {
-		const sql = "INSERT INTO hike_user(hikeID, userID, start_time) VALUES (?, ?, ?)";
-		db.run(sql, [hikeID, userID, time], function(err) {
+		const sql = "INSERT INTO hike_user(userID, hikeID, start_time) VALUES (?, ?, ?)";
+		db.run(sql, [userID, hikeID,  time], function(err) {
 			if(err) reject(err)
 			else {
 				resolve(this.lastID)
