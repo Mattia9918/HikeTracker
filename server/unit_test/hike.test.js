@@ -210,6 +210,8 @@ describe("test hikes and filtering", () => {
 	testGetOngoingHikeRecordedByUser(1);
 	testGetHikeRecordedById(2);
 	testGetHikeStatsById(1,1);
+	testStartHike(1, 1, "22.00");
+	testEndHike(1, 1, "22.00", "23.00");
 });
 
 function testGetHikes() {
@@ -644,6 +646,37 @@ function testGetHikeStatsById(userID, hikeID) {
 				end_time: "16"
 				
 			}]);
+		});
+	});
+}
+
+function testStartHike(userID, hikeID, time) {
+	describe("Testing startHikeByUser()", () => {
+		test("starting the hike", async () => {
+			const userHikeID = await hike_dao.startHikeByUser(userID, hikeID, time);
+			const res = await hike_dao.getHikeRecordedById(userHikeID);
+			expect(res).toEqual({
+				id: userHikeID,
+				hikeID: hikeID,
+				start_time: time,
+				end_time: null
+			});
+		});
+	});
+}
+
+function testEndHike(userID, hikeID, startTime, endTime) {
+	describe("Testing endHikeByUser()", () => {
+		test("starting the hike", async () => {
+			const userHikeID = await hike_dao.startHikeByUser(userID, hikeID, startTime);
+			await hike_dao.endHikeByUser(userHikeID, endTime)
+			const res = await hike_dao.getHikeRecordedById(userHikeID);
+			expect(res).toEqual({
+				id: userHikeID,
+				hikeID: hikeID,
+				start_time: startTime,
+				end_time: endTime
+			});
 		});
 	});
 }
