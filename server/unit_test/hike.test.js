@@ -189,7 +189,7 @@ describe("test hikes and filtering", () => {
 			await user_dao.insertUser(localguide2);
 			await hike_dao.saveFile(gpx1.gpxfile);
 			await hike_dao.startHikeByUser(1,1,14);
-			await hike_dao.startHikeByUser(1,1,18);
+			await hike_dao.startHikeByUser(1,2,18);
 			await hike_dao.endHikeByUser(1,16);
 		} catch (err) {
 			console.log(err);
@@ -207,6 +207,9 @@ describe("test hikes and filtering", () => {
 	testInsertImg(1, "hike5.jpg");
 	testGetComplitedHikes(1);
 	testGetAllHikesRecordedByUser(1);
+	testGetOngoingHikeRecordedByUser(1);
+	testGetHikeRecordedById(2);
+	testGetHikeStatsById(1,1);
 });
 
 function testGetHikes() {
@@ -592,10 +595,54 @@ function testGetAllHikesRecordedByUser(userID) {
 			},
 			{
 				id: 2,
-				hikeID:1, 
+				hikeID:2, 
 				start_time: "18",
 				end_time: null
 
+			}]);
+		});
+	});
+}
+
+function testGetOngoingHikeRecordedByUser(userID) {
+	describe("Testing getComplitedHikes()", () => {
+		test("get the Hikes complited", async () => {
+			let res = await hike_dao.getOngoingHikeRecordedByUser(userID);
+			expect(res).toEqual({
+				id: 2,
+				hikeID:2, 
+				start_time: "18"
+				
+			});
+		});
+	});
+}
+
+function testGetHikeRecordedById(id) {
+	describe("Testing getComplitedHikes()", () => {
+		test("get the Hikes complited", async () => {
+			let res = await hike_dao.getHikeRecordedById(id);
+			expect(res).toEqual({
+				id: 2,
+				hikeID:2, 
+				start_time: "18",
+				end_time: null
+				
+			});
+		});
+	});
+}
+
+function testGetHikeStatsById(userID, hikeID) {
+	describe("Testing getComplitedHikes()", () => {
+		test("get the Hikes complited", async () => {
+			let res = await hike_dao.getHikeStatsById(userID,hikeID);
+			expect(res).toEqual([{
+				id: 1,
+				hikeID:1, 
+				start_time: "14",
+				end_time: "16"
+				
 			}]);
 		});
 	});
