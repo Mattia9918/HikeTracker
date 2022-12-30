@@ -83,7 +83,7 @@ app.use(passport.authenticate('session'));
 app.use('/api', userRouter);
 app.use('', hikeRouter);
 app.use('', gpxRouter);
-app.use('', hutRouter ); 
+app.use('', hutRouter); 
 app.use('', parkingRouter);
 app.use('/api/sessions', sessionRouter);
 
