@@ -1,6 +1,10 @@
 #bg {
-    background-color: #f7f7f754;
-    height:fit-content;
+    background-color: #ececec54;
+    min-height: 100vh;
+}
+
+#largebg {
+    background-color: #f7f7f754;   
 }
 
 #cardscontainer {

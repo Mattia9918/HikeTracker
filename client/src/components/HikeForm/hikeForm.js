@@ -167,7 +167,10 @@ const UploadSection = (props)=>{
             <Col className = 'c'>
 
                 <Form.Group controlId="formFile" className="mb-3">
-                    <Form.Control type="file"   onChange={onFileSelected}/>
+                    <Form.Control 
+                        type="file"   
+                        onChange={onFileSelected}
+                        required = {true}/>
                 </Form.Group>
                
             </Col>
@@ -203,7 +206,8 @@ const UploadPicture = (props)=>{
                 <Form.Group controlId="formFile" className="mb-3">
                     <Form.Control 
                      type="file"
-                     onChange={(e) => props.setImage(e.target.files[0])}/>
+                     onChange={(e) => props.setImage(e.target.files[0])}
+                     required = {true}/>
                 </Form.Group>
                
             </Col>
