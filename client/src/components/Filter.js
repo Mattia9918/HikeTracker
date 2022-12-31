@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Accordion, ListGroup } from "react-bootstrap";
-import { AiOutlineConsoleSql } from "react-icons/ai";
 
 //Filter for length/time/difficulty/ascent | filter for altitude/reachability
 const AccordionFilter = (props) => {

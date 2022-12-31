@@ -32,6 +32,22 @@ const point2 = {
 	},
 };
 
+const hut_point1 = {
+	latitude: 45.459,
+	longitude: 7.873,
+	type: "hut",
+	province: "Torino",
+	city: "Ivrea",
+};
+
+const hut_point2 = {
+	latitude: 44.704,
+	longitude: 7.8567,
+	type: "hut",
+	province: "Cuneo",
+	city: "Bra",
+};
+
 describe("test point", () => {
 	beforeEach(async () => {
 		await hike_dao.deleteHikes();
@@ -51,6 +67,8 @@ describe("test point", () => {
 
 			await hike_dao.postPoint(point1);
 			await hike_dao.postPoint(point2);
+			await hike_dao.postPointHut(hut_point1);
+			await hike_dao.postPointHut(hut_point2);
 			await hike_dao.postHike_Point(1, "start", 1);
 			await hike_dao.postHike_Point(1, "arrive", 2);
 		} catch (err) {
@@ -60,6 +78,7 @@ describe("test point", () => {
 
 	testGetPointByHikeId(1);
 	testGetPointById(1);
+	testGetHutMap();
 });
 
 function testGetPointByHikeId(id) {
@@ -93,7 +112,27 @@ function testGetPointById(id) {
 						latitude:1.1,
 						longitude:2.1
 					}
-				);
-			});
+			);
 		});
-	}
+	});
+}
+
+function testGetHutMap() {
+	describe("Testing getHutMap", () => {
+		test("Getting coordinates of all huts", async () => {
+			let res = await point.getHutMap();
+			expect(res).toEqual(
+				[
+					{
+						latitude: 45.459,
+						longitude: 7.873
+					},
+					{
+						latitude: 44.704,
+						longitude: 7.8567
+					}
+				]
+			);
+		});
+	});
+}

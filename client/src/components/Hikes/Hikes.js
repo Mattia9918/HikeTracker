@@ -175,7 +175,6 @@ function FilterMenu(props) {
 													const newElement = {
 														filterName: "none",
 													};
-													// filterVector = [];
 													filterVector.push(
 														newElement
 													);
