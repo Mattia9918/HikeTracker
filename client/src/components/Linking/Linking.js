@@ -38,8 +38,6 @@ function LinkingModal(props) {
             const obj = {
                 hikeid: props.hike.id,
                 pointid: point.point_id,
-                latitude: point.latitude,
-                longitude: point.longitude,
             }
             await APIHikes.putHikePoint(obj, type);
             const updatedHikeInfo = await APIHikes.getHikes();
