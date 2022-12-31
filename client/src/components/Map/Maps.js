@@ -20,6 +20,7 @@ const MapItem = (props) => {
 	const [center, setCenter] = useState([]);
 	const [start, setStart] = useState([]);
 	const [arrive, setArrive] = useState([]);
+	const [hutsMap,setHutsMap] = useState([]);
 
 	const [interest, setInterest] = useState([]);
 
@@ -28,6 +29,8 @@ const MapItem = (props) => {
 			try {
 				const json = await APIGpx.getFileById(props.hikeid);
 				const point = await APIGpx.getPointByHikeId(props.hikeid);
+				const huts = await APIGpx.getHutForMap(); 
+				
 				const startHikePoint = point.filter(
 					(p) => p.type === "start"
 				)[0];
@@ -68,6 +71,7 @@ const MapItem = (props) => {
 				setStart([startHikePoint.latitude, startHikePoint.longitude]);
 				setArrive([endHikePoint.latitude, endHikePoint.longitude]);
 				setInterest(others);
+				setHutsMap(huts);
 			} catch (err) {}
 		};
 		getJson();
@@ -137,6 +141,19 @@ const MapItem = (props) => {
 									/>
 								);
 						})}
+
+						{
+							hutsMap.map((p)=>{
+								return (
+									<Marker
+										key={hutsMap.indexOf(p)}
+										position={[p.latitude,p.longitude]}
+										icon={GetCustomIcon("hut")}
+									/>
+								);
+							})
+						}
+
 					</MapContainer>
 				</center>
 			)}

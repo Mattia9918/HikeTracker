@@ -30,3 +30,16 @@ exports.getPointById = (id) => {
 		});
 	})
 }
+
+exports.getHutMap = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT latitude,longitude FROM point P WHERE type='hut'"
+			db.all(sql, [], (err, rows) => {
+			if (err) reject(err);
+			else {
+				resolve(rows);
+			}
+		});
+	});
+};
