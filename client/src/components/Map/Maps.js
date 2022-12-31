@@ -142,7 +142,7 @@ const MarkerMap = (props) => {
     <>
       <center>
         <MapContainer
-          style={{ height: "500px", width: "770px" }}
+          style={{ height: "400px", width: "100%" }}
           center={{ lat: 44.763765, lng: 10.929165 }}
           zoom={5}
           scrollWheelZoom={true}
@@ -189,7 +189,7 @@ const AreaDragMap = (props) => {
     <>
       <center>
         <MapContainer
-          style={{ height: "500px", width: "770px" }}
+          style={{ height: "400", width: "100%" }}
           center={{ lat: 44.763765, lng: 10.929165 }}
           zoom={5}
           scrollWheelZoom={true}
