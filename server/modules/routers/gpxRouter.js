@@ -97,10 +97,8 @@ router.get("/api/hutMap", async (req, res) => {
     try {
 
         const hutMap = await point.getHutMap();
-        if(hutMap.length>0)
-           res.status(200).json(hutMap);
-        else 
-            res.status(404).json({err:"Empty array"}); 
+        res.status(200).json(hutMap);
+      
 
     } catch (err) {
         res.status(500).end();
