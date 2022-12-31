@@ -64,7 +64,7 @@ app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
 /* This path is freely accessible from the external */
-app.use(express.static('hikepictures'));
+app.use(express.static('pictures'));
 
 app.use(session({
 	secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',

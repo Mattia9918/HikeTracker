@@ -37,9 +37,7 @@ exports.getHutMap = () => {
 			"SELECT latitude,longitude FROM point P WHERE type='hut'"
 			db.all(sql, [], (err, rows) => {
 			if (err) reject(err);
-			else {
-				resolve(rows);
-			}
+			else resolve(rows);
 		});
 	});
 };
