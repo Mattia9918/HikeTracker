@@ -77,9 +77,6 @@ function LinkingModal(props) {
     async function loadParkingLots() {
         try {
             let parkingLotList = await APIParkingGet.getParkingLots();
-            //parkingLotList = parkingLotList.filter((parking) =>
-            //    !(parking.latitude === props.hike.startingPoint.latitude && parking.longitude === props.hike.startingPoint.longitude || parking.latitude === props.hike.endingPoint.latitude && parking.longitude === props.hike.endingPoint.longitude)
-            //);
             setParkingLotList(parkingLotList);
         } catch (err) { 
             console.log(err);

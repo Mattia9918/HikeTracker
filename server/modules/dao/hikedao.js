@@ -181,47 +181,55 @@ function calculateDistanceAndAscent(coordinates) {
 } 
 
 function estimateDifficulty(totalDistance, totalAscent) {
-	let difficultyScore = 0;
 
-	if (totalDistance < 3) {
-		difficultyScore += 1;
-	}
-	else if (totalDistance >= 3 && totalDistance < 7) {
-		difficultyScore += 2;
-	}
-	else if (totalDistance >= 7 && totalDistance < 12) {
-		difficultyScore += 3;
-	} 
-	else {
-		difficultyScore += 4;
+	function distanceScore(totalDistance){
+		let difficultyScore;
+
+		if (totalDistance < 3) {
+			return difficultyScore = 1;
+		}
+		else if (totalDistance >= 3 && totalDistance < 7) {
+			return difficultyScore = 2;
+		}
+		else if (totalDistance >= 7 && totalDistance < 12) {
+			return difficultyScore = 3;
+		} 
+		else {
+			return difficultyScore = 4;
+		}
 	}
 
 
-	if (totalAscent < 0 && totalAscent > -100) {
-		difficultyScore += 1;
+	function ascentScore(totalAscent){
+		let difficultyScore;
+		if (totalAscent < 0 && totalAscent > -100) {
+			return difficultyScore = 1;
+		}
+		else if (totalAscent <= -100 && totalAscent > -300) {
+			return difficultyScore = 2;
+		}
+		else if (totalAscent <= -300) {
+			return difficultyScore = 3;
+		}
+		else if (totalAscent >= 0 && totalAscent < 100) {
+			return difficultyScore = 1;
+		}
+		else if (totalAscent >= 100 && totalAscent < 300) {
+			return difficultyScore = 2;
+		}
+		else if (totalAscent >= 300 && totalAscent < 600) {
+			return difficultyScore = 3;
+		}
+		else {
+			return difficultyScore = 4;
+		}
 	}
-	else if (totalAscent <= -100 && totalAscent > -300) {
-		difficultyScore += 2;
-	}
-	else if (totalAscent <= -300) {
-		difficultyScore += 3;
-	}
-	else if (totalAscent >= 0 && totalAscent < 100) {
-		difficultyScore += 1;
-	}
-	else if (totalAscent >= 100 && totalAscent < 300) {
-		difficultyScore += 2;
-	}
-	else if (totalAscent >= 300 && totalAscent < 600) {
-		difficultyScore += 3;
-	}
-	else {
-		difficultyScore += 4;
-	}
+
+	const totalScore = distanceScore(totalDistance) + ascentScore(totalAscent)
 	
-	if (difficultyScore <= 2) {
+	if (totalScore <= 2) {
 		return 'Easy'
-	} else if (difficultyScore >= 3 && difficultyScore <= 5) {
+	} else if (totalScore >= 3 && totalScore <= 5) {
 		return 'Average'
 	} else {
 		return 'Difficult'

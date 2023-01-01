@@ -116,7 +116,7 @@ const HikeInfo = (props)=>{
             </Col>
             <Col className='c'>
 
-                <Number obj={{label:"Hike estimated time",
+                <Number obj={{label:"Hike estimated time (in hours)",
                     number:estimatedtime,
                     setNumber:setEstimatedtime,
                     disabled:false}}
