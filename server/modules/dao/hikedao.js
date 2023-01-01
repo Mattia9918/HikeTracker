@@ -160,7 +160,9 @@ exports.getGpxInfo = (file) => {
 			longitude: end[0]
 		}
 		const {totalDistance, totalAscent} = calculateDistanceAndAscent(coordinates);
-		const difficulty = estimateDifficulty(totalDistance, totalAscent);
+		const dS = distanceScore(totalDistance);
+		const aS = ascentScore(totalAscent);
+		const difficulty = estimateDifficulty(dS, aS);
 		return {startingPoint: startingPoint, endingPoint: endingPoint, totalDistance: totalDistance, totalAscent: totalAscent, difficulty: difficulty};
 	}
 	return {};
@@ -180,52 +182,49 @@ function calculateDistanceAndAscent(coordinates) {
 	return {totalDistance: distance, totalAscent: ascent}
 } 
 
-function estimateDifficulty(totalDistance, totalAscent) {
+function distanceScore(totalDistance){
 
-	function distanceScore(totalDistance){
-		let difficultyScore;
-
-		if (totalDistance < 3) {
-			return difficultyScore = 1;
-		}
-		else if (totalDistance >= 3 && totalDistance < 7) {
-			return difficultyScore = 2;
-		}
-		else if (totalDistance >= 7 && totalDistance < 12) {
-			return difficultyScore = 3;
-		} 
-		else {
-			return difficultyScore = 4;
-		}
+	if (totalDistance < 3) {
+		return 1;
 	}
-
-
-	function ascentScore(totalAscent){
-		let difficultyScore;
-		if (totalAscent < 0 && totalAscent > -100) {
-			return difficultyScore = 1;
-		}
-		else if (totalAscent <= -100 && totalAscent > -300) {
-			return difficultyScore = 2;
-		}
-		else if (totalAscent <= -300) {
-			return difficultyScore = 3;
-		}
-		else if (totalAscent >= 0 && totalAscent < 100) {
-			return difficultyScore = 1;
-		}
-		else if (totalAscent >= 100 && totalAscent < 300) {
-			return difficultyScore = 2;
-		}
-		else if (totalAscent >= 300 && totalAscent < 600) {
-			return difficultyScore = 3;
-		}
-		else {
-			return difficultyScore = 4;
-		}
+	else if (totalDistance >= 3 && totalDistance < 7) {
+		return 2;
 	}
+	else if (totalDistance >= 7 && totalDistance < 12) {
+		return 3;
+	} 
+	else {
+		return 4;
+	}
+}
 
-	const totalScore = distanceScore(totalDistance) + ascentScore(totalAscent)
+function ascentScore(totalAscent){
+	if (totalAscent < 0 && totalAscent > -100) {
+		return 1;
+	}
+	else if (totalAscent <= -100 && totalAscent > -300) {
+		return 2;
+	}
+	else if (totalAscent <= -300) {
+		return  3;
+	}
+	else if (totalAscent >= 0 && totalAscent < 100) {
+		return 1;
+	}
+	else if (totalAscent >= 100 && totalAscent < 300) {
+		return 2;
+	}
+	else if (totalAscent >= 300 && totalAscent < 600) {
+		return 3;
+	}
+	else {
+		return 4;
+	}
+}
+
+function estimateDifficulty(distanceScore, ascentScore) {
+
+	const totalScore = distanceScore + ascentScore;
 	
 	if (totalScore <= 2) {
 		return 'Easy'
