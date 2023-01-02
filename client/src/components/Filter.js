@@ -115,7 +115,7 @@ const AccordionGeo = (props) => {
 				<Accordion.Header>{label}</Accordion.Header>
 				{filter === "province" ? (
 					<Accordion.Body>
-						<ListGroup variant="flush">
+						<ListGroup variant="flush"  id = "scrollablelg">
 							{props.cities &&
 								props.cities.map((province) => {
 									return <ListGroupItem
@@ -137,7 +137,7 @@ const AccordionGeo = (props) => {
 
 				{filter === "city" ? (
 					<Accordion.Body>
-						<ListGroup variant="flush">
+						<ListGroup variant="flush" id = "scrollablelg">
 							{props.cities &&
 								props.cities.map((city) => {
 									return <ListGroupItem
