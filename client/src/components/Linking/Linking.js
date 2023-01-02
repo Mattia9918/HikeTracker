@@ -76,7 +76,7 @@ function LinkingModal(props) {
 
     async function loadParkingLots() {
         try {
-            let parkingLotList = await APIParkingGet.getParkingLots();
+            let parkingLotList = await APIParkingGet.getParksDistantFromHike(props.hike.id);
             setParkingLotList(parkingLotList);
         } catch (err) { 
             console.log(err);
@@ -85,7 +85,7 @@ function LinkingModal(props) {
 
     async function loadHuts() {
         try {
-            let hutList = await APIHuts.getHuts();
+            let hutList = await APIHuts.getHutsDistantFromHike(props.hike.id);
             setHutList(hutList);
         } catch (err) { 
             console.log(err);

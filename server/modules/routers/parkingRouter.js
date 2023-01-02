@@ -5,6 +5,7 @@ const hike_dao = require("../dao/hikedao");
 const parking_dao = require("../dao/parkingdao");
 const {check, validationResult} = require("express-validator");
 const checkAuth = require("../../authMiddleware");
+const functions = require("../functions/functions");
 
 const router = express.Router();
 
@@ -68,6 +69,45 @@ router.delete('/api/parking/delete', async (req, res) => {
         console.log(err);
         res.status(500).end();
     }
+});
+
+
+/* Gets all parking in 5km from a specific hike*/
+router.get("/api/parksDistantFromHike/:hikeId", async (req, res) => {
+	try {
+	
+		//join with point and hut
+		//get array of huts (hutId,name,pointId,latitude,longitude)
+		const p = await parking_dao.getParks();
+
+		let parks = p.map(park=> {
+			return {
+			parkId:park.parkID,
+			name:park.name,
+			pointId:park.point_id,
+			latitude:park.latitude,
+			longitude:park.longitude,
+            city:park.city,
+			province:park.province
+			}
+		});
+
+		//get only huts distant 5 km from specific hike
+		const filteredParks = await functions.getItemDistantFromHike(req.params.hikeId,parks,5);
+		
+		//hikeId not valid => hike not defined in gpx table
+		if(filteredParks.length===1 && filteredParks[0].err!==undefined)	
+			res.status(404).json(filteredParks[0].err);
+		
+		else 
+			res.status(200).json(filteredParks);
+		 
+
+		
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
 });
 
 

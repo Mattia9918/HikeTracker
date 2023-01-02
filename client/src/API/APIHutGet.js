@@ -155,5 +155,26 @@ async function linkHut(hutInfo, type) {
 
 }
 
-const APIHuts = {getFilter, getHuts, getHutFilter, getHutCities, getHutProvinces, linkHut};
+async function getHutsDistantFromHike(hikeId) {
+    const url = APIURL + `hutsDistantFromHike/${hikeId}`;
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+        if (response.ok) {
+            const list = await response.json();
+            return list;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        console.log(err);
+        throw (err);
+    }
+};
+
+const APIHuts = {getFilter, getHuts, getHutFilter, getHutCities, getHutProvinces, linkHut,getHutsDistantFromHike};
 export default APIHuts;
