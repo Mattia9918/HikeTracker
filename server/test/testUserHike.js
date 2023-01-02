@@ -215,3 +215,4 @@ function endRecordHike(expectedHTTPStatus, dateTime, hikeId) {
     })
 }
 
+
