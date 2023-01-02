@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx version="1.1" creator="https://www.komoot.de" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Tiglio Napoleone</name>
+    <author>
+      <link href="https://www.komoot.de">
+        <text>komoot</text>
+        <type>text/html</type>
+      </link>
+    </author>
+  </metadata>
+  <trk>
+    <name>Tiglio Napoleone</name>
+    <trkseg>
+      <trkpt lat="46.496981" lon="13.598963">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:20.502Z</time>
+      </trkpt>
+      <trkpt lat="46.496990" lon="13.598960">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:21.655Z</time>
+      </trkpt>
+      <trkpt lat="46.497044" lon="13.598959">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:28.062Z</time>
+      </trkpt>
+      <trkpt lat="46.497120" lon="13.598957">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:37.472Z</time>
+      </trkpt>
+      <trkpt lat="46.497120" lon="13.598957">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:37.526Z</time>
+      </trkpt>
+      <trkpt lat="46.497207" lon="13.598682">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:58.425Z</time>
+      </trkpt>
+      <trkpt lat="46.497207" lon="13.598682">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:58.455Z</time>
+      </trkpt>
+      <trkpt lat="46.497207" lon="13.598682">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:21:58.465Z</time>
+      </trkpt>
+      <trkpt lat="46.497299" lon="13.598408">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:22:19.514Z</time>
+      </trkpt>
+      <trkpt lat="46.497299" lon="13.598408">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:22:19.554Z</time>
+      </trkpt>
+      <trkpt lat="46.497299" lon="13.598408">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:22:19.564Z</time>
+      </trkpt>
+      <trkpt lat="46.497347" lon="13.598215">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:22:33.737Z</time>
+      </trkpt>
+      <trkpt lat="46.497347" lon="13.598215">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:22:33.737Z</time>
+      </trkpt>
+      <trkpt lat="46.497303" lon="13.597898">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:22:56.077Z</time>
+      </trkpt>
+      <trkpt lat="46.497314" lon="13.597748">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:06.498Z</time>
+      </trkpt>
+      <trkpt lat="46.497314" lon="13.597748">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:06.508Z</time>
+      </trkpt>
+      <trkpt lat="46.497380" lon="13.597662">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:15.391Z</time>
+      </trkpt>
+      <trkpt lat="46.497477" lon="13.597657">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:25.102Z</time>
+      </trkpt>
+      <trkpt lat="46.497477" lon="13.597657">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:25.112Z</time>
+      </trkpt>
+      <trkpt lat="46.497643" lon="13.597603">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:42.134Z</time>
+      </trkpt>
+      <trkpt lat="46.497643" lon="13.597603">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:42.134Z</time>
+      </trkpt>
+      <trkpt lat="46.497779" lon="13.597475">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:58.361Z</time>
+      </trkpt>
+      <trkpt lat="46.497779" lon="13.597475">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:23:58.371Z</time>
+      </trkpt>
+      <trkpt lat="46.497849" lon="13.597281">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:24:13.494Z</time>
+      </trkpt>
+      <trkpt lat="46.497849" lon="13.597281">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:24:13.504Z</time>
+      </trkpt>
+      <trkpt lat="46.497842" lon="13.597088">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:24:26.856Z</time>
+      </trkpt>
+      <trkpt lat="46.497779" lon="13.596911">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:24:40.614Z</time>
+      </trkpt>
+      <trkpt lat="46.498303" lon="13.596777">
+        <ele>799.936114</ele>
+        <time>2020-09-23T17:25:33.849Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
