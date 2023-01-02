@@ -211,4 +211,41 @@ router.get("/api/provincesHut", async (req, res) => {
 	}
 });
 
+/* Gets all huts in 5km from a specific hike*/
+router.get("/api/hutsDistantFromHike/:hikeId", async (req, res) => {
+	try {
+	
+		//join with point and hut
+		//get array of huts (hutId,name,pointId,latitude,longitude)
+		const h = await hut_dao.getHuts();
+
+		let huts = h.map(hut=> {
+			return {
+			hutId:hut.id,
+			name:hut.name,
+			pointId:hut.point_id,
+			latitude:hut.latitude,
+			longitude:hut.longitude,
+			city:hut.city,
+			province:hut.province
+			}
+		});
+		//get only huts distant 5 km from specific hike
+		const filteredHuts = await functions.getItemDistantFromHike(req.params.hikeId,huts,5);
+		
+		//hikeId not valid => hike not defined in gpx table
+		if(filteredHuts.length===1 && filteredHuts[0].err!==undefined)	
+			res.status(404).json(filteredHuts[0].err);
+		
+		else 
+			res.status(200).json(filteredHuts);
+		
+		
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
+
 module.exports = router;
