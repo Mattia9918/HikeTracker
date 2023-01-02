@@ -76,3 +76,8 @@
     object-position: 20% 50%;
     border-radius: 7px;
 }
+
+#scrollablelg {
+    max-height: 200px;
+    overflow-y:scroll;
+}

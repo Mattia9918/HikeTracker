@@ -253,7 +253,7 @@ function Hikes(props) {
 
 	return (
 		<>
-			<Row>
+			<div className = "row gx-0">
 				<center>
 					<Col lg={8} xs={12}>
 
@@ -280,7 +280,7 @@ function Hikes(props) {
 
 					</Col>
 				</center>
-			</Row>
+			</div>
 		</>
 	)
 };

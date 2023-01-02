@@ -6,15 +6,15 @@ function Layout(props) {
     return (
         <>
             {/* -- NAVIGATION BAR -- */}
-            <Row>
+            <Row className = "g-0">
                 <Navigation user = {props.user} logout = {props.logout}/>
             </Row>
 
             {/* -- BODY  -- */}
-            <div id = "bg">
-                <Row>
+            <div className = "row gx-0" id = "bg">
+                <div className = "row gx-0">
                     <Outlet />
-                </Row>
+                </div>
             </div>
         </>
     )
