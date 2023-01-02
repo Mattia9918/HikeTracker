@@ -14,8 +14,8 @@ function HikeStatusModal(props){
 
 function StartOrTerminateModal(props) {
 
-    var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1).split('.')
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1).split('.')
 
     const [curPos, setCurPos] = useState();
     const [dateTime, setDateTime] = useState(localISOTime[0]);
