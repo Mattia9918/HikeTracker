@@ -42,12 +42,13 @@ function HutForm(props) {
         const hut = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
-        
-        const result = await APIHutForm.postHut(hut); 
 
         /* Hut image loading */
         const imgData = new FormData();
         imgData.append('image', image);
+        
+        const result = await APIHutForm.postHut(hut); 
+
         await APIHutForm.addHutImage(imgData, result.id);
           
         navigate("/huts");

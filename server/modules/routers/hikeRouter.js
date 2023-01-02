@@ -2,6 +2,7 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
+const hut_dao = require("../dao/hutdao");
 const point_dao = require("../dao/pointdao");
 const { check, validationResult } = require("express-validator");
 const checkAuth = require("../../authMiddleware");
@@ -159,18 +160,33 @@ router.post('/api/hiking',
 	}
 );
 
- router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
-     try {
-         console.log("Informazioni sull'immagine inserita:");
-		 console.log(req)
-         console.log(req.file);
-         await hike_dao.insertImg(req.params.hikeId, req.file.filename);
-         res.status(201).end()
-     } catch (err) {
-         console.log(err);
-         res.status(500).end();
-     }
- });
+
+
+router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
+	try {
+		console.log("Informazioni sull'immagine inserita:");
+		console.log(req.file);
+		await hike_dao.insertImg(req.params.hikeId, req.file.filename);
+		res.status(201).end()
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
+// Saves an image for a Hut
+router.put("/api/hut/:id/image", storage.uploadImg, async (req, res) => {
+	try {
+		console.log("Informazioni sull'immagine inserita:");
+		console.log(req.file);
+		await hut_dao.insertHutImg(req.params.id, req.file.filename);
+		res.status(201).end()
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
 
 
 router.get("/api/cities", async (req, res) => {

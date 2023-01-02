@@ -38,8 +38,6 @@ function LinkingModal(props) {
             const obj = {
                 hikeid: props.hike.id,
                 pointid: point.point_id,
-                latitude: point.latitude,
-                longitude: point.longitude,
             }
             await APIHikes.putHikePoint(obj, type);
             const updatedHikeInfo = await APIHikes.getHikes();
@@ -79,9 +77,6 @@ function LinkingModal(props) {
     async function loadParkingLots() {
         try {
             let parkingLotList = await APIParkingGet.getParkingLots();
-            //parkingLotList = parkingLotList.filter((parking) =>
-            //    !(parking.latitude === props.hike.startingPoint.latitude && parking.longitude === props.hike.startingPoint.longitude || parking.latitude === props.hike.endingPoint.latitude && parking.longitude === props.hike.endingPoint.longitude)
-            //);
             setParkingLotList(parkingLotList);
         } catch (err) { 
             console.log(err);

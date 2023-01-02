@@ -64,7 +64,7 @@ app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
 /* This path is freely accessible from the external */
-app.use(express.static('hikepictures'));
+app.use(express.static('pictures'));
 
 app.use(session({
 	secret: 'r8q,+&1LM3)CD*zAGpx1xm{NeQhc;#',
@@ -83,7 +83,7 @@ app.use(passport.authenticate('session'));
 app.use('/api', userRouter);
 app.use('', hikeRouter);
 app.use('', gpxRouter);
-app.use('', hutRouter ); 
+app.use('', hutRouter); 
 app.use('', parkingRouter);
 app.use('/api/sessions', sessionRouter);
 

@@ -160,7 +160,9 @@ exports.getGpxInfo = (file) => {
 			longitude: end[0]
 		}
 		const {totalDistance, totalAscent} = calculateDistanceAndAscent(coordinates);
-		const difficulty = estimateDifficulty(totalDistance, totalAscent);
+		const dS = distanceScore(totalDistance);
+		const aS = ascentScore(totalAscent);
+		const difficulty = estimateDifficulty(dS, aS);
 		return {startingPoint: startingPoint, endingPoint: endingPoint, totalDistance: totalDistance, totalAscent: totalAscent, difficulty: difficulty};
 	}
 	return {};
@@ -180,48 +182,53 @@ function calculateDistanceAndAscent(coordinates) {
 	return {totalDistance: distance, totalAscent: ascent}
 } 
 
-function estimateDifficulty(totalDistance, totalAscent) {
-	let difficultyScore = 0;
+function distanceScore(totalDistance){
 
 	if (totalDistance < 3) {
-		difficultyScore += 1;
+		return 1;
 	}
 	else if (totalDistance >= 3 && totalDistance < 7) {
-		difficultyScore += 2;
+		return 2;
 	}
 	else if (totalDistance >= 7 && totalDistance < 12) {
-		difficultyScore += 3;
+		return 3;
 	} 
 	else {
-		difficultyScore += 4;
+		return 4;
 	}
+}
 
-
+function ascentScore(totalAscent){
 	if (totalAscent < 0 && totalAscent > -100) {
-		difficultyScore += 1;
+		return 1;
 	}
 	else if (totalAscent <= -100 && totalAscent > -300) {
-		difficultyScore += 2;
+		return 2;
 	}
 	else if (totalAscent <= -300) {
-		difficultyScore += 3;
+		return  3;
 	}
 	else if (totalAscent >= 0 && totalAscent < 100) {
-		difficultyScore += 1;
+		return 1;
 	}
 	else if (totalAscent >= 100 && totalAscent < 300) {
-		difficultyScore += 2;
+		return 2;
 	}
 	else if (totalAscent >= 300 && totalAscent < 600) {
-		difficultyScore += 3;
+		return 3;
 	}
 	else {
-		difficultyScore += 4;
+		return 4;
 	}
+}
+
+function estimateDifficulty(distanceScore, ascentScore) {
+
+	const totalScore = distanceScore + ascentScore;
 	
-	if (difficultyScore <= 2) {
+	if (totalScore <= 2) {
 		return 'Easy'
-	} else if (difficultyScore >= 3 && difficultyScore <= 5) {
+	} else if (totalScore >= 3 && totalScore <= 5) {
 		return 'Average'
 	} else {
 		return 'Difficult'

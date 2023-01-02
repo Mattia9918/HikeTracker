@@ -1,4 +1,4 @@
-import {  Form, Button,  Alert, Container } from 'react-bootstrap';
+import {  Form, Button,  Alert, Container, Row, Col } from 'react-bootstrap';
 import '../../css/App.css';
 import { useState,useEffect } from 'react';
 
@@ -51,9 +51,11 @@ function SignIn(props) {
 
   }
 
-  return (<>
-
-    <Container className="shadow-sm p-5 mt-5 w-50" id = "cardscontainer">
+  return (
+  <>
+    <Row className = "justify-content-center">
+      <Col lg = {4} sm = {10} className = "ms-4">
+    <Container className="shadow-sm p-5 mt-5" id = "cardscontainer">
      
       <AlertSignIn msg={props.msg} status={props.status}/>
 
@@ -72,7 +74,11 @@ function SignIn(props) {
         <center><Button variant="primary" size="lg" type="submit">Register</Button></center>
 
       </Form>
-    </Container></>
+    </Container>
+    </Col>
+    </Row>
+
+    </>
   );
 }
 
