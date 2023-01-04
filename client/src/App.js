@@ -15,6 +15,8 @@ import  Hikes  from './components/Hikes/Hikes';
 import HutForm from './components/HutForm/Hut';
 import HutList from './components/Huts/HutList';
 
+import MyHikes from './components/Hikes/MyHikes'; 
+
 
 import ParkingForm from './components/ParkingLotForm/Parking';
 
@@ -110,7 +112,7 @@ function App2() {
             <Route path='/' element = {<Hikes msg = {msg} user = {user} setMsg = {setMsg} />}/>
             
             <Route path='/huts' element={<HutList/>}/>
-            
+            <Route path='/myHikes' element={<MyHikes/>}/>
             <Route path='/login' element={(!user && <LoginForm login={login} msg={msg} setMsg={setMsg}/>) || <Navigate replace to='/' />}/>
             <Route path='/validate/:code' element={ <ValidatePage />} />
             <Route path='/register' element={(!user && <SignIn addUser={addUser} status={status} setStatus={setStatus} msg={msg}/>) || <Navigate replace to='/' />} /> 

@@ -29,6 +29,10 @@ function Navigation(props) {
             name: "Huts",
             link: "/huts"
         },
+        {
+            name: "My Hikes",
+            link: "/myHikes"
+        },
     ]
     return (
         <>

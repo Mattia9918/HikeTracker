@@ -61,6 +61,40 @@ async function getHikes() {
          throw (err);
      }
  };
+
+ async function getCompletedHikes() {
+    const url = APIURL + `completedHikes`; 
+    try {
+        const response = await fetch(url, {
+            credentials : 'include',
+        }); 
+        if (response.ok) {
+            const list = await response.json(); 
+            
+            const starting_point= list.filter(hike => hike.HPtype === 'start');
+            const ending_point= list.filter(hike => hike.HPtype === 'arrive');
+            
+            const hikes = []; 
+            starting_point.forEach(element => {
+                ending_point.forEach(el => {
+                    if (element.hikeID === el.hikeID && element.id === el.id) {
+                        var hike = {start : element, end : el}; 
+                        hikes.push(hike); 
+                    }
+                })
+            }); 
+
+            return hikes;           
+            
+        }
+    } catch (err) {
+        console.log(err); 
+        throw(err); 
+    
+    }
+ }
+
+
  
  async function getFilter(filterObj) {
     const url = APIURL + 'hikes/filter';
@@ -269,7 +303,10 @@ async function getStats(hikeId) {
          throw (err);
      }
  };
+
+
+ 
  
 
- const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint, getStartedHike, getStats, startHike, terminateHike}; 
+ const APIHikes = {getFilter, getHikes, getHikeCities, getHikeProvinces, putHikePoint, getStartedHike, getStats, startHike, terminateHike, getCompletedHikes}; 
   export default APIHikes; 
