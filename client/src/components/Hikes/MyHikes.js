@@ -1,45 +1,23 @@
 import {
 	Container,
-	Card,
 	Row,
 	Col,
-	Button,
-	Accordion,
-	ButtonGroup,
     Table,
 	ToggleButton,
 	Collapse
 } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
-import { MapModal } from "../Map/Maps";
 
-import { AccordionFilter, AccordionGeo } from "../Filter";
-import {
-	length,
-	time,
-	difficulty,
-	ascent,
-	objProv,
-	objCity,
-} from "./HikesObjInfo";
 
 import APIHikes from "../../API/APIHikes";
 
-import { TbMapSearch } from "react-icons/tb";
-import { BsMap } from "react-icons/bs";
-import { GrPowerReset } from "react-icons/gr";
-import { RiMindMap } from "react-icons/ri";
+
 
 import {
 	CardImg,
-	AlertUser,
-	CardHeader,
-	VisibleItem,
-	HiddenItem,
 } from "./HikeCardComp";
-import { LinkingModal } from "../Linking/Linking";
-import { HikeStatusModal } from "../HikeStatus/HikeStatus";
+
 
 
 function MyHikes(props) {
@@ -50,7 +28,7 @@ function MyHikes(props) {
     async function loadHikes() {
 		try {
 			const hikeList = await APIHikes.getCompletedHikes();
-            console.log(hikeList); 
+            
 			setHikes(hikeList);
 		}
 		catch (err) {
@@ -140,29 +118,93 @@ function HikeList(props){
 function HikeRow(props) {
 
     const [open, setOpen] = useState(false); 
- 
+	const sdate = new Date(props.hikes.start.start_time); 
+	const adate = new Date(props.hikes.start.end_time); 
+	const diffDate = Math.abs(adate - sdate); 
+	
     return (
-        <tr>
-            <td>
-				
-				<h6>{props.hikes.start.title}</h6>	
-				<ToggleButton
-                    variant="outline-primary"
-                    size="sm"
-                    className="float-end m-2"
-                    onClick={() => setOpen(!open)}
-                    
-                    aria-expanded={open}>
-                    {open ? <i className="bi bi-arrow-bar-up"></i> : <i className="bi bi-arrow-bar-down "></i>}
-                </ToggleButton>
+        <tr className="border border-1">
+            <td className="m-2 p-2">
+				<Row>
+					<Col>
+						<br></br>
+						<h4 className="d-inline p-3 mb-2">{props.hikes.start.title}</h4>
+												
+						<ToggleButton
+							variant="outline-primary"
+							size="sm"
+							className="float-end m-2"
+							onClick={() => setOpen(!open)}
+							
+							aria-expanded={open}>
+							{open ? <i className="bi bi-arrow-bar-up"></i> : <i className="bi bi-arrow-bar-down "></i>}
+						</ToggleButton>
+						<h6 className="d-inline p-3 mb-2 float-end">Date: {props.hikes.start.end_time}</h6>	
+					</Col>
 
+				</Row>
 				<Collapse in={open} >
+					<div>
+						<Row>
+							<Col>
+								
+								<div className="m-2 p-2" >
+									<CardImg imgPath={props.hikes.start.imgPath} />
+								</div>
+								
+							</Col>
+							<Col>
+								<div className="m-2 mt-4 p-2 fst-italic" >
+									<p>{props.hikes.start.hikeDescription}</p>
+								</div>
+							
+							</Col>
+							
+							
+						</Row>
+						<Row>
+						<Col>
+								<div className="m-2  p-2 fs-6" >
+									<p>Orario Inizio: {adate.getTime()}</p>
+									<p>Orario Fine: {props.hikes.start.end_time}</p>
+									<p>Hike lenght: {props.hikes.start.len} km </p>
+									<p>Estimated time: {props.hikes.start.estimatedTime} hours</p>
+								</div>
+							
+							</Col>
+						<Col>
+							<div className="m-2 p-2" >
+								<p>Hai terminato l'escursione in:   </p>
+								<p>{Math.floor((diffDate) / (1000 * 60 * 60 * 24) )} giorni - {Math.floor(((adate - sdate) / (1000 * 60 * 60 )) % 24 )} ore</p>
+								
+								<p>{Math.floor(((adate - sdate) / (1000 * 60 )) % 60 )} minuti e {Math.floor(((adate - sdate) / (1000)) % 60 )} secondi </p>
 
-                    <div className="m-2 p-2 " >
+								<p>Media passo: {(((props.hikes.start.len * 1000) / (Math.floor((adate - sdate) / (1000))) ) * 3.6).toFixed(2)} km/h</p>
+							</div>
+
+						</Col>
+						<Col>
+							<div className="m-2 p-2" >
+								
+								<p>Partenza:</p>
+								<p> {props.hikes.start.city}, {props.hikes.start.province} </p>
+								<p>Arrivo:</p>
+								<p> {props.hikes.end.city}, {props.hikes.end.province} </p>
+							
+							</div>
 						
-                    </div>
+						
+						</Col>
+						
+						
 
-                </Collapse>
+						</Row>
+					</div>
+					
+
+
+				</Collapse>
+				
 			</td>
         </tr>
     )
