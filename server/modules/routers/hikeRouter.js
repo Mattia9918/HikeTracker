@@ -80,13 +80,14 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 				case "area":
 					const neCoordinates = filter.value1.split(",");
 					const swCoordinates = filter.value2.split(",");
-
+					
 					hikes = hikes.filter(
-						(hike) =>
-							hike.startingPoint.latitude > swCoordinates[0] &&
+						(hike) =>{
+							return (hike.startingPoint.latitude > swCoordinates[0] &&
 							hike.startingPoint.latitude < neCoordinates[0] &&
 							hike.startingPoint.longitude > swCoordinates[1] &&
-							hike.startingPoint.longitude > neCoordinates[1]
+							hike.startingPoint.longitude < neCoordinates[1])
+						}
 					);
 					console.log("dao by area " + hikes.length);
 					break;

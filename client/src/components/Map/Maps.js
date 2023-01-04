@@ -189,7 +189,7 @@ const AreaDragMap = (props) => {
     <>
       <center>
         <MapContainer
-          style={{ height: "400", width: "100%" }}
+          style={{ height: "400px", width: "100%" }}
           center={{ lat: 44.763765, lng: 10.929165 }}
           zoom={5}
           scrollWheelZoom={true}
@@ -326,8 +326,10 @@ function MapModal(props) {
                   value1: pointNe,
                   value2: pointSw,
                 };
-                filterVector.push(filterObj);
-                loadFilter(filterVector);
+                //filterVector.push(filterObj);
+                //loadFilter(filterVector);
+                loadFilter([filterObj]);
+                
               }}
             >
               Search
