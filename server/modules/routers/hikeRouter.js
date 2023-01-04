@@ -2,6 +2,7 @@
 
 const express = require("express");
 const hike_dao = require("../dao/hikedao");
+const hut_dao = require("../dao/hutdao");
 const point_dao = require("../dao/pointdao");
 const { check, validationResult } = require("express-validator");
 const checkAuth = require("../../authMiddleware");
@@ -79,13 +80,14 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 				case "area":
 					const neCoordinates = filter.value1.split(",");
 					const swCoordinates = filter.value2.split(",");
-
+					
 					hikes = hikes.filter(
-						(hike) =>
-							hike.startingPoint.latitude > swCoordinates[0] &&
+						(hike) =>{
+							return (hike.startingPoint.latitude > swCoordinates[0] &&
 							hike.startingPoint.latitude < neCoordinates[0] &&
 							hike.startingPoint.longitude > swCoordinates[1] &&
-							hike.startingPoint.longitude > neCoordinates[1]
+							hike.startingPoint.longitude < neCoordinates[1])
+						}
 					);
 					console.log("dao by area " + hikes.length);
 					break;
@@ -159,18 +161,33 @@ router.post('/api/hiking',
 	}
 );
 
- router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
-     try {
-         console.log("Informazioni sull'immagine inserita:");
-		 console.log(req)
-         console.log(req.file);
-         await hike_dao.insertImg(req.params.hikeId, req.file.filename);
-         res.status(201).end()
-     } catch (err) {
-         console.log(err);
-         res.status(500).end();
-     }
- });
+
+
+router.put("/api/image/:hikeId", storage.uploadImg, async (req, res) => {
+	try {
+		console.log("Informazioni sull'immagine inserita:");
+		console.log(req.file);
+		await hike_dao.insertImg(req.params.hikeId, req.file.filename);
+		res.status(201).end()
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
+// Saves an image for a Hut
+router.put("/api/hut/:id/image", storage.uploadImg, async (req, res) => {
+	try {
+		console.log("Informazioni sull'immagine inserita:");
+		console.log(req.file);
+		await hut_dao.insertHutImg(req.params.id, req.file.filename);
+		res.status(201).end()
+	} catch (err) {
+		console.log(err);
+		res.status(500).end();
+	}
+});
+
 
 
 router.get("/api/cities", async (req, res) => {
@@ -317,6 +334,12 @@ router.post(
 		}
 
 		try {
+			// Check if time is a valid date
+			const time = new Date(req.body.time);
+			if(time.toString() === "Invalid Date") {
+				return res.status(422).json({ error: "Invalid Date" });
+			}
+
             // Check if hike exists
             const hike = await hike_dao.getHikeById(req.params.id);
             if(hike === undefined) {
@@ -359,19 +382,32 @@ router.put(
 		}
 
 		try {
+			// Check if time is a valid date
+			const time = new Date(req.body.time);
+			if(time.toString() === "Invalid Date") {
+				return res.status(422).json({ error: "Invalid Date" });
+			}
+
              // Check if record of hike exists and it's still ongoing
-             const hike = await hike_dao.getHikeRecordedById(req.params.id);
-             if(hike === undefined) {
+             const record = await hike_dao.getHikeRecordedById(req.params.id);
+             if(record === undefined) {
                  return res.status(404).json({error: "hike record not found"})
              }
-             if(hike.end_time !== null) {
+             if(record.end_time !== null) {
                  return res.status(403)
                  .json({error: "you cannot end if you don't start"})
              }
+			 
+			 // Check if end time is after start time
+			 const start_time = new Date(record.start_time);
+			 if(time < start_time) {
+				return res.status(403)
+                 .json({error: "end time must be after start time"})
+			 }
 
              // Update recorded hike
-             const id = await hike_dao.endHikeByUser(req.params.id, req.body.time);
-             return res.status(200).json({msg: "Record hike's end with id = " + id})
+             await hike_dao.endHikeByUser(req.params.id, req.body.time);
+             return res.status(200).json({msg: "Record hike's end with id = " + req.params.id})
 		} catch (err) {
 			console.log(err);
 			return res.status(500).json({ error: err });
@@ -382,6 +418,13 @@ router.put(
 router.get("/api/hike/:id/stats", checkAuth.isHiker, async (req, res) => {
 	try {
 		const hikes = await hike_dao.getHikeStatsById(req.user.id, req.params.id);
+		hikes.map((h) => {
+			h.start_time = h.start_time.replace("T", " ");
+
+			if(h.end_time !== null) {
+				h.end_time = h.end_time.replace("T", " ");
+			}
+		})
 		return res.status(200).json(hikes);
 	} catch (err) {
 		return res.status(500).json({ error: err });
@@ -400,8 +443,12 @@ router.get("/api/ongoingHike", checkAuth.isHiker, async (req, res) => {
 
 router.get("/api/completedHikes",  checkAuth.isHiker,async (req, res) => {
 	try {
-		const hike = await hike_dao.getCompletedHikesOfHiker(req.user.id);
-		return res.status(200).json(hike);
+		const hikes = await hike_dao.getCompletedHikesOfHiker(req.user.id);
+		hikes.map((h) => {
+			h.start_time = h.start_time.replace("T", " ");
+			h.end_time = h.end_time.replace("T", " ");
+		})
+		return res.status(200).json(hikes);
 	} catch (err) {
         console.log(err)
 		return res.status(500).json({ error: err });

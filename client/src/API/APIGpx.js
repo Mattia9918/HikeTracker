@@ -76,5 +76,47 @@ async function getPointByHikeId(id) {
      }
  };
 
-const APIpostGpx = {postGpx , getFileById,getPointByHikeId}; 
+ async function getHutForMap() {
+    const url = APIURL + `hutMap`;
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+        if (response.ok) {
+            const list = await response.json();
+            return list;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        console.log(err);
+        throw (err);
+    }
+};
+
+async function getParkingForMap() {
+    const url = APIURL + `parkingMap`;
+    try {
+        const response = await fetch(url, {
+            credentials: 'include',
+        });
+        if (response.ok) {
+            const list = await response.json();
+            return list;
+        } else {
+            /* Application error */
+            const appErrText = await response.text();
+            throw new TypeError(appErrText);
+        }
+    } catch (err) {
+        /* Network error */
+        console.log(err);
+        throw (err);
+    }
+};
+
+const APIpostGpx = {postGpx , getFileById,getPointByHikeId,getHutForMap,getParkingForMap}; 
 export default APIpostGpx; 

@@ -122,6 +122,7 @@ async function getHikes() {
                     hike.startingPoint,
                     hike.pointsOfInterest,
                     hike.endingPoint,
+                    hike.imgPath,
                 ];
                 return new Hike(params);
             });

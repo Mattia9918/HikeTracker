@@ -92,4 +92,31 @@ router.get("/api/point/:id", async (req, res) => {
     }
 });
 
+
+router.get("/api/hutMap", async (req, res) => {
+    try {
+
+        const hutMap = await point.getHutMap();
+        res.status(200).json(hutMap);
+      
+
+    } catch (err) {
+        res.status(500).end();
+    }
+});
+
+router.get("/api/parkingMap", async (req, res) => {
+    try {
+
+        const parkingMap = await point.getParkingMap();
+        res.status(200).json(parkingMap);
+      
+
+    } catch (err) {
+        res.status(500).end();
+    }
+});
+
+
+
 module.exports = router;

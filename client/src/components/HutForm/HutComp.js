@@ -208,7 +208,8 @@ const Picture = (props)=>{
                 <Form.Group controlId="formFile" className="mb-3">
                     <Form.Control 
                         type="file"
-                        onChange={(e) => props.setImage(e.target.files[0])}/>
+                        onChange={(e) => props.setImage(e.target.files[0])}
+                        required = {true}/>
                 </Form.Group>
                 
             </Col>

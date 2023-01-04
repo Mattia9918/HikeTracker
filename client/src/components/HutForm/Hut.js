@@ -13,25 +13,25 @@ import APIHutForm from '../../API/APIHutForm';
 
 function HutForm(props) {
 
-    const [hutname, setHutname] = useState("Rifugio Torre di Pisa"); 
-    const [address, setAddress] = useState("Cima, 38037 Chavignon TN"); 
-    const [phonenumber, setPhonenumber] = useState("+393483645379"); 
-    const [email, setEmail] = useState("torre@mail.it"); 
-    const [website, setWebsite] = useState("https://www.rifugiotorredipisa.it"); 
-    const [description, setDescription] = useState("Hut in Predazzo"); 
-    const [latitude, setLatitude] = useState("46.360977936689984"); 
-    const [longitude, setLongitude] = useState("11.559676297710938");
-    const [altitude, setAltitude] = useState("1018"); 
-    const [rooms, setRooms] = useState("10");
-    const [bathrooms, setBathrooms] = useState("10"); 
-    const [beds, setBeds] = useState("12");     
-    const [city, setCity] = useState("Predazzo"); 
-    const [province, setProvince] = useState("Trento"); 
-    const [language, setLanguage] = useState("French"); 
+    const [hutname, setHutname] = useState(""); 
+    const [address, setAddress] = useState(""); 
+    const [phonenumber, setPhonenumber] = useState(""); 
+    const [email, setEmail] = useState(""); 
+    const [website, setWebsite] = useState(""); 
+    const [description, setDescription] = useState(""); 
+    const [latitude, setLatitude] = useState(""); 
+    const [longitude, setLongitude] = useState("");
+    const [altitude, setAltitude] = useState(""); 
+    const [rooms, setRooms] = useState("");
+    const [bathrooms, setBathrooms] = useState(""); 
+    const [beds, setBeds] = useState("");     
+    const [city, setCity] = useState(""); 
+    const [province, setProvince] = useState(""); 
+    const [language, setLanguage] = useState(""); 
     const [restservice, setRestservice] = useState(false); 
     const [disable, setDisable] = useState(false); 
     const [bikefriendly, setBikefriendly] = useState(false);
-    const [reachability, setReachability] = useState("Cableway");
+    const [reachability, setReachability] = useState("");
     const [image, setImage] = useState();  
     const [showModal, setShowModal] = useState(false);
 
@@ -42,12 +42,13 @@ function HutForm(props) {
         const hut = { hutname, address, phonenumber, email, website, altitude ,language, description, latitude, longitude, rooms, bathrooms, reachability, beds, city, province, restservice, disable, bikefriendly };
 
         event.preventDefault();
-        
-        const result = await APIHutForm.postHut(hut); 
 
         /* Hut image loading */
         const imgData = new FormData();
         imgData.append('image', image);
+        
+        const result = await APIHutForm.postHut(hut); 
+
         await APIHutForm.addHutImage(imgData, result.id);
           
         navigate("/huts");

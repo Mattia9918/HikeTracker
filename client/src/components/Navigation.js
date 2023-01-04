@@ -39,7 +39,7 @@ function Navigation(props) {
 
             {/* -- NAVBAR -- */}
 
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="lg" >
                 <Container fluid className="shadow-sm p-2" id="topbar">
 
                     <Col className="col-3">
@@ -57,8 +57,7 @@ function Navigation(props) {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
                     {/* Dropdowns and links */}
-                   <Container>
-                    <Navbar.Collapse id="basic-navbar-nav" >
+                    <Navbar.Collapse id="basic-navbar-nav" align = "right" >
                         <Nav className="ms-auto">
                         {props.user !== undefined && props.user.role === "localGuide" && <MyNavDropdown array = {localGuideActions} label = "Local Guide Menu"/>}
                         {props.user !== undefined && <MyNavDropdown array = {hikerActions} label = "Menu"/>}
@@ -74,7 +73,6 @@ function Navigation(props) {
                         </Nav>
                     </Navbar.Collapse>
                     </Container> 
-                </Container>
             </Navbar>
         </>
     );

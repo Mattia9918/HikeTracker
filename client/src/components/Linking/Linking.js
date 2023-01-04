@@ -37,9 +37,7 @@ function LinkingModal(props) {
 
             const obj = {
                 hikeid: props.hike.id,
-                pointid: point.point_id,
-                latitude: point.latitude,
-                longitude: point.longitude,
+                pointid: point.pointId,
             }
             await APIHikes.putHikePoint(obj, type);
             const updatedHikeInfo = await APIHikes.getHikes();
@@ -50,8 +48,10 @@ function LinkingModal(props) {
             setMessage({variant: "danger", msg: err.message});
         }
     };
+
     async function linkHut(point, type) {
         try {
+            console.log(point)
             
             props.hike.pointsOfInterest.forEach((poi) => {
                 if (poi.latitude === point.latitude && poi.longitude === point.longitude) {
@@ -61,10 +61,7 @@ function LinkingModal(props) {
             
             const obj = {
                 hikeid: props.hike.id,
-                pointid: point.point_id,
-                latitude: point.latitude,
-                longitude: point.longitude,
-                hutId : selectedHut.id
+                pointid: point.pointId,
             }
             await APIHuts.linkHut(obj, type);
             const updatedHikeInfo = await APIHikes.getHikes();
@@ -78,10 +75,7 @@ function LinkingModal(props) {
 
     async function loadParkingLots() {
         try {
-            let parkingLotList = await APIParkingGet.getParkingLots();
-            //parkingLotList = parkingLotList.filter((parking) =>
-            //    !(parking.latitude === props.hike.startingPoint.latitude && parking.longitude === props.hike.startingPoint.longitude || parking.latitude === props.hike.endingPoint.latitude && parking.longitude === props.hike.endingPoint.longitude)
-            //);
+            let parkingLotList = await APIParkingGet.getParksDistantFromHike(props.hike.id);
             setParkingLotList(parkingLotList);
         } catch (err) { 
             console.log(err);
@@ -90,7 +84,7 @@ function LinkingModal(props) {
 
     async function loadHuts() {
         try {
-            let hutList = await APIHuts.getHuts();
+            let hutList = await APIHuts.getHutsDistantFromHike(props.hike.id);
             setHutList(hutList);
         } catch (err) { 
             console.log(err);
@@ -146,20 +140,22 @@ function LinkingModal(props) {
                 <Row>
                     <Col>
                         <ListGroup id="hplistgroup">
-                            {(mode === 0 &&
+                            {(mode === 0 && (
+                                hutList.length === 0? <center className = "mt-5">There's no hut within 5 km to this track to be linked</center> :
                                 hutList.map((hut) => <ListGroup.Item key = {hut.id} id = "hpitem" action onClick={() => {
                                     setSelectedHut(hut);
                                     setSelectedParkingLot();
                                 }}>
                                     <b>{hut.name}</b>, {hut.city}, {hut.province}
-                                </ListGroup.Item>)) ||
-                                (mode === 1 &&
+                                </ListGroup.Item>))) ||
+                                (mode === 1 && (
+                                    parkingLotList.length === 0? <center className = "mt-5">There's no parking lot within 5 km to this track to be linked</center> :
                                     parkingLotList.map((parkingLot) => <ListGroup.Item key = {parkingLot.id} id = "hpitem" action onClick={() => {
                                         setSelectedParkingLot(parkingLot);
                                         setSelectedHut();
                                     }}>
                                     <b>{parkingLot.name}</b>, {parkingLot.city}, {parkingLot.province}
-                                    </ListGroup.Item>))}
+                                    </ListGroup.Item>)))}
                         </ListGroup>
                     </Col>
                 </Row>

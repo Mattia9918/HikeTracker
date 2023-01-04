@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Accordion, ListGroup } from "react-bootstrap";
-import { AiOutlineConsoleSql } from "react-icons/ai";
 
 //Filter for length/time/difficulty/ascent | filter for altitude/reachability
 const AccordionFilter = (props) => {
@@ -36,33 +35,43 @@ const AccordionFilter = (props) => {
 
 const ListGroupItem = (props) => {
 	const [clicked, setClicked] = useState(false);
+	const filterVector = props.filterVector;
+	const filter = props.filter;
+	const filterValue = props.filterValue;
+	const option = props.option;
+	useEffect(() => {
+		if(clicked) {
+			let found = false;
+			let filVet = [...filterVector];
+			filVet = filVet.filter((fil) => fil.filterName === filter)
+			filVet.forEach((filt) => {
+				let fv = [];
+				if(option !== undefined)
+					fv = option.filterOption.split(",");
+				if(filt.value1 === fv[0])
+					found = true;
+				if(filt.value1 === filterValue) {
+					console.log("TROVATO");
+					found = true
+				}
+			})
+			console.log(filterVector[0].filterName && filterVector.length === 1);
+			if(filterVector[0].filterName === "none")
+				found = false;
 
-	if(clicked) {
-		let found = false;
-		let filVet = [...props.filterVector];
-		filVet = filVet.filter((fil) => fil.filterName === props.filter)
-		filVet.forEach((filt) => {
-			console.log(props.filterValue);
-			console.log(filt.value1);
-			let fv = [];
-			if(props.option !== undefined)
-				fv = props.option.filterOption.split(",");
-			if(filt.value1 === fv[0])
-				found = true;
-			if(filt.value1 == props.filterValue) {
-				console.log("TROVATO");
-				found = true
-			}
-		})
-		if(!found)
-			setClicked(false);
-	}
+			if(!found)
+				setClicked(false);
+		}
+	}, [clicked, filterVector, filter, filterValue, option]);
+
 	return (
 		<ListGroup.Item
 			action={true}
 			style={{background: clicked && "AntiqueWhite"}}
 			onClick={() => {
 				props.removeElementFilterVector(props.filter);
+				props.removeElementFilterVector("none");
+				console.log(props.filterVector);
 				console.log(clicked);
 				if (!clicked) {
 					setClicked(true);
@@ -106,7 +115,7 @@ const AccordionGeo = (props) => {
 				<Accordion.Header>{label}</Accordion.Header>
 				{filter === "province" ? (
 					<Accordion.Body>
-						<ListGroup variant="flush">
+						<ListGroup variant="flush"  id = "scrollablelg">
 							{props.cities &&
 								props.cities.map((province) => {
 									return <ListGroupItem
@@ -128,7 +137,7 @@ const AccordionGeo = (props) => {
 
 				{filter === "city" ? (
 					<Accordion.Body>
-						<ListGroup variant="flush">
+						<ListGroup variant="flush" id = "scrollablelg">
 							{props.cities &&
 								props.cities.map((city) => {
 									return <ListGroupItem

@@ -175,10 +175,11 @@ function FilterMenu(props) {
 													const newElement = {
 														filterName: "none",
 													};
-													// filterVector = [];
-													filterVector.push(
+													const vec = [];
+													vec.push(
 														newElement
 													);
+													setFilterVector([...vec]);
 													props.loadFilter(
 														filterVector
 													);
@@ -254,7 +255,7 @@ function Hikes(props) {
 
 	return (
 		<>
-			<Row>
+			<div className = "row gx-0">
 				<center>
 					<Col lg={8} xs={12}>
 
@@ -281,7 +282,7 @@ function Hikes(props) {
 
 					</Col>
 				</center>
-			</Row>
+			</div>
 		</>
 	)
 };

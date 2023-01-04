@@ -14,11 +14,11 @@ function HikeStatusModal(props){
 
 function StartOrTerminateModal(props) {
 
-    const curDate = new Date();
-    const defaultStartDateTime = curDate.toISOString().split(".")
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    const localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1).split('.')
 
     const [curPos, setCurPos] = useState();
-    const [dateTime, setDateTime] = useState(defaultStartDateTime[0]);
+    const [dateTime, setDateTime] = useState(localISOTime[0]);
 
     const type = props.type;
 
@@ -38,7 +38,7 @@ function StartOrTerminateModal(props) {
         try {
             switch(type){
                 case 0:
-                    await APIHikes.startHike(dateTime.replace('T', " "), props.hike.id);
+                    await APIHikes.startHike(dateTime, props.hike.id);
                     props.setStarted(props.hike.id);
                     props.setShowStatusModal({
                         isVisible: false,
@@ -48,7 +48,7 @@ function StartOrTerminateModal(props) {
                 
                 case 1:
                     const hike = await APIHikes.getStartedHike()
-                    await APIHikes.terminateHike(dateTime.replace('T', " "), hike.id);
+                    await APIHikes.terminateHike(dateTime, hike.id);
                     props.setStarted();
                     props.setShowStatusModal({
                         isVisible: false,

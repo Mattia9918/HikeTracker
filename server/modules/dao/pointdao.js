@@ -23,10 +23,32 @@ exports.getPointByHikeId = (id) => {
 
 exports.getPointById = (id) => {
 	return new Promise((resolve, reject) => {
-		const sql = "SELECT latitude, longitude FROM point WHERE id=?"
+		const sql = "SELECT latitude, longitude, type FROM point WHERE id=?"
 		db.get(sql, [id], (err, row) => {
 			if(err) reject(err);
 			else resolve(row);
 		});
 	})
 }
+
+exports.getHutMap = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT latitude,longitude FROM point P WHERE type='hut'"
+			db.all(sql, [], (err, rows) => {
+			if (err) reject(err);
+			else resolve(rows);
+		});
+	});
+};
+
+exports.getParkingMap = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT latitude,longitude FROM point P WHERE type='parking'"
+			db.all(sql, [], (err, rows) => {
+			if (err) reject(err);
+			else resolve(rows);
+		});
+	});
+};
