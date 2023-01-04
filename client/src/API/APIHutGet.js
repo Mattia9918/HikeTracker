@@ -123,6 +123,8 @@ async function getHutProvinces() {
 
 async function linkHut(hutInfo, type) {
     const url = APIURL + `hutLinkHike`; 
+
+    console.log(hutInfo)
     
     try {
         const response = await fetch(url, {
@@ -132,11 +134,8 @@ async function linkHut(hutInfo, type) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                hutId : hutInfo.hutId,
                 hikeid: hutInfo.hikeid,
                 pointid: hutInfo.pointid,
-                latitude: hutInfo.latitude,
-                longitude: hutInfo.longitude
             })
         });
         if (response.ok) {

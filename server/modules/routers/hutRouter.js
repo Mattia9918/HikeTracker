@@ -2,6 +2,7 @@
 
 const express = require("express");
 const hut_dao = require("../dao/hutdao");
+const point_dao = require("../dao/pointdao");
 const { check, validationResult } = require("express-validator");
 const hike_dao = require("../dao/hikedao");
 const checkAuth = require("../../authMiddleware");
@@ -46,19 +47,42 @@ router.post(
 router.post(
 	"/api/hutLinkHike",
 	checkAuth.isLocalGuide,
-	[],
+	[
+		check("hikeid").isInt(),
+		check("pointid").isInt()
+	],
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(422).json({ errors: errors.array() });
 		}
 		try {
-			const hut = await hut_dao.getHutById(req.body.hutId);
+			const hike = await hike_dao.getHikeById(req.body.hikeid);
+			// Check if hike exists
+			if (hike === undefined) {
+				return res.status(404).json({ error: "Hike not found"});
+			}
+
+			// Check if it is my hike
+			if (hike.localguideID !== req.user.id) {
+				return res.status(403).json({ error: "Operation forbidden: you must be creator of the hike" });
+			}
+
+			const point = await point_dao.getPointById(req.body.pointid);
+			// Check if point exists
+			if (point === undefined) {
+				return res.status(404).json({ error: "Point not found"});
+			}
+			// Check if point is a hut
+			if(point.type !== "hut") {
+				return res.status(422).json({ error: "Point to link is not a hut" });
+			}
+
 			const maxRadius = 5;
 			if (
 				!(await functions.checkRadiusDistance(
 					req.body.hikeid,
-					req.body,
+					point,
 					maxRadius
 				))
 			)
@@ -70,7 +94,7 @@ router.post(
 			const hikeID = await hike_dao.postHike_Point(
 				req.body.hikeid,
 				"hut",
-				hut.point_id
+				req.body.pointid
 			);
 			return res.status(201).json({ id: hikeID });
 		} catch (err) {

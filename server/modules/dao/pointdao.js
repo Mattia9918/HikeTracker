@@ -23,7 +23,7 @@ exports.getPointByHikeId = (id) => {
 
 exports.getPointById = (id) => {
 	return new Promise((resolve, reject) => {
-		const sql = "SELECT latitude, longitude FROM point WHERE id=?"
+		const sql = "SELECT latitude, longitude, type FROM point WHERE id=?"
 		db.get(sql, [id], (err, row) => {
 			if(err) reject(err);
 			else resolve(row);

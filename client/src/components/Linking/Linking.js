@@ -37,7 +37,7 @@ function LinkingModal(props) {
 
             const obj = {
                 hikeid: props.hike.id,
-                pointid: point.point_id,
+                pointid: point.pointId,
             }
             await APIHikes.putHikePoint(obj, type);
             const updatedHikeInfo = await APIHikes.getHikes();
@@ -48,8 +48,10 @@ function LinkingModal(props) {
             setMessage({variant: "danger", msg: err.message});
         }
     };
+
     async function linkHut(point, type) {
         try {
+            console.log(point)
             
             props.hike.pointsOfInterest.forEach((poi) => {
                 if (poi.latitude === point.latitude && poi.longitude === point.longitude) {
@@ -59,10 +61,7 @@ function LinkingModal(props) {
             
             const obj = {
                 hikeid: props.hike.id,
-                pointid: point.point_id,
-                latitude: point.latitude,
-                longitude: point.longitude,
-                hutId : selectedHut.id
+                pointid: point.pointId,
             }
             await APIHuts.linkHut(obj, type);
             const updatedHikeInfo = await APIHikes.getHikes();
