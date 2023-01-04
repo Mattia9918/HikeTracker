@@ -41,3 +41,14 @@ exports.getHutMap = () => {
 		});
 	});
 };
+
+exports.getParkingMap = () => {
+	return new Promise((resolve, reject) => {
+		const sql =
+			"SELECT latitude,longitude FROM point P WHERE type='parking'"
+			db.all(sql, [], (err, rows) => {
+			if (err) reject(err);
+			else resolve(rows);
+		});
+	});
+};

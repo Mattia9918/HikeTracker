@@ -20,8 +20,7 @@ const MapItem = (props) => {
   const [center, setCenter] = useState([]);
   const [start, setStart] = useState([]);
   const [arrive, setArrive] = useState([]);
-  const [hutsMap, setHutsMap] = useState([]);
-
+  
   const [interest, setInterest] = useState([]);
 
   useEffect(() => {
@@ -29,8 +28,7 @@ const MapItem = (props) => {
       try {
         const json = await APIGpx.getFileById(props.hikeid);
         const point = await APIGpx.getPointByHikeId(props.hikeid);
-        const huts = await APIGpx.getHutForMap();
-
+        
         const startHikePoint = point.filter((p) => p.type === "start")[0];
         const endHikePoint = point.filter((p) => p.type === "arrive")[0];
         const others = point
@@ -64,7 +62,7 @@ const MapItem = (props) => {
         setStart([startHikePoint.latitude, startHikePoint.longitude]);
         setArrive([endHikePoint.latitude, endHikePoint.longitude]);
         setInterest(others);
-        setHutsMap(huts);
+        //setHutsMap(huts);
       } catch (err) {}
     };
     getJson();
@@ -120,16 +118,6 @@ const MapItem = (props) => {
                 );
               else return <Marker key={interest.indexOf(p)} position={p} />;
             })}
-
-            {hutsMap.map((p) => {
-              return (
-                <Marker
-                  key={hutsMap.indexOf(p)}
-                  position={[p.latitude, p.longitude]}
-                  icon={GetCustomIcon("hut")}
-                />
-              );
-            })}
           </MapContainer>
         </center>
       )}
@@ -138,6 +126,24 @@ const MapItem = (props) => {
 };
 
 const MarkerMap = (props) => {
+
+  const [pointMap, setPointMap] = useState([]);
+
+  useEffect(()=>{
+    //get all huts/parking and show them in Map
+    const getPoint = async () => {
+      let point;
+      if(props.type==="hut")
+        point = await APIGpx.getHutForMap();
+      else 
+        point = await APIGpx.getParkingForMap();
+      
+      setPointMap(point);
+    }
+    getPoint();
+
+  },[])
+
   return (
     <>
       <center>
@@ -157,20 +163,32 @@ const MarkerMap = (props) => {
             pos={props.pos}
             type={props.type}
           />
+          {pointMap.map((p) => {
+              return (
+                <Marker
+                  key={pointMap.indexOf(p)}
+                  position={[p.latitude, p.longitude]}
+                  icon={GetCustomIcon(props.type)}
+                />
+              );
+            })}
+        
         </MapContainer>
+
+
       </center>
     </>
   );
 };
 
-function CustomMarker(props) {
+function CustomMarker(props) { 
   useMapEvents({
     click: (ev) => {
       const coord = ev.latlng;
       props.setLatlng(coord);
     },
   });
-
+  
   const type = props.type;
 
   return (
@@ -326,9 +344,9 @@ function MapModal(props) {
                   value1: pointNe,
                   value2: pointSw,
                 };
-                //filterVector.push(filterObj);
-                //loadFilter(filterVector);
-                loadFilter([filterObj]);
+                filterVector.push(filterObj);
+                loadFilter(filterVector);
+                
                 
               }}
             >
@@ -400,8 +418,6 @@ function GetCustomIcon(type) {
   }
 }
 
-export { MapItem, AreaDragMap, MarkerMap, MapModal };
-
 function Legenda(props) {
   return (
     <Accordion className="mb-2">
@@ -459,3 +475,7 @@ function Legenda(props) {
     </Accordion>
   );
 }
+
+export { MapItem, AreaDragMap, MarkerMap, MapModal };
+
+
