@@ -110,7 +110,8 @@ function testGetPointById(id) {
 			expect(res).toEqual(
 					{
 						latitude:1.1,
-						longitude:2.1
+						longitude:2.1,
+						type: "point"
 					}
 			);
 		});
