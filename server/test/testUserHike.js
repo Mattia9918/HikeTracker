@@ -10,6 +10,7 @@ let agent = chai.request.agent(app);
 const bcrypt = require("bcrypt");
 
 const dateTime = "2023-01-02T17:54:44"; 
+const endDateTime = "2023-01-02T17:55:44"; 
 const hikerId=1;
 const pwd = "password"
 
@@ -211,6 +212,106 @@ function endRecordHike(expectedHTTPStatus, dateTime, hikeId) {
             .then(function (res) {
                 res.should.have.status(expectedHTTPStatus);  
             }); 
+
+    })
+}
+
+
+describe('test get /api/ongoingHike', () => {
+
+
+    before(async ()=>{
+        // delete tables hike, point, hike_point and user
+        await deleteTables();
+
+        // create user
+        await insertHiker();
+
+        // log hiker
+        await logUser("giulia.brambilla@mail.it", "password");
+
+        await createHike();
+
+        await hike_dao.startHikeByUser(hikerId,hike.id,dateTime);
+
+    }); 
+
+    getOngoingHikeRecordedByUser(200); 
+
+});
+describe('test get /api/notFinishedHike', () => {
+
+
+    before(async ()=>{
+        // delete tables hike, point, hike_point and user
+        await deleteTables();
+
+        // create user
+        await insertHiker();
+
+        // log hiker
+        await logUser("giulia.brambilla@mail.it", "password");
+
+        await createHike();
+
+        await hike_dao.startHikeByUser(hikerId,hike.id,dateTime);
+
+    }); 
+
+    getNotFinishedHike(200); 
+
+});
+describe('test get /api/completedHikes', () => {
+
+
+    before(async ()=>{
+        // delete tables hike, point, hike_point and user
+        await deleteTables();
+
+        // create user
+        await insertHiker();
+
+        // log hiker
+        await logUser("giulia.brambilla@mail.it", "password");
+
+        await createHike();
+
+        await hike_dao.startHikeByUser(hikerId,hike.id,dateTime);
+        await hike_dao.endHikeByUser(hikerId,hike.id,endDateTime); 
+
+    }); 
+
+    getCompletedHikes(200); 
+    
+
+});
+
+function getCompletedHikes(expectedHTTPStatus) {
+    it('test get /api/completedHikes', async () => {
+        await agent.get(`/api/completedHikes`).then(function(res) {
+            res.should.have.status(expectedHTTPStatus);
+            res.body.length.should.equal(2); 
+        }); 
+
+    })
+}
+
+function getNotFinishedHike(expectedHTTPStatus) {
+    it('test get /api/notFinishedHike', async () => {
+        await agent.get(`/api/notFinishedHike`).then(function(res) {
+            res.should.have.status(expectedHTTPStatus);
+            res.body.length.should.equal(2); 
+        }); 
+
+    })
+}
+
+
+function getOngoingHikeRecordedByUser(expectedHTTPStatus) {
+    it('test get /api/ongoingHike', async () => {
+        await agent.get(`/api/ongoingHike`).then(function(res) {
+            res.should.have.status(expectedHTTPStatus);
+        }); 
 
     })
 }
