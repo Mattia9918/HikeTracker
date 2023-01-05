@@ -20,7 +20,7 @@ const MapItem = (props) => {
   const [center, setCenter] = useState([]);
   const [start, setStart] = useState([]);
   const [arrive, setArrive] = useState([]);
-  
+
   const [interest, setInterest] = useState([]);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const MapItem = (props) => {
       try {
         const json = await APIGpx.getFileById(props.hikeid);
         const point = await APIGpx.getPointByHikeId(props.hikeid);
-        
+
         const startHikePoint = point.filter((p) => p.type === "start")[0];
         const endHikePoint = point.filter((p) => p.type === "arrive")[0];
         const others = point
@@ -126,23 +126,19 @@ const MapItem = (props) => {
 };
 
 const MarkerMap = (props) => {
-
   const [pointMap, setPointMap] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     //get all huts/parking and show them in Map
     const getPoint = async () => {
       let point;
-      if(props.type==="hut")
-        point = await APIGpx.getHutForMap();
-      else 
-        point = await APIGpx.getParkingForMap();
-      
-      setPointMap(point);
-    }
-    getPoint();
+      if (props.type === "hut") point = await APIGpx.getHutForMap();
+      else point = await APIGpx.getParkingForMap();
 
-  },[])
+      setPointMap(point);
+    };
+    getPoint();
+  }, []);
 
   return (
     <>
@@ -164,31 +160,28 @@ const MarkerMap = (props) => {
             type={props.type}
           />
           {pointMap.map((p) => {
-              return (
-                <Marker
-                  key={pointMap.indexOf(p)}
-                  position={[p.latitude, p.longitude]}
-                  icon={GetCustomIcon(props.type)}
-                />
-              );
-            })}
-        
+            return (
+              <Marker
+                key={pointMap.indexOf(p)}
+                position={[p.latitude, p.longitude]}
+                icon={GetCustomIcon(props.type)}
+              />
+            );
+          })}
         </MapContainer>
-
-
       </center>
     </>
   );
 };
 
-function CustomMarker(props) { 
+function CustomMarker(props) {
   useMapEvents({
     click: (ev) => {
       const coord = ev.latlng;
       props.setLatlng(coord);
     },
   });
-  
+
   const type = props.type;
 
   return (
@@ -216,6 +209,15 @@ const AreaDragMap = (props) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          {props.huts?.map((h) => {
+            return (
+              <Marker
+                key={props.huts.indexOf(h)}
+                position={[h.latitude, h.longitude]}
+                icon={GetCustomIcon("hut")}
+              />
+            );
+          })}
           <AreaSelect bounds={props.bounds} setBounds={props.setBounds} />
         </MapContainer>
       </center>
@@ -306,7 +308,12 @@ function MapModal(props) {
           <Legenda />
 
           {(areadragmap && (
-            <AreaDragMap mode={2} bounds={bounds} setBounds={setBounds} />
+            <AreaDragMap
+              mode={2}
+              bounds={bounds}
+              setBounds={setBounds}
+              huts={props.obj.huts}
+            />
           )) ||
             (markermap && (
               <MarkerMap
@@ -346,8 +353,6 @@ function MapModal(props) {
                 };
                 filterVector.push(filterObj);
                 loadFilter(filterVector);
-                
-                
               }}
             >
               Search
@@ -477,5 +482,3 @@ function Legenda(props) {
 }
 
 export { MapItem, AreaDragMap, MarkerMap, MapModal };
-
-
