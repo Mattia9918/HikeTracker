@@ -495,6 +495,18 @@ exports.getOngoingHikeRecordedByUser = (userID) => {
 	})
 }
 
+exports.getNotFinishedHikesByUser = (userID) => {
+	return new Promise((resolve, reject) => {
+		const sql = "SELECT DISTINCT HU.userID, HU.id, P.id AS pointID, HU.hikeID, title, HU.start_time, HU.end_time, length AS len, H.description AS hikeDescription, difficulty, estimatedTime, ascent, localguideID, imgPath, latitude, longitude, P.type AS pointType, city, province, HP.type AS HPtype, U.username  FROM hike_user HU, hike H, user U, point P, hike_point HP INNER JOIN hike_user ON  HU.hikeID= H.id AND HU.hikeID=HP.hikeID AND H.id=HP.hikeID AND U.id = HU.userID  AND P.id = HP.pointID WHERE HU.end_time IS NULL AND  HU.userID = ?  ORDER BY HU.id"
+		db.all(sql, [userID], function (err, row) {
+			if(err) reject(err)
+			else {
+				resolve(row)
+			}
+		})
+	})
+}
+
 exports.getHikeRecordedById = (id) => {
 	return new Promise((resolve, reject) => {
 		const sql = "SELECT id, hikeID, start_time, end_time FROM hike_user WHERE id = ?"
