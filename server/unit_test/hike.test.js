@@ -212,6 +212,7 @@ describe("test hikes and filtering", () => {
 	testGetHikeStatsById(1,1);
 	testStartHike(1, 1, "22.00");
 	testEndHike(1, 1, "22.00", "23.00");
+	testGetNotFinishedHikes(1);
 });
 
 function testGetHikes() {
@@ -584,6 +585,61 @@ function testGetComplitedHikes(userID) {
 	});
 }
 
+function testGetNotFinishedHikes(userID) {
+	describe("Testing getNotFinishedHikesByUser()", () => {
+		test("get the Hikes complited", async () => {
+			let res = await hike_dao.getNotFinishedHikesByUser(userID);
+			expect(res).toEqual([{
+				userID:1,
+				id: 2,
+				pointID:3,
+				hikeID:2, 
+				title: "Hike2",
+				start_time: "18",
+				end_time: null,
+				len: 20,
+				hikeDescription: "I'm Hike2!",
+				difficulty: "Average",
+				estimatedTime: "2",
+				ascent: 400,
+				localguideID: 2,
+				imgPath: "hike2.jpg",
+				latitude: 5.1,
+				longitude: 6.1, 
+				pointType: "point",
+				city: "Grugliasco", 
+				province: "Torino",
+				HPtype: "start",
+				username: "Francescone"
+			},
+			{
+				userID:1,
+				id: 2,
+				pointID:4,
+				hikeID:2, 
+				title: "Hike2",
+				start_time: "18",
+				end_time: null,
+				len: 20,
+				hikeDescription: "I'm Hike2!",
+				difficulty: "Average",
+				estimatedTime: "2",
+				ascent: 400,
+				localguideID: 2,
+				imgPath: "hike2.jpg",
+				latitude: 7.1,
+				longitude: 8.1, 
+				pointType: "point",
+				city: "Grugliasco", 
+				province: "Torino",
+				HPtype: "arrive",
+				username: "Francescone"
+
+			}]);
+		});
+	});
+}
+
 function testGetAllHikesRecordedByUser(userID) {
 	describe("Testing getComplitedHikes()", () => {
 		test("get the Hikes complited", async () => {
@@ -607,8 +663,8 @@ function testGetAllHikesRecordedByUser(userID) {
 }
 
 function testGetOngoingHikeRecordedByUser(userID) {
-	describe("Testing getComplitedHikes()", () => {
-		test("get the Hikes complited", async () => {
+	describe("Testing getOngoingHikeRecordedByUser()", () => {
+		test("get the Hikes on going", async () => {
 			let res = await hike_dao.getOngoingHikeRecordedByUser(userID);
 			expect(res).toEqual({
 				id: 2,
@@ -619,6 +675,7 @@ function testGetOngoingHikeRecordedByUser(userID) {
 		});
 	});
 }
+
 
 function testGetHikeRecordedById(id) {
 	describe("Testing getComplitedHikes()", () => {
