@@ -78,7 +78,7 @@ const BtnFilterHut = (props) => {
             areadragmap: true,
             filterVector,
             loadFilter,
-            huts,
+            point: huts,
           }}
         />
       )}

@@ -209,12 +209,11 @@ const AreaDragMap = (props) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {props.huts?.map((h) => {
+          {props.point?.map((p) => {
             return (
               <Marker
-                key={props.huts.indexOf(h)}
-                position={[h.latitude, h.longitude]}
-                icon={GetCustomIcon("hut")}
+                key={props.point.indexOf(p)}
+                position={[p.latitude, p.longitude]}
               />
             );
           })}
@@ -312,7 +311,7 @@ function MapModal(props) {
               mode={2}
               bounds={bounds}
               setBounds={setBounds}
-              huts={props.obj.huts}
+              point={props.obj.point}
             />
           )) ||
             (markermap && (
