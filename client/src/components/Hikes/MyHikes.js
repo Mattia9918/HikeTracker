@@ -60,7 +60,7 @@ function MyHikes(props) {
     return(
         <>
 			{started.length === 0 ? null :
-				<Row>
+				<Row className="align-items-start">
 				<center>
 					<Col lg={8} xs={12}>
 
@@ -72,7 +72,7 @@ function MyHikes(props) {
 								
 								<Row>
 									<Col>
-										<h4 className="text-success fw-bold">Escursione in corso</h4>
+										<h4 className="text-success fw-bold">Hike in progress</h4>
 										<HikeList hikes={started}></HikeList>
 									</Col>
 								</Row>
@@ -88,7 +88,7 @@ function MyHikes(props) {
 			
 			}
        		
-			<Row>
+			<Row className="align-items-start">
 				<center>
 					<Col lg={8} xs={12}>
 						<Container className="mt-3 mb-3  shadow-sm p-2" id="cardscontainer">
@@ -99,8 +99,8 @@ function MyHikes(props) {
 							{hikes.length === 0 ? 
 								<Row>
 									<Col>
-										<h1 className="fst-italic">Non hai terminanto nessuna escursione</h1>
-										<h3 className="fst-italic">Inizia una nuova escursione </h3>
+										<h1 className="fst-italic">You did not finished any hike</h1>
+										<h3 className="fst-italic">Start a new hike</h3>
 									</Col>
 								</Row>
 							: 
@@ -168,7 +168,7 @@ function HikeRow(props) {
 							aria-expanded={open}>
 							{open ? <i className="bi bi-arrow-bar-up"></i> : <i className="bi bi-arrow-bar-down "></i>}
 						</ToggleButton>
-						<h6 className="d-inline p-3 mb-2 float-end">Data: {adate.getDay()}/{adate.getMonth() +1 }/{adate.getFullYear()}</h6>	
+						<h6 className="d-inline p-3 mb-2 float-end">Date: {adate.getDay()}/{adate.getMonth() +1 }/{adate.getFullYear()}</h6>	
 					</Col>
 
 				</Row>
@@ -183,7 +183,8 @@ function HikeRow(props) {
 								
 							</Col>
 							<Col>
-								<div className="m-2 mt-5 p-2 fst-italic" >
+								<div className="m-2 mt-4 p-2 fst-italic" >
+									<p><b>Description:</b></p>
 									<p>{props.hikes.start.hikeDescription}</p>
 								</div>
 							
@@ -197,16 +198,16 @@ function HikeRow(props) {
 								<Col>
 									
 									<div className="m-2  p-2 fs-6">
-										<p><b>Orario Inizio:</b> {sdate.getHours()}:{sdate.getUTCMinutes()}:{sdate.getSeconds()}</p>
-										<p><b>Orario Fine:</b> {adate.getHours()}:{adate.getUTCMinutes()}:{adate.getSeconds()}</p>
-										<p><b>Lunghezza escursione:</b> {props.hikes.start.len} km </p>
-										<p><b>Tempo stimato:</b> {props.hikes.start.estimatedTime} ore</p>
+										<p><b>Start time:</b> {sdate.getHours()}:{sdate.getUTCMinutes()}:{sdate.getSeconds()}</p>
+										<p><b>End time:</b> {adate.getHours()}:{adate.getUTCMinutes()}:{adate.getSeconds()}</p>
+										<p><b>Hike length:</b> {props.hikes.start.len} km </p>
+										<p><b>Estimated Time:</b> {props.hikes.start.estimatedTime} hours</p>
 									</div>
 									
 								</Col>
 								<Col>
 									<div className="m-2 p-2">
-										<p><b>Difficoltà: </b> 
+										<p><b>Difficulty: </b> 
 																	<Badge
 																	bg={
 																		(props.hikes.start.difficulty === "Easy" && "success") ||
@@ -217,17 +218,17 @@ function HikeRow(props) {
 																	{props.hikes.start.difficulty}
 																	</Badge>
 																</p>
-										<p><b>Hai terminato l'escursione in:</b>   </p>
-										<p>{Math.floor(((diffDate) / (1000 * 60 * 60 )) % 24 )} ore {Math.floor(((diffDate) / (1000 * 60 )) % 60 )} minuti e {Math.floor(((diffDate) / (1000)) % 60 )} secondi </p>
+										<p><b>Hike completed in:</b>   </p>
+										<p>{Math.floor(((diffDate) / (1000 * 60 * 60 )) % 24 )} hours {Math.floor(((diffDate) / (1000 * 60 )) % 60 )} minutes and {Math.floor(((diffDate) / (1000)) % 60 )} seconds </p>
 
-										<p><b>Media passo:</b> {(((props.hikes.start.len * 1000) / (Math.floor((diffDate) / (1000))) ) * 3.6).toFixed(2)} km/h</p>
+										<p><b>Average pace:</b> {(((props.hikes.start.len * 1000) / (Math.floor((diffDate) / (1000))) ) * 3.6).toFixed(2)} km/h</p>
 									</div>
 								</Col>
 								<Col>
 									<div className="m-2 p-2">
-										<p><b>Partenza:</b></p>										
+										<p><b>Starting point:</b></p>										
 										<p><i> {props.hikes.start.city}, {props.hikes.start.province} </i></p>
-										<p><b>Arrivo:</b></p>
+										<p><b>Ending point:</b></p>
 										<p><i> {props.hikes.end.city}, {props.hikes.end.province} </i></p>
 									</div>
 								</Col>
@@ -237,17 +238,17 @@ function HikeRow(props) {
 							<Row>
 								<Col>
 									<div className="m-2  p-2 fs-6">
-										<p><b>Orario Inizio:</b> {sdate.getHours()}:{sdate.getUTCMinutes()}:{sdate.getSeconds()}</p>
-										<p><b>Lunghezza escursione:</b> {props.hikes.start.len} km </p>
-										<p><b>Tempo stimato:</b> {props.hikes.start.estimatedTime} ore</p>
+										<p><b>Start Time:</b> {sdate.getHours()}:{sdate.getUTCMinutes()}:{sdate.getSeconds()}</p>
+										<p><b>Hike length:</b> {props.hikes.start.len} km </p>
+										<p><b>Estimated time:</b> {props.hikes.start.estimatedTime} hours</p>
 									</div>
 								</Col>
 								
 								<Col>
 								<div className="m-2 p-2">
-										<p><b>Partenza:</b></p>										
+										<p><b>Starting point:</b></p>										
 										<p><i> {props.hikes.start.city}, {props.hikes.start.province} </i></p>
-										<p><b>Arrivo:</b></p>
+										<p><b>Ending point:</b></p>
 										<p><i> {props.hikes.end.city}, {props.hikes.end.province} </i></p>
 									</div>
 								</Col>
