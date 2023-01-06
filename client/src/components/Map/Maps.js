@@ -62,7 +62,7 @@ const MapItem = (props) => {
         setStart([startHikePoint.latitude, startHikePoint.longitude]);
         setArrive([endHikePoint.latitude, endHikePoint.longitude]);
         setInterest(others);
-        //setHutsMap(huts);
+        
       } catch (err) {}
     };
     getJson();
