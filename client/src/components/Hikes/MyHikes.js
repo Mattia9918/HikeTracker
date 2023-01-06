@@ -39,7 +39,7 @@ function MyHikes(props) {
 	async function loadStarted() {
 		try {
 			const startedHike = await APIHikes.getNotFinishedHike();
-			//const startedHikeId = startedHike ? startedHike.hikeID : undefined;
+			
 			setStarted(startedHike);
 			 
 		} catch (err) {
@@ -64,7 +64,7 @@ function MyHikes(props) {
 				<center>
 					<Col lg={8} xs={12}>
 
-						{/* <AlertUser obj={{ msg: props.msg, user: props.user, setMsg: props.setMsg }} /> */}
+						
 						{started.length === 0 ? 
 								null
 							: 
@@ -218,9 +218,9 @@ function HikeRow(props) {
 																	</Badge>
 																</p>
 										<p><b>Hai terminato l'escursione in:</b>   </p>
-										<p>{Math.floor(((adate - sdate) / (1000 * 60 * 60 )) % 24 )} ore {Math.floor(((adate - sdate) / (1000 * 60 )) % 60 )} minuti e {Math.floor(((adate - sdate) / (1000)) % 60 )} secondi </p>
+										<p>{Math.floor(((diffDate) / (1000 * 60 * 60 )) % 24 )} ore {Math.floor(((diffDate) / (1000 * 60 )) % 60 )} minuti e {Math.floor(((diffDate) / (1000)) % 60 )} secondi </p>
 
-										<p><b>Media passo:</b> {(((props.hikes.start.len * 1000) / (Math.floor((adate - sdate) / (1000))) ) * 3.6).toFixed(2)} km/h</p>
+										<p><b>Media passo:</b> {(((props.hikes.start.len * 1000) / (Math.floor((diffDate) / (1000))) ) * 3.6).toFixed(2)} km/h</p>
 									</div>
 								</Col>
 								<Col>
