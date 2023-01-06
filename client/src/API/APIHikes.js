@@ -77,7 +77,7 @@ async function getHikes() {
             starting_point.forEach(element => {
                 ending_point.forEach(el => {
                     if (element.hikeID === el.hikeID && element.id === el.id) {
-                        var hike = {start : element, end : el}; 
+                        const hike = {start : element, end : el}; 
                         hikes.push(hike); 
                     }
                 })
