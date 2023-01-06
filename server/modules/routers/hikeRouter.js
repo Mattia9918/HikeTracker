@@ -441,6 +441,16 @@ router.get("/api/ongoingHike", checkAuth.isHiker, async (req, res) => {
 	}
 });
 
+router.get("/api/notFinishedHike", checkAuth.isHiker, async (req, res) => {
+	try {
+		const hike = await hike_dao.getNotFinishedHikesByUser(req.user.id);
+		return res.status(200).json(hike);
+	} catch (err) {
+        console.log(err)
+		return res.status(500).json({ error: err });
+	}
+});
+
 router.get("/api/completedHikes",  checkAuth.isHiker,async (req, res) => {
 	try {
 		const hikes = await hike_dao.getCompletedHikesOfHiker(req.user.id);

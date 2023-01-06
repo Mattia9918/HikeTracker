@@ -78,7 +78,7 @@ const BtnFilterHut = (props) => {
             areadragmap: true,
             filterVector,
             loadFilter,
-            huts,
+            point: huts,
           }}
         />
       )}
@@ -323,24 +323,7 @@ function HutList(props) {
     setProvinces(provincelist);
   }
 
-  /*
-  async function loadHutFilter(filter, value) {
-    try {
-      const filteredHutList = await APIHuts.getFilter(filter, value);
-
-      setHuts(filteredHutList);
-    } catch (err) {}
-  }
-
-  async function loadByArea(filter, value) {
-    try {
-      const filteredHutList = await APIHuts.getHutFilter(filter, value);
-      setHuts(filteredHutList);
-    } catch (err) {}
-  }
-   <AccordionFilterHut obj={obj} />
-                   
-  */
+  
 
   useEffect(() => {
     if (filterVector.length === 0) {

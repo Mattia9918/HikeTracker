@@ -48,6 +48,22 @@ const hut_point2 = {
 	city: "Bra",
 };
 
+const park_point1 = {
+	latitude: 54.704,
+	longitude: 8.8567,
+	type: "parking",
+	province: "Genova",
+	city: "Genova",
+};
+
+const park_point2 = {
+	latitude: 69.704,
+	longitude: 33.8567,
+	type: "parking",
+	province: "Imperia",
+	city: "Pontedassio",
+};
+
 describe("test point", () => {
 	beforeEach(async () => {
 		await hike_dao.deleteHikes();
@@ -69,6 +85,8 @@ describe("test point", () => {
 			await hike_dao.postPoint(point2);
 			await hike_dao.postPointHut(hut_point1);
 			await hike_dao.postPointHut(hut_point2);
+			await hike_dao.postParkPoint(park_point1);
+			await hike_dao.postParkPoint(park_point2);
 			await hike_dao.postHike_Point(1, "start", 1);
 			await hike_dao.postHike_Point(1, "arrive", 2);
 		} catch (err) {
@@ -79,6 +97,8 @@ describe("test point", () => {
 	testGetPointByHikeId(1);
 	testGetPointById(1);
 	testGetHutMap();
+	testGetParkingMap();
+	testGetHikesMap();
 });
 
 function testGetPointByHikeId(id) {
@@ -131,6 +151,48 @@ function testGetHutMap() {
 					{
 						latitude: 44.704,
 						longitude: 7.8567
+					}
+				]
+			);
+		});
+	});
+}
+
+function testGetParkingMap() {
+	describe("Testing getParkingMap", () => {
+		test("Getting coordinates of all parks", async () => {
+			let res = await point.getParkingMap();
+			expect(res).toEqual(
+				[
+					{
+						latitude: 54.704,
+						longitude: 8.8567,
+						
+					},
+					{
+						latitude: 69.704,
+						longitude: 33.8567
+					}
+				]
+			);
+		});
+	});
+}
+
+function testGetHikesMap() {
+	describe("Testing getHikesMap", () => {
+		test("Getting coordinates of all hikes", async () => {
+			let res = await point.getHikesMap();
+			expect(res).toEqual(
+				[
+					{
+						latitude: 1.1,
+						longitude: 2.1,
+						
+					},
+					{
+						latitude: 5.1,
+						longitude: 6.1
 					}
 				]
 			);

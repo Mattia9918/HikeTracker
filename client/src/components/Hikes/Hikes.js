@@ -22,6 +22,7 @@ import {
 } from "./HikesObjInfo";
 
 import APIHikes from "../../API/APIHikes";
+import APIGpx from "../../API/APIGpx";
 
 import { TbMapSearch } from "react-icons/tb";
 import { BsMap } from "react-icons/bs";
@@ -43,6 +44,7 @@ function FilterMenu(props) {
   const [provinces, setProvinces] = useState();
   const [showModal, setShowModal] = useState(false);
   const [filterVector, setFilterVector] = useState([]);
+  const [hikesMap, setHikesMap] = useState([]);
 
   function removeElementFilterVector(filterName) {
     let vect = [...filterVector];
@@ -77,6 +79,9 @@ function FilterMenu(props) {
 
       const provincelist = await APIHikes.getHikeProvinces();
       setProvinces(provincelist);
+
+      const hikesMap = await APIGpx.getHikesForMap();
+      setHikesMap(hikesMap);
     }
     if (filterVector.length === 0) loadList();
 
@@ -183,6 +188,7 @@ function FilterMenu(props) {
             areadragmap: true,
             loadFilter: props.loadFilter,
             filterVector: filterVector,
+            point: hikesMap,
           }}
         />
       )}
