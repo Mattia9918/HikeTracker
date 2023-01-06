@@ -305,7 +305,7 @@ function HutList(props) {
     const vec = [];
     vec.push(newElement);
     setFilterVector([...vec]);
-    loadFilter(filterVector);
+    loadFilter();
   }
 
   async function loadHuts() {

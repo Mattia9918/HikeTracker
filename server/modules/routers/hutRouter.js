@@ -14,7 +14,6 @@ router.post(
   checkAuth.isLocalGuide,
   [
     check("hut.email").isEmail(),
-    check("hut.website").isURL(),
     check("hut.description").notEmpty(),
     check("hut.altitude").isNumeric(),
     check("hut.languages").isIn(["French", "English", "German"]),

@@ -77,7 +77,7 @@ const Url = (props)=>{
         
         <Form.Control type="url" placeholder={"Enter "+label}
           value={url}
-          required={true}
+          required={false}
           onChange={(event) => setUrl(event.target.value)}
           />
     
