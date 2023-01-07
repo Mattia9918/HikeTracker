@@ -108,7 +108,7 @@ describe("test api/huts (case success 200)", () => {
 	getHutsByDisabledService(200);
 	getHutsByCity(200, "Bra");
 	getHutsByProvince(200, "Cuneo");
-	getHutsByBeds(200, 2);
+	getHutsByBeds(200);
 	getHutsByReachability(200, "With normal car");
 	getHutsByArea(200, "46,8", "43,6");
 });
