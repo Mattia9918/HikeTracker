@@ -72,7 +72,7 @@ exports.createParking = (
 			function (err) {
 				if (err) reject(err);
 					
-				resolve(this.lastID);
+				else resolve(this.lastID);
 			}
 		);
 	});

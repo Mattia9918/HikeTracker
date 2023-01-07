@@ -36,11 +36,8 @@ exports.postHut = (hut, point_id) => {
 				hut.restaurant_service, 
 				point_id
 			], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve(this.lastID);
+			if (err) reject(err);
+			else resolve(this.lastID);
 		});
 	});
 }
@@ -62,21 +59,15 @@ exports.deleteAllHuts = () => {
 		const sql =
 			"DELETE FROM hut";
 		db.run(sql, [], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
+			if (err) reject(err);
+			else resolve();
 		});
 
 		const sql2 =
 			"UPDATE sqlite_sequence SET seq=0 WHERE name='hut'";
 		db.run(sql2, [], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
+			if (err) reject(err);
+			else resolve();
 		});
 
 	})
@@ -87,11 +78,8 @@ exports.deleteHikeLinkedHut= () => {
 		const sql =
 			"DELETE FROM  hike_point  WHERE type='hut'  ";
 		db.run(sql, [], function (err) {
-			if (err) {
-				reject(err);
-				return;
-			}
-			resolve();
+			if (err) reject(err);
+			else resolve();
 		});
 	})
 };
@@ -105,9 +93,7 @@ exports.getHuts = () => {
 
 			db.all(sql, [], (err, rows) => {
 			if (err) reject(err);
-			else {
-				resolve(rows);
-			}
+			else resolve(rows);
 		});
 	});
 };
@@ -120,11 +106,8 @@ exports.getHutById = (id) => {
 			"FROM hut H, point P WHERE H.id = ? AND H.point_id = P.id"
 
 		db.get(sql, [id], (err, row) => {
-			if (err)
-				reject(err);
-			else {
-				resolve(row);
-			}
+			if (err) reject(err);
+			else resolve(row);
 		});
 	});
 };

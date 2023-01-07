@@ -45,8 +45,7 @@ const BtnFilterHut = (props) => {
 
     //se il vettore clickedFilter contiene già il filtro, lo rimuove altrimenti lo aggiunge
     const flag = clickedFilter.some((item) => {
-      if (item.filterName === filter && item.clicked === true) return true;
-      return false;
+      return (item.filterName === filter && item.clicked === true)
     });
 
     if (flag === false) {

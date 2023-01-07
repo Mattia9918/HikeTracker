@@ -150,21 +150,15 @@ exports.deleteUser = () => {
         const sql =
             "DELETE FROM user";
         db.run(sql, [], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve();
+            if (err) reject(err);
+            else resolve();
         });
 
         const sql2 =
             "UPDATE sqlite_sequence SET seq=0 WHERE name='user'";
         db.run(sql2, [], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve();
+            if (err) reject(err);
+            else resolve();
         });
 
     })
@@ -175,11 +169,8 @@ exports.deleteTableActivation = () => {
         const sql =
             "DELETE FROM activation";
         db.run(sql, [], function (err) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve();
+            if (err) reject(err);
+            else resolve();
         });
     })
 };
