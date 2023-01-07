@@ -12,13 +12,13 @@ const hutbike = url+"hutbike.jpg";
 const optionsReach = {
 	label:"Reachability",
 	eventKey:"1",
-    filter:"reach",
+    filter:"reachability",
     
     options:[
-        {label:"normal",filterOption:"normal"},
-        {label:"offroad",filterOption:"offroad"},
-        {label:"foot",filterOption:"foot"},
-        {label:"cable",filterOption:"cable"}
+        {label:"With normal car",filterOption:"With normal car"},
+        {label:"With off-road car",filterOption:"With off-road car"},
+        {label:"On foot",filterOption:"On foot"},
+        {label:"Cableway",filterOption:"Cableway"}
     ]
 }
 
