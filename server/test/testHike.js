@@ -840,13 +840,13 @@ describe('test Get Hikes', () => {
 
   getHikes(200, hike1, hike2);
   getHikeById(200, hike1);
-  getHikesByAscent(200, hike1, hike2, 200, 800);
+  getHikesByAscent(200, hike1, hike2, 200, 700);
   getHikesByExpectedTime(200, hike1, hike2, 0, 2);
   getHikesByLength(200, hike1, hike2, 1, 10);
-  getHikesByDifficulty(200, hike1, hike2, "easy");
-  getHikesByCity(200, hike1, hike2, "Biella");
-  getHikesByProvince(200, hike1, hike2, "Biella");
-  getHikesByDistance(200, hike1, hike2, 40, 40, 1000);
+  getHikesByDifficulty(200, hike1, hike2, "Easy");
+  getHikesByCity(200, hike1, hike2, "Paesana");
+  getHikesByProvince(200, hike1, hike2, "Provincia di Cuneo");
+  getHikesByArea(200, hike1, hike2, "45,8", "43,6");
 });
 
 function getHikes(expectedHTTPStatus, hike1, hike2) {
@@ -872,79 +872,138 @@ function getHikeById(expectedHTTPStatus, hike1) {
 }
 
 function getHikesByAscent(expectedHTTPStatus, hike1, hike2, minAscent, maxAscent) {
-  it('test getHikes', async () => {
+  it('test getHikes by ascent', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=ascent&value1=${minAscent}&value2=${maxAscent}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-          
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "ascent",
+            value1: minAscent,
+            value2: maxAscent
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(1);
   });
 }
 
 function getHikesByExpectedTime(expectedHTTPStatus, hike1, hike2, minTime, maxTime) {
-  it('test getHikes', async () => {
+  it('test getHikes by expected time', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=expectedTime&value1=${minTime}&value2=${maxTime}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "expectedTime",
+            value1: minTime,
+            value2: maxTime
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(0);
   });
 }
 
 function getHikesByLength(expectedHTTPStatus, hike1, hike2, minLen, maxLen) {
-  it('test getHikes', async () => {
+  it('test getHikes by length', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=length&value1=${minLen}&value2=${maxLen}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "length",
+            value1: minLen,
+            value2: maxLen
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(1);
   });
 }
 
 function getHikesByDifficulty(expectedHTTPStatus, hike1, hike2, difficulty) {
-  it('test getHikes', async () => {
+  it('test getHikes by difficulty', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=difficulty&value1=${difficulty}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "difficulty",
+            value1: difficulty
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(2);
   });
 }
 
 function getHikesByCity(expectedHTTPStatus, hike1, hike2, city) {
-  it('test getHikes', async () => {
+  it('test getHikes by city', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=city&value1=${city}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "city",
+            value1: city
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(2);
   });
 }
 
 function getHikesByProvince(expectedHTTPStatus, hike1, hike2, province) {
-  it('test getHikes', async () => {
+  it('test getHikes by province', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=ascent&province=${province}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "province",
+            value1: province
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(2);
   });
 }
 
-function getHikesByDistance(expectedHTTPStatus, hike1, hike2, latitude, longitude, maxDist) {
-  it('test getHikes', async () => {
+function getHikesByArea(expectedHTTPStatus, hike1, hike2, coor1, coor2) {
+  it('test getHikes by', async () => {
       await agent.post('/api/hiking').send(hike1);
       await agent.post('/api/hiking').send(hike2);
 
-      await agent.get(`/api/hikes?filter=distance&longitude=${longitude}&latitude=${latitude}&maxDist=${maxDist}`).then( function (res) {
-          res.should.have.status(expectedHTTPStatus);
-      });
+      const res = await agent.post("/api/hikes/filter").send(
+        [
+          {
+            filterName: "area",
+            value1: coor1,
+            value2: coor2
+          }
+        ]
+      );
+      
+      res.should.have.status(expectedHTTPStatus);
+      res.body.length.should.equal(2);
   });
 }

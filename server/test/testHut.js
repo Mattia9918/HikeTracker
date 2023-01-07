@@ -105,11 +105,12 @@ describe("test api/huts (case success 200)", () => {
 	getHutsByAltitude(200, 300);
 	getHutsByRestaurantService(200);
 	getHutsByBikeFriendly(200);
-	getHutsByDIsabledService(200);
+	getHutsByDisabledService(200);
 	getHutsByCity(200, "Bra");
 	getHutsByProvince(200, "Cuneo");
 	getHutsByBeds(200, 2);
 	getHutsByReachability(200, "With normal car");
+	getHutsByArea(200, "46,8", "43,6");
 });
 
 function getHuts(expectedHTTPStatus) {
@@ -121,82 +122,143 @@ function getHuts(expectedHTTPStatus) {
 	});
 }
 
-function getHutsByAltitude(expectedHTTPStatus, minALtitude) {
+function getHutsByAltitude(expectedHTTPStatus, minAltitude) {
 	it("test get by altitude", async () => {
-		await agent
-			.get(`/api/huts?filter=altitude&value1=${minALtitude}`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "altitude",
+				value1: minAltitude
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(0);
 	});
 }
 
 function getHutsByRestaurantService(expectedHTTPStatus) {
-	it("test get by altitude", async () => {
-		await agent
-			.get(`/api/huts?filter=restaurant_services&value1=1`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+	it("test get with restaurant service", async () => {
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "restaurant_service"
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(0);
 	});
 }
 
-function getHutsByDIsabledService(expectedHTTPStatus) {
-	it("test get by disabled service", async () => {
-		await agent
-			.get(`/api/huts?filter=disabled_services&value1=1`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+function getHutsByDisabledService(expectedHTTPStatus) {
+	it("test get with disabled services", async () => {
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "disabled_services"
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(2);
 	});
 }
 
 function getHutsByBikeFriendly(expectedHTTPStatus) {
-	it("test get by bike friendly", async () => {
-		await agent
-			.get(`/api/huts?filter=bike_friendly&value1=1`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+	it("test get bike friendly", async () => {
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "bike_friendly"
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(1);
 	});
 }
 
 function getHutsByCity(expectedHTTPStatus, city) {
 	it("test get by city", async () => {
-		await agent
-			.get(`/api/huts?filter=city&value1=${city}`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "city",
+				value1: city
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(1);
 	});
 }
 
 function getHutsByProvince(expectedHTTPStatus, province) {
 	it("test get by province", async () => {
-		await agent
-			.get(`/api/huts?filter=province&value1=${province}`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "province",
+				value1: province
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(1);
 	});
 }
 
-function getHutsByBeds(expectedHTTPStatus, minBeds) {
-	it("test get by beds", async () => {
-		await agent
-			.get(`/api/huts?filter=beds&value1=${minBeds}`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+function getHutsByBeds(expectedHTTPStatus) {
+	it("test get with beds", async () => {
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "beds"
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(2);
 	});
 }
 
 function getHutsByReachability(expectedHTTPStatus, reach) {
 	it("test get by reachability", async () => {
-		await agent
-			.get(`/api/huts?filter=reach&value1=${reach}`)
-			.then(function (res) {
-				res.should.have.status(expectedHTTPStatus);
-			});
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "reachability",
+				value1: reach
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(1);
+	});
+}
+
+function getHutsByArea(expectedHTTPStatus, coor1, coor2) {
+	it("test get by area", async () => {
+		const res = await agent.post("/api/huts/filter").send(
+			[
+			  {
+				filterName: "area",
+				value1: coor1,
+				value2: coor2
+			  }
+			]
+		  );
+		  
+		res.should.have.status(expectedHTTPStatus);
+		res.body.length.should.equal(2);
 	});
 }

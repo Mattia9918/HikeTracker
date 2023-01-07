@@ -89,7 +89,6 @@ router.post(`/api/hikes/filter`, async (req, res) => {
 							hike.startingPoint.longitude < neCoordinates[1])
 						}
 					);
-					console.log("dao by area " + hikes.length);
 					break;
 				default:
 					console.log("wrong filter error");
