@@ -7,8 +7,8 @@
 # How to run
 - create a `docker-compose.yaml` file
 - copy the following content inside it
-```
 
+```
 services:
   nodejs-server:
     container_name: nodejs-server
