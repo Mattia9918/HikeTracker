@@ -189,10 +189,6 @@ function testGetHikesMap() {
 						latitude: 1.1,
 						longitude: 2.1,
 						
-					},
-					{
-						latitude: 5.1,
-						longitude: 6.1
 					}
 				]
 			);
