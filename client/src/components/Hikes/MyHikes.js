@@ -136,6 +136,9 @@ function HikeRow(props) {
 	console.log("sdate", sdate);
 	const diffDate = Math.abs(adate - sdate);
 
+	const sdatemod = sdate.toString().split("GMT")
+	const adatemod = adate.toString().split("GMT")
+
 	return (
 		<tr className="border border-1">
 			<td className="m-2 p-2">
@@ -183,8 +186,8 @@ function HikeRow(props) {
 								<Col>
 
 									<div className="m-2  p-2 fs-6">
-										<p><b>Start time:</b> {sdate.getHours()}:{sdate.getUTCMinutes()}:{sdate.getSeconds()}</p>
-										<p><b>End time:</b> {adate.getHours()}:{adate.getUTCMinutes()}:{adate.getSeconds()}</p>
+										<p><b>Start time:</b> {sdatemod[0]}</p>
+										<p><b>End time:</b> {adatemod[0]}</p>
 										<p><b>Hike length:</b> {props.hikes.start.len} km </p>
 										<p><b>Estimated Time:</b> {props.hikes.start.estimatedTime} hours</p>
 									</div>
@@ -223,7 +226,7 @@ function HikeRow(props) {
 							<Row>
 								<Col>
 									<div className="m-2  p-2 fs-6">
-										<p><b>Start Time:</b> {sdate.getHours()}:{sdate.getUTCMinutes()}:{sdate.getSeconds()}</p>
+										<p><b>Start Time:</b> {sdatemod[0]} </p>
 										<p><b>Hike length:</b> {props.hikes.start.len} km </p>
 										<p><b>Estimated time:</b> {props.hikes.start.estimatedTime} hours</p>
 									</div>
