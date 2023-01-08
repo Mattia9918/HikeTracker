@@ -8,7 +8,7 @@
 - create a `docker-compose.yaml` file
 - copy the following content inside it
 ```
-version: '2.12.2'
+
 services:
   nodejs-server:
     container_name: nodejs-server
