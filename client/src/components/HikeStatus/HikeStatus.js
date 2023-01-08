@@ -2,13 +2,7 @@ import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Modal, Form, Table, Alert } from 'react-bootstrap';
 import APIHikeForm from '../../API/APIHikeForm';
 import APIHikes from '../../API/APIHikes';
-import APIGpx from '../../API/APIGpx';
-import {
-    MapContainer,
-    TileLayer,
-    Marker,
-    GeoJSON,
-} from "react-leaflet";
+import { HikeStatusMap } from './HikeStatusMap';
 
 function HikeStatusModal(props) {
     const type = props.type;
@@ -130,35 +124,6 @@ function StartOrTerminateModal(props) {
 
 function StartModalBody(props) {
 
-    const [coordinates, setCoordinates] = useState();
-    const [center, setCenter] = useState();
-
-    useEffect(() => {
-        const getJson = async () => {
-            try {
-                const json = await APIGpx.getFileById(props.hike.id);
-                const c = json.features;
-
-                setCoordinates(c);
-
-                const arrayCoordinates = c[0].geometry.coordinates;
-                const last = arrayCoordinates.length - 1;
-                const middle = Math.round(last / 2);
-
-
-                const cntr = [
-                    arrayCoordinates[middle][1],
-                    arrayCoordinates[middle][0],
-                ];
-
-                setCenter(cntr);
-
-            } catch (err) { }
-        };
-        getJson();
-
-        // eslint-disable-next-line
-    }, []);
 
     return (
         <>
@@ -169,26 +134,7 @@ function StartModalBody(props) {
             </Row>
             <hr className="mt-3"></hr>
             <Row>
-                {coordinates?.length && (
-                    <center>
-                        <MapContainer
-                            style={{ height: "400px", width: "100%" }}
-                            center={center}
-                            zoom={15}
-                            scrollWheelZoom={true}
-                        >
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            <GeoJSON data={coordinates} />
-                            {props.curPos &&
-                                <Marker
-                                    position={[props.curPos.latitude, props.curPos.longitude]}
-                                />
-                            }
-                        </MapContainer>
-                    </center>)}
+                <HikeStatusMap hike = {props.hike} curPos = {props.curPos} />
             </Row>
             <Row>
                 <Col xs={6}>
@@ -206,37 +152,6 @@ function StartModalBody(props) {
 };
 
 function TerminateModalBody(props) {
-
-    const [coordinates, setCoordinates] = useState();
-    const [center, setCenter] = useState();
-
-    useEffect(() => {
-        const getJson = async () => {
-            try {
-                const json = await APIGpx.getFileById(props.hike.id);
-                const c = json.features;
-
-                setCoordinates(c);
-
-                const arrayCoordinates = c[0].geometry.coordinates;
-                const last = arrayCoordinates.length - 1;
-                const middle = Math.round(last / 2);
-
-
-                const cntr = [
-                    arrayCoordinates[middle][1],
-                    arrayCoordinates[middle][0],
-                ];
-
-                setCenter(cntr);
-
-            } catch (err) { }
-        };
-        getJson();
-
-        // eslint-disable-next-line
-    }, []);
-
     return (
         <>
             <Row className="ms-2">
@@ -245,26 +160,7 @@ function TerminateModalBody(props) {
             </Row>
             <hr className="mt-3"></hr>
             <Row>
-                {coordinates?.length && (
-                    <center>
-                        <MapContainer
-                            style={{ height: "400px", width: "100%" }}
-                            center={center}
-                            zoom={15}
-                            scrollWheelZoom={true}
-                        >
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            <GeoJSON data={coordinates} />
-                            {props.curPos &&
-                                <Marker
-                                    position={[props.curPos.latitude, props.curPos.longitude]}
-                                />
-                            }
-                        </MapContainer>
-                    </center>)}
+               <HikeStatusMap hike = {props.hike} curPos = {props.curPos} />
             </Row>
             <Row>
                 <Col xs={6}>
