@@ -51,11 +51,9 @@ const ListGroupItem = (props) => {
 				if(filt.value1 === fv[0])
 					found = true;
 				if(filt.value1 === filterValue) {
-					console.log("TROVATO");
 					found = true
 				}
 			})
-			console.log(filterVector[0].filterName && filterVector.length === 1);
 			if(filterVector[0].filterName === "none")
 				found = false;
 
@@ -71,11 +69,8 @@ const ListGroupItem = (props) => {
 			onClick={() => {
 				props.removeElementFilterVector(props.filter);
 				props.removeElementFilterVector("none");
-				console.log(props.filterVector);
-				console.log(clicked);
 				if (!clicked) {
 					setClicked(true);
-					console.log("PUSHING");
 					let newElement;
 					let fv = [];
 
@@ -95,6 +90,7 @@ const ListGroupItem = (props) => {
 					props.insertElementFilterVector(newElement);
 				} else {
 					setClicked(false);
+					props.removeElementFilterVector(props.filter);
 				}
 				props.loadFilter(props.filterVector);
 			}}>

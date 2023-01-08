@@ -52,10 +52,12 @@ exports.getParkingMap = () => {
 
 exports.getHikesMap = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT latitude,longitude FROM point P WHERE type='point'";
+    const sql = "SELECT latitude,longitude FROM hike_point HP, point P WHERE HP.pointID = P.id AND HP.type='start'";
     db.all(sql, [], (err, rows) => {
       if (err) reject(err);
       else resolve(rows);
     });
   });
 };
+
+

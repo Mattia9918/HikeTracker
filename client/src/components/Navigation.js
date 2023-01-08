@@ -29,10 +29,6 @@ function Navigation(props) {
             name: "Huts",
             link: "/huts"
         },
-        {
-            name: "My Hikes",
-            link: "/myHikes"
-        },
     ]
     return (
         <>
@@ -61,6 +57,7 @@ function Navigation(props) {
                         <Nav className="ms-auto">
                         {props.user !== undefined && props.user.role === "localGuide" && <MyNavDropdown array = {localGuideActions} label = "Local Guide Menu"/>}
                         {props.user !== undefined && <MyNavDropdown array = {hikerActions} label = "Menu"/>}
+                        {props.user !== undefined && props.user.role === "hiker" && <Nav.Link id = "navlink" onClick = {() => navigate('/completedhikes')}>Completed hikes</Nav.Link>}
                         <Nav.Item>
                             {props.user === undefined && <Nav.Link id = "navlink" onClick = {() => navigate('/login')}>Login</Nav.Link>}
                         </Nav.Item>
