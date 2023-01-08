@@ -12,7 +12,7 @@
 services:
   nodejs-server:
     container_name: nodejs-server
-    image: loferro/hike-server:latest
+    image: loferro/hike-server:final
     volumes:
       - '/usr/src/app/node_modules'
     ports:
@@ -20,7 +20,7 @@ services:
 
   react-ui:
     container_name: react-ui
-    image: loferro/hike-client:latest
+    image: loferro/hike-client:final
     volumes:
       - '/usr/src/app/node_modules'
     ports:
