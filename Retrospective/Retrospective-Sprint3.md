@@ -91,7 +91,7 @@ TEMPLATE FOR RETROSPECTIVE (Team 7)
 
 - Which ones you were not able to achieve? Why?
 
-  - None
+  - *None*
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
 
