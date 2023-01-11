@@ -11,7 +11,7 @@ TEMPLATE FOR RETROSPECTIVE (Team 7)
 
 - Number of stories committed vs done: **3/3**
 - Total points committed vs done: **21/21**
-- Nr of hours planned vs spent (as a team): **72h/73h 40m**
+- Nr of hours planned vs spent (as a team): **72h / 73h 40m**
 
 **Definition of Done:**
 
