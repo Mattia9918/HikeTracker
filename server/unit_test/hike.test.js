@@ -373,7 +373,7 @@ function testGetGpxInfo(file) {
 					latitude: 45.313864,
 					longitude: 7.30556,
 				},
-				totalAscent: -393.20000000000005,
+				totalAscent: 284.2999999999997,
 				totalDistance: 13.40820509184726,
 				difficulty: "Difficult",
 			});
