@@ -175,11 +175,13 @@ function calculateDistanceAndAscent(coordinates) {
 	for (let i = 0; i < coordinates.length-1; i++) {
 		let pointA = {latitude: coordinates[i][0], longitude: coordinates[i][1]}
 		let pointB = {latitude: coordinates[i+1][0], longitude: coordinates[i+1][1]}
-		let relativeAscent = coordinates[i+1][2] - coordinates[i][2]
+		if(coordinates[i+1][2] > coordinates[i][2]) {
+			ascent += coordinates[i+1][2] - coordinates[i][2]
+		}
 		distance = distance + haversine(pointA, pointB)/1000; //in kilometers
-		ascent = ascent + relativeAscent; //in meters
 	}
-	return {totalDistance: distance, totalAscent: ascent}
+	return {totalDistance: distance,
+		 totalAscent: ascent}
 } 
 
 function distanceScore(totalDistance){
